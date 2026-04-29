@@ -93,7 +93,6 @@
   .faq-q.open::after{content:'－'}
   .faq-a{display:none;padding:0 16px 16px;font-size:15px;line-height:1.8;color:#2a392c;border-top:1px solid var(--border)}
   .faq-a p{margin-top:10px}
-  .faq-a p:first-child{margin-top:10px}
 </style>
 </head>
 <body>
@@ -173,656 +172,82 @@
     </a>
   </div></div>
 
-<script>
-// RESTORED DATA (from your last working build)
-window.NSUK_DATA = [
-  {
-    faculty: "Administration",
-    courses: [
-      { name:"Accounting", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government/History","Civic Education","Geography","Commerce","Marketing","Financial Accounting"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics"], optional_pick:2,
-                optional:["Government/History","Civic Education","Geography","Commerce","Marketing","Financial Accounting"]}
-      },
-      { name:"Banking and Finance", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Economics","Government/History","Civic Education","Geography","Commerce","Marketing","Financial Accounting","Christian Religious Studies","Literature-in-English","Islamic Studies"]}
-      },
-      { name:"Business Administration", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Commerce","Marketing","Financial Accounting","Government/History","Civic Education","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics"], optional_pick:2,
-                optional:["Financial Accounting","Business Method","Commerce","Government/History","Geography","Civic Education"]}
-      },
-      { name:"Entrepreneurship", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government/History","Civic Education","Geography","Commerce","Marketing","Financial Accounting"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics"], optional_pick:2,
-                optional:["Government/History","Civic Education","Geography","Commerce","Marketing","Financial Accounting"]}
-      },
-      { name:"Public Administration", cutoff:170,
-        jamb:{compulsory:["Use of English","Government/History","Economics"], optional_pick:1,
-              optional:["Civic Education","Geography","Christian Religious Studies","Literature-in-English","Islamic Studies"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics","Government/History"], optional_pick:1,
-                optional:["Geography","Commerce","Marketing","Financial Accounting","Christian Religious Studies","Literature-in-English","Islamic Studies","Civic Education"]}
-      },
-      { name:"Marketing", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government/History", "Civic Education", "Geography"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Economics","Accounting","Civic Education","Business Method","Geography","Commerce","Government/History","Statistics"]}
-      },
-      { name:"Taxation", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government/History","Geography","Civic Education"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics"], optional_pick:2,
-                optional:["Accounting","Business Method","Commerce","Government/History","Geography","Civic Education","Marketing"]}
-      },
-      { name:"Security and Investment Studies", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics","Economics"], optional_pick:1,
-              optional:["Government/History","Civic Education","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Economics","Accounting","Business Method","Commerce","Government","Geography","Statistics","Christian Religious Studies","Literature-in-English","Islamic Studies"]}
-      }
-    ]
-  },
-  {
-    faculty: "Agriculture",
-    courses: [
-      { name:"Agricultural Economics & Extension", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Mathematics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-                optional:["Geography","Physics","Economics"]}
-      },
-      { name:"Fisheries", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Physics","Food and Nutrition"]},
-        olevel:{compulsory:["English Language","Mathematics","Biology/Agricultural Science"], optional_pick:2,
-                optional:["Chemistry","Physics","Food and Nutrition"]}
-      },
-      { name:"Agronomy", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Mathematics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-                optional:["Geography","Physics","Economics"]}
-      },
-      { name:"Animal Science", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Mathematics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-                optional:["Geography","Physics","Economics"]}
-      },
-      { name:"Forestry and Wildlife", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Mathematics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology"], optional_pick:1,
-                optional:["Physics","Economics","Further Mathematics","Statistics"]}
-      },
-      { name:"Home Science and Management", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Mathematmatics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-                optional:["Physics","General Metal Work","General Wood Work","Building/Engineering Drawing","Furniture Design and Construction","Upholstery Design and Construction","Spray Painting and Period Furniture","Spinning","Weaving","Surface Design and Printing","Dyeing and Bleaching","Basic Electricity"]}
-      }
-    ]
-  },
-  {
-    faculty: "Education",
-    courses: [
-      { name:"Chemistry Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry"], optional_pick:2,
-              optional:["Physics","Biology","Mathematics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry"], optional_pick:2,
-                optional:["Physics","Biology","Agricultural Science"]}
-      },
-      { name:"Mathematics Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Mathematics"], optional_pick:2,
-              optional:["Physics","Chemistry","Biology"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Chemistry","Biology","Physics","Agricultural Science","Food and Nutrition"]}
-      },
-      { name:"Integrated Science Education", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Mathematics","Chemistry","Physics","Biology","Agricultural Science"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology"], optional_pick:1,
-                optional:["Physics","Agricultural Science","Food and Nutrition","Civic Education","Economics","Geography"]}
-      },
-      { name:"Biology Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Biology"], optional_pick:2,
-              optional:["Chemistry","Mathematics","Physics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology"], optional_pick:1,
-                optional:["Physics","Agricultural Science","Food and Nutrition","Civic Education","Economics","Geography"]}
-      },
-      { name:"Islamic Studies Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Islamic Studies/Arabic"], optional_pick:2,
-              optional:["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","French","Yoruba","Hausa"]},
-        olevel:{compulsory:["English Language","Mathematics","Islamic Studies"], optional_pick:2,
-                optional:["Literature-in-English","French","Yoruba","Hausa","Government/History","Civic Education"]}
-      },
-      { name:"French Education", cutoff:170,
-        jamb:{compulsory:["Use of English","French"], optional_pick:2,
-              optional:["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","Yoruba"]},
-        olevel:{compulsory:["English Language","Mathematics","French"], optional_pick:2,
-                optional:["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","Yoruba","Hausa","Government/History","Civic Education"]}
-      },
-      { name:"Geography Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Geography"], optional_pick:2,
-              optional:["Government/History","Civic Education","Economics","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"]},
-        olevel:{compulsory:["English Language","Mathematics","Geography"], optional_pick:2,
-                optional:["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics"]}
-      },
-      { name:"History Education", cutoff:170,
-        jamb:{compulsory:["Use of English","History"], optional_pick:2,
-              optional:["Christain Religious Studies","Islamic Studies","Literature-in-English","French","Yoruba","Geography","Economics","Government/History","Hausa"]},
-        olevel:{compulsory:["English Language","Mathematics","Government/History"], optional_pick:2,
-                optional:["Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba"]}
-      },
-      { name:"Physics Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Physics","Mathematics/Chemistry"], optional_pick:1,
-              optional:["Biology","Agricultural Science","Food and Nutrition","Economics","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics","Physics"], optional_pick:2,
-                optional:["Chemistry","Biology","Agricultural Science","Food and Nutrition"]}
-      },
-      { name:"English Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Literature in English"], optional_pick:2,
-              optional:["Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics","Literature in English"], optional_pick:2,
-                optional:["Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"]}
-      },
-      { name:"Crs Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Christain Religious Studies"], optional_pick:2,
-              optional:["Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Economics","Geography"]},
-        olevel:{compulsory:["English Language","Mathematics","Christain Religious Studies"], optional_pick:2,
-                optional:["Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History"]}
-      },
-      { name:"Economics Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Economics","Mathematics"], optional_pick:1,
-              optional:["Geography/Physics","History","Government","Literature-in-English"]},
-        olevel:{compulsory:["English Language","Mathematics","Economics"], optional_pick:2,
-                optional:["Government/History","Civic Education","Geography","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Commerce","Marketing","Financial Accounting"]}
-      },
-      { name:"Social Studies Education", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Geography/Physics","Christain Religious Studies","Economics","Government","History","Islamic Studies"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"]}
-      },
-      { name:"Guidance and Counselling", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Subjects"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"]}
-      },
-      { name:"Special Education", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Subjects"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Government/History","Civic Education","Economics","Geography","Agricultural Science","Food and Nutrition","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Commerce","Marketing","Financial Accounting"]}
-      },
-      { name:"Library and Information Science", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Subjects"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Government/History","Civic Education","Economics","Geography","Agricultural Science","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Commerce","Marketing","Financial Accounting"]}
-      },
-      { name:"Home Economics Education", cutoff:170,
-        jamb:{compulsory:["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-              optional:["Economics","Geography","Government/History","Food and Nutrition","Christain Religious Studies","Literature-in-English","Islamic Studies","Physics","Civic Education"]},
-        olevel:{compulsory:["English Language","Mathematics","Home Economics","Biology","Chemistry"], optional_pick:0,
-                optional:[]}
-      },
-      { name:"Educational Management", cutoff:170,
-        jamb:{compulsory:["Use of English","Economics","Mathematics"], optional_pick:1,
-              optional:["Government/History","Civic Education","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"]}
-      },
-      { name:"Early Child Education", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Subjects"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Any three Subjects"]}
-      },
-      { name:"Primary Education Studies", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Subjects"]},
-        olevel:{compulsory:["English Language","Mathematics"], optional_pick:3,
-                optional:["Any three Subjects"]}
-      },
-      { name:"Agricultural Science Education", cutoff:170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Chemistry","Biology","Agricultural Science","Physics","Economics","Geography","Mathematics"]},
-        olevel:{compulsory:["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick:1,
-                optional:["Physics","Food and Nutrition"]}
-      }
-    ]
-  }
+<div id="loading-msg" style="text-align:center;padding:32px;color:#2f7a2d;font-weight:700;font-size:15px">⏳ Loading courses...</div>
 
-  ,{
-    faculty: "Arts",
-    courses: [
-      {
-        name: "Arabic",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Arabic"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Arabic"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "CRS",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","CRS"], optional_pick: 2,
-          optional: ["Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","CRS"], optional_pick: 2,
-          optional: ["Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] }
-      },
-      {
-        name: "English",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English"], optional_pick: 2,
-          optional: ["Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography","Christain Religious Studies"] }
-      },
-      {
-        name: "French",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","French"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language"], optional_pick: 4,
-          optional: ["Mathematics","French","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","Yoruba","Hausa","Government/History","Economics","Geography"] }
-      },
-      {
-        name: "History",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Government/History"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Government/History"], optional_pick: 2,
-          optional: ["Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Islam and Development Studies",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Islamic Studies"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Islamic Studies/Arabic"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] }
-      },
-      {
-        name: "Languages and Linguistics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English"], optional_pick: 3,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Government/History","Civic Education","Economics","Geography","Chemistry","Biology","Physics","Agricultural Science","Food and Nutrition","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Theatre art and cultural studies",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Government","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Hausa",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English","Hausa"], optional_pick: 1,
-          optional: ["Economics","Government/History","Arabic"] },
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Government/History","Civic Education","Economics","Geography"] }
-      },
-      {
-        name: "Philosophy",
-        cutoff: 170,
-        jamb:{compulsory:["Use of English"], optional_pick:3,
-              optional:["Any three Arts or Social Science Subjects"]} ,
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      }
-    ]
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
+  authDomain: "nsuk-combination.firebaseapp.com",
+  projectId: "nsuk-combination",
+  storageBucket: "nsuk-combination.firebasestorage.app",
+  messagingSenderId: "1009558767395",
+  appId: "1:1009558767395:web:1a208eb6e7befa4632ae96"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+async function loadCourses(){
+  try {
+    const snap = await getDocs(collection(db, 'courses'));
+    const grouped = {};
+    snap.forEach(d => {
+      const c = d.data();
+      if(!grouped[c.faculty]) grouped[c.faculty] = [];
+      grouped[c.faculty].push({
+        name:   c.name,
+        cutoff: c.cutoff,
+        jamb: {
+          compulsory:    c.jamb_compulsory    || [],
+          optional_pick: c.jamb_optional_pick || 0,
+          optional:      c.jamb_optional      || []
+        },
+        olevel: {
+          compulsory:    c.olevel_compulsory    || [],
+          optional_pick: c.olevel_optional_pick || 0,
+          optional:      c.olevel_optional      || []
+        }
+      });
+    });
+
+    // Sort faculties and courses
+    const data = Object.keys(grouped).sort().map(fac => ({
+      faculty: fac,
+      courses: grouped[fac].sort((a,b) => a.name.localeCompare(b.name))
+    }));
+
+    // Store globally for search
+    window.NSUK_DATA = data;
+
+    // Hide loader
+    const loader = document.getElementById('loading-msg');
+    if(loader) loader.style.display = 'none';
+
+    // Update stats count dynamically
+    let total = 0;
+    data.forEach(f => total += f.courses.length);
+    const statEl = document.querySelector('.stat-value');
+    if(statEl) statEl.textContent = total;
+
+    // Trigger render
+    if(typeof window.nsukRender === 'function') window.nsukRender(data);
+
+  } catch(e) {
+    const loader = document.getElementById('loading-msg');
+    if(loader) loader.innerHTML = '❌ Failed to load courses. Please refresh the page.';
+    console.error(e);
   }
-  ,{
-    faculty: "Environmental Science",
-    courses: [
-      {
-        name: "Geography",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Geography"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Geography"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics", "Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Urban and Regional Planning",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Geography"], optional_pick: 2,
-          optional: ["Economics","Physics","Chemistry"] },
-        olevel: { compulsory: ["English Language","Mathematics","Geography"], optional_pick: 2,
-          optional: ["Physics","Chemistry","Economics","Government","Biology","Technical Drawing"] }
-      },
-      {
-        name: "Environmental Management",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Geography"], optional_pick: 2,
-          optional: ["Chemistry","Physics","Economics"] },
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Geography/Agricultural Science","Biology","Physics","Chemistry"] }
-      },
-      {
-        name: "Architecture",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Physics","Mathematics"], optional_pick: 1,
-          optional: ["Chemistry","Geography","Biology","Economics","Fine Arts"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics"], optional_pick: 2,
-          optional: ["Chemistry","Geography","Economics","Biology","Fine Arts","Technical Drawing"] }
-      },
-      {
-        name: "Building Technology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Physics","Mathematics"], optional_pick: 1,
-          optional: ["Chemistry","Geography","Biology","Economics"] },
-        olevel: { compulsory: ["English Language","Physics","Mathematics","Chemistry"], optional_pick: 1,
-          optional: ["Geography","Technical Drawing","Economics"] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Law",
-    courses: [
-      {
-        name: "Common Law",
-        cutoff: 200,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Islamic Law and Jurisprudence",
-        cutoff: 200,
-        jamb: { compulsory: ["Use of English","Literature in English","Islamic Studies/Arabic"], optional_pick: 1,
-          optional: ["Government/History","Civic Education","Economics","Geography","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English","Islamic Studies/Arabic"], optional_pick: 1,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","French","Yoruba","Hausa"] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Social Sciences",
-    courses: [
-      {
-        name: "Economics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Economics","Mathematics"], optional_pick: 1,
-          optional: ["Government","History","Geography","Commerce","Civic Education","Literature in English","Christain Religious Studies","Islamic Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Economics"], optional_pick: 2,
-          optional: ["Government/History","Civic Education","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Psychology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Government/History"], optional_pick: 2,
-          optional: ["Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Civic Education","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Government/History"], optional_pick: 2,
-          optional: ["Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Sociology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English"], optional_pick: 3,
-          optional: ["Government/History","Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Economics","Government/History"], optional_pick: 1,
-          optional: ["Civic Education","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] }
-      },
-      {
-        name: "Criminology and Security Studies",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English"], optional_pick: 3,
-          optional: ["Government/History","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Economics"], optional_pick: 2,
-          optional: ["Government/History","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies"] }
-      },
-      {
-        name: "Demography and Social Statistics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Mathematics","Economics/Geography"], optional_pick: 1,
-          optional: ["Government/History","Christain Religious Studies","Islamic Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Economics","Geography"], optional_pick: 1,
-          optional: ["Government/History","Christain Religious Studies","Literature-in-English","Islamic Studies"] }
-      },
-      {
-        name: "Political Science",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Government/History"], optional_pick: 2,
-          optional: ["Civic Education","Economics","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa"] },
-        olevel: { compulsory: ["English Language","Mathematics","Government/History"], optional_pick: 2,
-          optional: ["Civic Education","Geography","Christain Religious Studies","Literature-in-English","Islamic Studies","Arabic","French","Yoruba","Hausa","Economics"] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Communication & Media Studies",
-    courses: [
-      {
-        name: "Broadcasting",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Government","Economics","Islamic Studies","Christain Religious Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Economics","Christain Religious Studies","Islamic Studies"] }
-      },
-      {
-        name: "Public Relations",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Government","Economics","Islamic Studies","Christain Religious Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Economics","Christain Religious Studies","Islamic Studies"] }
-      },
-      {
-        name: "Journalism and Media Studies",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Literature in English"], optional_pick: 2,
-          optional: ["Government","Economics","Islamic Studies","Christain Religious Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Literature in English"], optional_pick: 2,
-          optional: ["Government/History","Economics","Christain Religious Studies","Islamic Studies","Geography"] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Natural & Applied Sciences",
-    courses: [
-      {
-        name: "Physics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Physics","Mathematics"], optional_pick: 1,
-          optional: ["Chemistry","Biology"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Further Mathematics","Biology","Agricultural Science"] }
-      },
-      {
-        name: "Chemistry",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Chemistry"], optional_pick: 2,
-          optional: ["Physics","Biology","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology/Agricultural Science"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Mathematics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics"], optional_pick: 1,
-          optional: ["Economics","Chemistry","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics"], optional_pick: 2,
-          optional: ["Chemistry","Economics/Geography","Biology/Agricultural Science"] }
-      },
-      {
-        name: "Statistics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Mathematics"], optional_pick: 2,
-          optional: ["Physics","Chemistry","Economics"] },
-        olevel: { compulsory: ["English Language","Mathematics"], optional_pick: 3,
-          optional: ["Physics","Biology","Chemistry","Further Mathematics","Economics","Geography"] }
-      },
-      {
-        name: "Statistics and Data Analytics",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics"], optional_pick: 1,
-          optional: ["Biology","Chemistry","Geography","Computer Studies"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics"], optional_pick: 2,
-          optional: ["Biology","Chemistry","Geography","Computer Studies"] }
-      },
-      {
-        name: "Computer Science",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics"], optional_pick: 1,
-          optional: ["Biology","Chemistry","Agricultural Science","Economics","Geography","Further Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics"], optional_pick: 2,
-          optional: ["Chemistry","Biology","Agricultural Science","Further Mathematics","Economics","Geography"] }
-      },
-      {
-        name: "Cyber Security",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics"], optional_pick: 1,
-          optional: ["Biology","Chemistry","Agricultural Science","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics"], optional_pick: 2,
-          optional: ["Chemistry","Biology","Agricultural Science","Economics","Geography"] }
-      },
-      {
-        name: "Data Science",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics"], optional_pick: 1,
-          optional: ["Biology","Chemistry","Agricultural Science","Economics","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Biology","Agricultural Science","Further Mathematics","Economics","Geography"] }
-      },
-      {
-        name: "Biochemistry",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Microbiology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Plant Science and Biotechnology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Agricultural Science","Food and Nutrition"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Geology and Mining",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Biology","Geography"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Zoology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Biology"], optional_pick: 2,
-          optional: ["Physics","Chemistry","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Agricultural Science"] }
-      },
-      {
-        name: "Science Laboratory Technology",
-        cutoff: 170,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Medicine & Health Sciences",
-    courses: [
-      {
-        name: "Community Health",
-        cutoff: 200,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Health Information Management",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Environmental Health",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Biology","Chemistry"], optional_pick: 1,
-          optional: ["Physics","Mathematics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry","Biology"], optional_pick: 0,
-          optional: [] }
-      },
-      {
-        name: "Nutrition and Dietetics",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Chemistry","Biology/Agricultural Science"], optional_pick: 1,
-          optional: ["Mathematics","Physics"] },
-        olevel: { compulsory: ["English Language","Mathematics","Chemistry","Biology/Agricultural Science"], optional_pick: 1,
-          optional: ["Physics","General Metal Work","General Wood Work","Building/Engineering Drawing","Furniture Design and Construction","Upholstery Design and Construction","Spray Painting and Period","Furniture","Spinning","Weaving","Surface Design and Printing","Dyeing and Bleaching","Basic Electricity"] }
-      }
-    ]
-  }
-  ,{
-    faculty: "Engineering",
-    courses: [
-      {
-        name: "Chemical Engineering",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics","Chemistry"], optional_pick: 0,
-          optional: [] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Further Mathematics","Technical Drawing","Biology","Geography"] }
-      },
-      {
-        name: "Civil Engineering",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics","Chemistry"], optional_pick: 0,
-          optional: [] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Further Mathematics","Technical Drawing","Biology","Geography"] }
-      },
-      {
-        name: "Electrical Electronics Engineering",
-        cutoff: 180,
-        jamb: { compulsory: ["Use of English","Mathematics","Physics","Chemistry"], optional_pick: 0,
-          optional: [] },
-        olevel: { compulsory: ["English Language","Mathematics","Physics","Chemistry"], optional_pick: 1,
-          optional: ["Further Mathematics","Technical Drawing","Biology","Geography"] }
-      }
-    ]
-  }];
+}
+
+loadCourses();
 </script>
 
 <script>
 (function(){
-  var data = window.NSUK_DATA;
+  var data = window.NSUK_DATA || [];
 
   // tiny closest() fallback for older browsers
   function closest(el, sel){
@@ -896,7 +321,8 @@ window.NSUK_DATA = [
       root.appendChild(fac);
     }
   }
-  render(data);
+  window.nsukRender = render;
+if(data && data.length) render(data);
 
   // Expand/Collapse buttons
   document.getElementById('expandAll').addEventListener('click', function(){
@@ -923,7 +349,7 @@ window.NSUK_DATA = [
 
   // Search
   document.getElementById('search').addEventListener('input',function(e){
-    var q=e.target.value.trim().toLowerCase(); if(!q){render(data);return;}
+    var q=e.target.value.trim().toLowerCase(); data=window.NSUK_DATA||[]; if(!q){render(data);return;}
     var out=[];
     for(var gi=0; gi<data.length; gi++){
       var g=data[gi]; var matches=[];
@@ -942,119 +368,23 @@ window.NSUK_DATA = [
 <div class="wrap">
   <div class="faq-section">
     <h2 class="faq-heading">Frequently Asked Questions</h2>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">1. What is the NSUK cut-off mark for 2026?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p><strong>200 and above:</strong> Law, Community Health</p>
-          <p><strong>180 and above:</strong> Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition &amp; Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering</p>
-          <p><strong>170 and above:</strong> All other courses</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">2. Does NSUK accept second-choice candidates?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>❌ No. NSUK does not accept second-choice candidates. You must choose NSUK as your <strong>first choice</strong> on JAMB to be eligible.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">3. Does NSUK conduct physical Post-UTME screening?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>❌ No. The NSUK Post-UTME screening is <strong>completely online</strong>. All registrations are done online — you do not need to be physically present at the school.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">4. Can I combine WAEC and NECO results?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>✅ Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of <strong>two sittings</strong>.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">5. What type of O'Level results does NSUK accept?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>✅ NSUK accepts results from <strong>WAEC, NECO, NABTEB</strong> and <strong>NBAIS</strong>.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">6. What are the O'Level requirements for UTME candidates?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>UTME candidates must possess at least <strong>five (5) O'Level credit passes (C6 and above)</strong> in relevant subjects including <strong>English Language</strong> and <strong>Mathematics</strong>, obtained at not more than <strong>two (2) sittings</strong> in WAEC, NECO, NABTEB and/or NBAIS.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">7. What happens if I choose the wrong subject combination?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>⚠️ The Post-UTME system will <strong>automatically disqualify you</strong>. If your subject combination is wrong, use this website to find the correct combination for your course before registering.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">8. Can I apply if my JAMB score is below the cut-off mark?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>❌ No. If your score is below the required cut-off for your preferred course, you should do a <strong>JAMB change of course</strong> to another course that matches both your JAMB score and your subject combination. Use this website to find a suitable course.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">9. Can I use awaiting results for NSUK Post-UTME?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>✅ Yes. You can register while awaiting your WAEC or NECO result. However, you <strong>must upload your result before the Post-UTME registration portal closes</strong>.</p>
-          <p>⚠️ If you fail to upload your result before the portal closes, you will be <strong>automatically disqualified</strong> from admission.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">10. Does NSUK accept Direct Entry candidates?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>✅ Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter <strong>200 level</strong> directly.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <button class="faq-q" onclick="toggleFaq(this)" itemprop="name">11. What are the requirements for Direct Entry candidates?</button>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <div itemprop="text">
-          <p>Direct Entry candidates must meet <strong>one</strong> of the following:</p>
-          <p>✅ Minimum of Lower Credit in <strong>National Diploma (ND)</strong> or Nasarawa State University Diploma</p>
-          <p>✅ Merit in <strong>Nigeria Certificate of Education (NCE)</strong></p>
-          <p>✅ <strong>8 points in IJMB</strong></p>
-          <p>In addition, all Direct Entry candidates must:</p>
-          <p>✅ Possess at least five (5) O'Level credit passes in relevant subjects including English Language and Mathematics at not more than two (2) sittings in WAEC, NECO, NABTEB and/or NBAIS.</p>
-          <p>✅ Upload O'Level results on their JAMB profile at a JAMB accredited CBT centre.</p>
-          <p>⚠️ <strong>Note:</strong> Direct Entry candidates into <strong>Community Health, Environmental Health Science</strong> and <strong>Health Information Management</strong> must be licensed by their respective professional bodies.</p>
-        </div>
-      </div>
-    </div>
-
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">1. What is the NSUK cut-off mark for 2026?</button><div class="faq-a"><p><strong>200 and above:</strong> Law, Community Health</p><p><strong>180 and above:</strong> Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition &amp; Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering</p><p><strong>170 and above:</strong> All other courses</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">2. Does NSUK accept second-choice candidates?</button><div class="faq-a"><p>❌ No. NSUK does not accept second-choice candidates. You must choose NSUK as your <strong>first choice</strong> on JAMB to be eligible.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">3. Does NSUK conduct physical Post-UTME screening?</button><div class="faq-a"><p>❌ No. The NSUK Post-UTME screening is <strong>completely online</strong>. All registrations are done online — you do not need to be physically present at the school.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">4. Can I combine WAEC and NECO results?</button><div class="faq-a"><p>✅ Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of <strong>two sittings</strong>.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">5. What type of O'Level results does NSUK accept?</button><div class="faq-a"><p>✅ NSUK accepts results from <strong>WAEC, NECO, NABTEB</strong> and <strong>NBAIS</strong>.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">6. What are the O'Level requirements for UTME candidates?</button><div class="faq-a"><p>UTME candidates must possess at least <strong>five (5) O'Level credit passes (C6 and above)</strong> in relevant subjects including <strong>English Language</strong> and <strong>Mathematics</strong>, at not more than <strong>two (2) sittings</strong> in WAEC, NECO, NABTEB and/or NBAIS.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">7. What happens if I choose the wrong subject combination?</button><div class="faq-a"><p>⚠️ The Post-UTME system will <strong>automatically disqualify you</strong>. Use this website to find the correct combination for your course before registering.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">8. Can I apply if my JAMB score is below the cut-off mark?</button><div class="faq-a"><p>❌ No. If your score is below the required cut-off for your preferred course, do a <strong>JAMB change of course</strong> to another course that matches both your score and subject combination. Use this website to find a suitable course.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">9. Can I use awaiting results for NSUK Post-UTME?</button><div class="faq-a"><p>✅ Yes. You can register while awaiting your result. However, you <strong>must upload your result before the portal closes</strong> or you will be automatically disqualified.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">10. Does NSUK accept Direct Entry candidates?</button><div class="faq-a"><p>✅ Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter <strong>200 level</strong> directly.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">11. What are the requirements for Direct Entry candidates?</button><div class="faq-a"><p>Direct Entry candidates must have one of: minimum Lower Credit in <strong>ND</strong> or Nasarawa State University Diploma, Merit in <strong>NCE</strong>, or <strong>8 points in IJMB</strong>.</p><p>✅ Must also possess five O'Level credit passes including English and Mathematics at not more than two sittings.</p><p>✅ Must upload O'Level results on JAMB profile at a JAMB accredited CBT centre.</p><p>⚠️ DE candidates into <strong>Community Health, Environmental Health Science</strong> and <strong>Health Information Management</strong> must be licensed by their respective professional bodies.</p></div></div>
   </div>
 </div>
 
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the NSUK cut-off mark for 2026?","acceptedAnswer":{"@type":"Answer","text":"200 and above: Law, Community Health. 180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition & Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering. 170 and above: All other courses."}},{"@type":"Question","name":"Does NSUK accept second-choice candidates?","acceptedAnswer":{"@type":"Answer","text":"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB to be eligible."}},{"@type":"Question","name":"Does NSUK conduct physical Post-UTME screening?","acceptedAnswer":{"@type":"Answer","text":"No. The NSUK Post-UTME screening is completely online."}},{"@type":"Question","name":"Can I combine WAEC and NECO results?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK allows combination of WAEC and NECO results with a maximum of two sittings."}},{"@type":"Question","name":"What type of O'Level results does NSUK accept?","acceptedAnswer":{"@type":"Answer","text":"NSUK accepts WAEC, NECO, NABTEB and NBAIS."}},{"@type":"Question","name":"Can I use awaiting results for NSUK Post-UTME?","acceptedAnswer":{"@type":"Answer","text":"Yes, but you must upload your result before the portal closes or you will be disqualified."}},{"@type":"Question","name":"Does NSUK accept Direct Entry?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK accepts Direct Entry for every course. DE candidates enter 200 level directly."}}]}
+</script>
 <footer class="footer">
   <div class="inner">
     This site helps NSUK aspirants find the right subject combinations to avoid mistakes.
@@ -1064,46 +394,12 @@ window.NSUK_DATA = [
 </footer>
 
 <script>
-function closePopup(){
-  document.getElementById('popupOverlay').style.display='none';
-}
-document.getElementById('popupOverlay').addEventListener('click',function(e){
-  if(e.target===this) closePopup();
-});
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {"@type":"Question","name":"What is the NSUK cut-off mark for 2026?","acceptedAnswer":{"@type":"Answer","text":"200 and above: Law, Community Health. 180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition & Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering. 170 and above: All other courses."}},
-    {"@type":"Question","name":"Does NSUK accept second-choice candidates?","acceptedAnswer":{"@type":"Answer","text":"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB to be eligible."}},
-    {"@type":"Question","name":"Does NSUK conduct physical Post-UTME screening?","acceptedAnswer":{"@type":"Answer","text":"No. The NSUK Post-UTME screening is completely online. All registrations are done online — you do not need to be physically present at the school."}},
-    {"@type":"Question","name":"Can I combine WAEC and NECO results?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of two sittings."}},
-    {"@type":"Question","name":"What type of O'Level results does NSUK accept?","acceptedAnswer":{"@type":"Answer","text":"NSUK accepts results from WAEC, NECO, NABTEB and NBAIS."}},
-    {"@type":"Question","name":"What are the O'Level requirements for UTME candidates?","acceptedAnswer":{"@type":"Answer","text":"UTME candidates must possess at least five (5) O'Level credit passes (C6 and above) in relevant subjects including English Language and Mathematics, obtained at not more than two (2) sittings in WAEC, NECO, NABTEB and/or NBAIS."}},
-    {"@type":"Question","name":"What happens if I choose the wrong subject combination?","acceptedAnswer":{"@type":"Answer","text":"The Post-UTME system will automatically disqualify you. Use this website to find the correct combination for your course before registering."}},
-    {"@type":"Question","name":"Can I apply if my JAMB score is below the cut-off mark?","acceptedAnswer":{"@type":"Answer","text":"No. If your score is below the required cut-off for your preferred course, you should do a JAMB change of course to another course that matches both your JAMB score and your subject combination."}},
-    {"@type":"Question","name":"Can I use awaiting results for NSUK Post-UTME?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can register while awaiting your WAEC or NECO result. However, you must upload your result before the Post-UTME registration portal closes or you will be automatically disqualified."}},
-    {"@type":"Question","name":"Does NSUK accept Direct Entry candidates?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter 200 level directly."}},
-    {"@type":"Question","name":"What are the requirements for Direct Entry candidates?","acceptedAnswer":{"@type":"Answer","text":"Direct Entry candidates must have a minimum of Lower Credit in ND or Nasarawa State University Diploma, Merit in NCE, or 8 points in IJMB. They must also have five O'Level credit passes including English and Mathematics at not more than two sittings. Note: DE candidates into Community Health, Environmental Health Science and Health Information Management must be licensed by their respective professional bodies."}}
-  ]
-}
-</script>
-<script>
+function closePopup(){ document.getElementById('popupOverlay').style.display='none'; }
+document.getElementById('popupOverlay').addEventListener('click',function(e){ if(e.target===this) closePopup(); });
 function toggleFaq(btn){
-  var answer = btn.nextElementSibling;
-  var isOpen = btn.classList.contains('open');
-  // Close all
-  document.querySelectorAll('.faq-q.open').forEach(function(b){
-    b.classList.remove('open');
-    b.nextElementSibling.style.display='none';
-  });
-  // Open clicked if it was closed
-  if(!isOpen){
-    btn.classList.add('open');
-    answer.style.display='block';
-  }
+  var a=btn.nextElementSibling, isOpen=btn.classList.contains('open');
+  document.querySelectorAll('.faq-q.open').forEach(function(b){ b.classList.remove('open'); b.nextElementSibling.style.display='none'; });
+  if(!isOpen){ btn.classList.add('open'); a.style.display='block'; }
 }
 </script>
 </body>
