@@ -692,10 +692,12 @@ window.postAnnouncement = async function(){
       progress.style.display = 'none';
     }
 
+    // Use Firestore serverTimestamp — also store client time as fallback
     await addDoc(collection(db, 'announcements'), {
       text: text || '',
       imageUrl: imageUrl || null,
       timestamp: serverTimestamp(),
+      clientTime: new Date().toISOString(),
       reactions: {}
     });
 
@@ -710,7 +712,12 @@ window.postAnnouncement = async function(){
   btn.disabled = false; btn.textContent = 'Send ✓';
 };
 
+let annListenerActive = false;
+
 function loadAnnouncements(){
+  if(annListenerActive) return;
+  annListenerActive = true;
+
   const q = query(collection(db, 'announcements'), orderBy('timestamp', 'desc'));
   onSnapshot(q, snap => {
     const list = document.getElementById('annList');
@@ -725,7 +732,9 @@ function loadAnnouncements(){
         if(voters.length) reactionSummary += `<span class="ann-reaction-badge">${e} ${voters.length}</span>`;
       });
 
-      const time = data.timestamp ? data.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Just now';
+      const time = data.timestamp
+        ? data.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})
+        : 'Just now';
 
       const card = document.createElement('div');
       card.className = 'ann-card';

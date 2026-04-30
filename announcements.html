@@ -177,10 +177,10 @@ function getVisitorId(){
 const VID = getVisitorId();
 
 // Format helpers
-function fmtTime(ts){ if(!ts) return ''; const d=ts.toDate?ts.toDate():new Date(ts); return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}); }
-function fmtDate(ts){
-  if(!ts) return '';
-  const d=ts.toDate?ts.toDate():new Date(ts);
+function fmtTime(ts,fallback){ if(!ts && !fallback) return ''; const d=ts?(ts.toDate?ts.toDate():new Date(ts)):new Date(fallback); return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}); }
+function fmtDate(ts,fallback){
+  if(!ts && !fallback) return '';
+  const d=ts?(ts.toDate?ts.toDate():new Date(ts)):new Date(fallback);
   const today=new Date(),yest=new Date(); yest.setDate(today.getDate()-1);
   if(d.toDateString()===today.toDateString()) return 'Today';
   if(d.toDateString()===yest.toDateString()) return 'Yesterday';
@@ -192,7 +192,7 @@ function linkify(t){ if(!t) return ''; return t.replace(/https?:\/\/[^\s]+/g,u=>
 // Render one message
 function renderMessage(id, data, prepend=false){
   const container = document.getElementById('msgContainer');
-  const dateStr = fmtDate(data.timestamp);
+  const dateStr = fmtDate(data.timestamp, data.clientTime);
   if(!prepend && dateStr !== lastDate){
     lastDate = dateStr;
     const dd = document.createElement('div'); dd.className='date-div';
@@ -215,7 +215,7 @@ function renderMessage(id, data, prepend=false){
   } else {
     bubbleInner += `<div class="msg-text">${linkify(data.text)}</div>`;
   }
-  bubbleInner += `<div class="msg-meta"><span class="msg-time">${fmtTime(data.timestamp)}</span><span class="ticks">✓✓</span></div>`;
+  bubbleInner += `<div class="msg-meta"><span class="msg-time">${fmtTime(data.timestamp, data.clientTime)}</span><span class="ticks">✓✓</span></div>`;
 
   const reactions = data.reactions || {};
   let rHTML = buildReactionHTML(id, reactions);
