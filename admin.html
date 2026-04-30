@@ -730,7 +730,7 @@ async function loadAnnouncements(){
       const reactions = data.reactions || {};
       let reactionSummary = '';
       EMOJIS.forEach(e => {
-        const voters = reactions[btoa(e)] || [];
+        const voters = reactions['e' + EMOJIS.indexOf(e)] || [];
         if(voters.length) reactionSummary += `<span class="ann-reaction-badge">${e} ${voters.length}</span>`;
       });
       const time = data.timestamp

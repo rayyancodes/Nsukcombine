@@ -232,10 +232,13 @@ function renderMessage(id, data, prepend=false){
   container.appendChild(row);
 }
 
+function emojiKey(e){ return 'e' + EMOJIS.indexOf(e); }
+
 function buildReactionHTML(id, reactions){
   let html = '';
   EMOJIS.forEach(e => {
-    const voters = reactions[btoa(e)] || [];
+    const key = emojiKey(e);
+    const voters = (reactions[key] || []);
     if(voters.length){
       const cls = voters.includes(VID) ? 'reacted' : '';
       html += `<div class="r-pill ${cls}" onclick="toggleReaction('${id}','${e}')">${e} <span class="r-count">${voters.length.toLocaleString()}</span></div>`;
@@ -257,7 +260,7 @@ window.toggleReaction = async function(msgId, emoji){
   const snap = await getDoc(ref); if(!snap.exists()) return;
   const data = snap.data();
   const reactions = data.reactions || {};
-  const key = btoa(emoji);
+  const key = emojiKey(emoji);
   const voters = reactions[key] || [];
   reactions[key] = voters.includes(VID) ? voters.filter(v=>v!==VID) : [...voters, VID];
   await updateDoc(ref,{reactions});
@@ -270,16 +273,21 @@ window.togglePicker = function(id){
 };
 
 // Load group settings
-onSnapshot(doc(db,'settings','group'), snap => {
-  if(!snap.exists()) return;
-  const d = snap.data();
-  if(d.name) document.getElementById('groupName').textContent = d.name;
-  if(d.iconUrl){
-    document.getElementById('groupAvatar').innerHTML = `<img src="${d.iconUrl}" alt="">`;
-    // Update all bubble avatars too
-    document.querySelectorAll('.b-avatar').forEach(a => { a.innerHTML=`<img src="${d.iconUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; });
-  }
-});
+async function loadGroupSettings(){
+  try {
+    const snap = await getDoc(doc(db,'settings','group'));
+    if(!snap.exists()) return;
+    const d = snap.data();
+    if(d.name){
+      document.getElementById('groupName').textContent = d.name;
+      document.title = d.name + ' – Announcements';
+    }
+    if(d.iconUrl){
+      document.getElementById('groupAvatar').innerHTML = `<img src="${d.iconUrl}" alt="">`;
+    }
+  } catch(e){ console.error('Settings error:', e); }
+}
+loadGroupSettings();
 
 // Load messages once on page load
 async function loadMessages(){
