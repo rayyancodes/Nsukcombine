@@ -229,6 +229,10 @@
         <button class="post-btn" id="postBtn" onclick="postAnnouncement()">Send ✓</button>
       </div>
     </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:800;color:#2a392c">📋 Posted Announcements</div>
+      <button onclick="loadAnnouncements()" style="padding:6px 14px;background:#f0f7ef;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer">🔄 Refresh</button>
+    </div>
     <div id="annList"><div class="ann-empty">No announcements yet.</div></div>
   </div>
 </div>
@@ -336,7 +340,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, onSnapshot, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -706,21 +710,19 @@ window.postAnnouncement = async function(){
     document.getElementById('annImage').value = '';
     selectedImageFile = null;
     showToast('✅ Announcement posted!');
+    await loadAnnouncements(); // refresh list
   } catch(e){
     showToast('❌ Error: ' + e.message);
   }
   btn.disabled = false; btn.textContent = 'Send ✓';
 };
 
-let annListenerActive = false;
-
-function loadAnnouncements(){
-  if(annListenerActive) return;
-  annListenerActive = true;
-
-  const q = query(collection(db, 'announcements'), orderBy('timestamp', 'desc'));
-  onSnapshot(q, snap => {
-    const list = document.getElementById('annList');
+async function loadAnnouncements(){
+  const list = document.getElementById('annList');
+  list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
+  try {
+    const q = query(collection(db, 'announcements'), orderBy('timestamp', 'desc'));
+    const snap = await getDocs(q);
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
     list.innerHTML = '';
     snap.forEach(d => {
@@ -731,11 +733,9 @@ function loadAnnouncements(){
         const voters = reactions[btoa(e)] || [];
         if(voters.length) reactionSummary += `<span class="ann-reaction-badge">${e} ${voters.length}</span>`;
       });
-
       const time = data.timestamp
         ? data.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})
-        : 'Just now';
-
+        : data.clientTime ? new Date(data.clientTime).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Just now';
       const card = document.createElement('div');
       card.className = 'ann-card';
       card.innerHTML = `
@@ -748,7 +748,9 @@ function loadAnnouncements(){
         ${reactionSummary ? `<div class="ann-reactions">${reactionSummary}</div>` : ''}`;
       list.appendChild(card);
     });
-  });
+  } catch(e){
+    list.innerHTML = `<div class="ann-empty" style="color:red">❌ Error loading: ${e.message}</div>`;
+  }
 }
 
 window.deleteAnnouncement = function(id){
@@ -758,6 +760,7 @@ window.deleteAnnouncement = function(id){
     try {
       await deleteDoc(doc(db, 'announcements', id));
       showToast('🗑️ Announcement deleted.');
+      await loadAnnouncements();
     } catch(e){ showToast('❌ Error: ' + e.message); }
   };
   document.getElementById('confirmOverlay').classList.add('open');
