@@ -88,6 +88,37 @@
   .section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#2a392c;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--border)}
 
   /* TOAST */
+  /* TABS */
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tab{flex:1;padding:10px;border:2px solid var(--border);border-radius:10px;background:#fff;font-size:14px;font-weight:700;cursor:pointer;text-align:center;color:#666;transition:all .15s}
+  .tab.active{border-color:var(--brand);background:var(--brand);color:#fff}
+
+  /* ANNOUNCEMENT COMPOSER */
+  .composer{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+  .composer h3{font-size:14px;font-weight:800;color:var(--brand);margin-bottom:12px}
+  .composer textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;resize:vertical;min-height:90px;font-family:inherit}
+  .composer textarea:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
+  .composer-row{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+  .img-label{display:flex;align-items:center;gap:6px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;color:var(--brand);background:#fff;white-space:nowrap}
+  .img-label:hover{background:var(--chip-bg)}
+  .img-preview{width:60px;height:60px;object-fit:cover;border-radius:8px;display:none;border:2px solid var(--brand)}
+  .post-btn{flex:1;padding:10px 16px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;min-width:120px}
+  .post-btn:hover{background:#245f23}
+  .post-btn:disabled{opacity:.5;cursor:not-allowed}
+  .upload-progress{font-size:12px;color:var(--warn);font-weight:700;display:none}
+
+  /* ANNOUNCEMENT LIST */
+  .ann-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+  .ann-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .ann-meta{font-size:12px;color:#888;font-weight:600}
+  .ann-text{font-size:14px;color:#122016;line-height:1.5;white-space:pre-wrap;margin-bottom:8px}
+  .ann-img{width:100%;max-width:200px;border-radius:8px;display:block;margin-bottom:6px}
+  .ann-reactions{font-size:12px;color:#666;display:flex;flex-wrap:wrap;gap:6px}
+  .ann-reaction-badge{background:#f0f7ef;border-radius:999px;padding:3px 8px;font-size:12px}
+  .btn-ann-del{background:#fdecea;color:var(--fail);border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+  .btn-ann-del:hover{background:var(--fail);color:#fff}
+  .ann-empty{text-align:center;padding:32px;color:#888;font-size:14px}
+
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#122016;color:#fff;padding:12px 24px;border-radius:999px;font-size:14px;font-weight:700;z-index:2000;display:none;white-space:nowrap}
   .toast.show{display:block;animation:fadeInUp .3s ease}
   @keyframes fadeInUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
@@ -133,6 +164,13 @@
     <div class="stat"><div class="num" id="statUpdated">—</div><div class="lbl">Last Updated</div></div>
   </div>
 
+  <div class="tabs">
+    <button class="tab active" id="tab-courses" onclick="switchTab('courses')">🎓 Courses</button>
+    <button class="tab" id="tab-announcements" onclick="switchTab('announcements')">📢 Announcements</button>
+  </div>
+
+  <!-- COURSES SECTION -->
+  <div id="section-courses">
   <div class="toolbar">
     <input type="text" id="searchInput" placeholder="🔍 Search course..." oninput="renderList()">
     <select id="facultyFilter" onchange="renderList()">
@@ -143,6 +181,23 @@
 
   <div class="course-list" id="courseList">
     <div class="loading">Loading courses...</div>
+  </div>
+  </div><!-- end section-courses -->
+
+  <!-- ANNOUNCEMENTS SECTION -->
+  <div id="section-announcements" style="display:none">
+    <div class="composer">
+      <h3>📢 Post New Announcement</h3>
+      <textarea id="annText" placeholder="Type your announcement..."></textarea>
+      <div class="composer-row">
+        <label class="img-label" for="annImage">📎 Attach Image</label>
+        <input type="file" id="annImage" accept="image/*" style="display:none" onchange="previewImage(this)">
+        <img id="imgPreview" class="img-preview" alt="preview">
+        <span class="upload-progress" id="uploadProgress">Uploading...</span>
+        <button class="post-btn" id="postBtn" onclick="postAnnouncement()">Send ✓</button>
+      </div>
+    </div>
+    <div id="annList"><div class="ann-empty">No announcements yet.</div></div>
   </div>
 </div>
 
@@ -249,7 +304,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -505,6 +560,118 @@ function showToast(msg){
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
+
+// ── TABS ──────────────────────────────────────────────────────
+window.switchTab = function(tab){
+  document.getElementById('section-courses').style.display      = tab==='courses'      ? 'block' : 'none';
+  document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
+  document.getElementById('tab-courses').classList.toggle('active',      tab==='courses');
+  document.getElementById('tab-announcements').classList.toggle('active', tab==='announcements');
+  if(tab==='announcements') loadAnnouncements();
+};
+
+// ── ANNOUNCEMENTS ─────────────────────────────────────────────
+const CLOUDINARY_URL    = 'https://api.cloudinary.com/v1_1/dmcspzbsv/image/upload';
+const CLOUDINARY_PRESET = 'Nsuk-announcements';
+const EMOJIS = ['👍','❤️','😮','😂','😢','🙏','🔥','💯'];
+
+let selectedImageFile = null;
+
+window.previewImage = function(input){
+  selectedImageFile = input.files[0];
+  if(!selectedImageFile) return;
+  const preview = document.getElementById('imgPreview');
+  preview.src = URL.createObjectURL(selectedImageFile);
+  preview.style.display = 'block';
+};
+
+async function uploadToCloudinary(file){
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_PRESET);
+  const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+  const data = await res.json();
+  if(!data.secure_url) throw new Error('Cloudinary upload failed');
+  return data.secure_url;
+}
+
+window.postAnnouncement = async function(){
+  const text = document.getElementById('annText').value.trim();
+  if(!text && !selectedImageFile){ showToast('❌ Please write a message or attach an image.'); return; }
+
+  const btn = document.getElementById('postBtn');
+  const progress = document.getElementById('uploadProgress');
+  btn.disabled = true; btn.textContent = 'Posting...';
+
+  try {
+    let imageUrl = null;
+    if(selectedImageFile){
+      progress.style.display = 'inline';
+      imageUrl = await uploadToCloudinary(selectedImageFile);
+      progress.style.display = 'none';
+    }
+
+    await addDoc(collection(db, 'announcements'), {
+      text: text || '',
+      imageUrl: imageUrl || null,
+      timestamp: serverTimestamp(),
+      reactions: {}
+    });
+
+    document.getElementById('annText').value = '';
+    document.getElementById('imgPreview').style.display = 'none';
+    document.getElementById('annImage').value = '';
+    selectedImageFile = null;
+    showToast('✅ Announcement posted!');
+  } catch(e){
+    showToast('❌ Error: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'Send ✓';
+};
+
+function loadAnnouncements(){
+  const q = query(collection(db, 'announcements'), orderBy('timestamp', 'desc'));
+  onSnapshot(q, snap => {
+    const list = document.getElementById('annList');
+    if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const data = d.data();
+      const reactions = data.reactions || {};
+      let reactionSummary = '';
+      EMOJIS.forEach(e => {
+        const voters = reactions[btoa(e)] || [];
+        if(voters.length) reactionSummary += `<span class="ann-reaction-badge">${e} ${voters.length}</span>`;
+      });
+
+      const time = data.timestamp ? data.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Just now';
+
+      const card = document.createElement('div');
+      card.className = 'ann-card';
+      card.innerHTML = `
+        <div class="ann-header">
+          <div class="ann-meta">📅 ${time}</div>
+          <button class="btn-ann-del" onclick="deleteAnnouncement('${d.id}')">🗑️ Delete</button>
+        </div>
+        ${data.imageUrl ? `<img class="ann-img" src="${data.imageUrl}" alt="image">` : ''}
+        ${data.text ? `<div class="ann-text">${data.text}</div>` : ''}
+        ${reactionSummary ? `<div class="ann-reactions">${reactionSummary}</div>` : ''}`;
+      list.appendChild(card);
+    });
+  });
+}
+
+window.deleteAnnouncement = function(id){
+  document.getElementById('confirmMsg').textContent = 'Are you sure you want to delete this announcement?';
+  document.getElementById('confirmYes').onclick = async function(){
+    closeConfirm();
+    try {
+      await deleteDoc(doc(db, 'announcements', id));
+      showToast('🗑️ Announcement deleted.');
+    } catch(e){ showToast('❌ Error: ' + e.message); }
+  };
+  document.getElementById('confirmOverlay').classList.add('open');
+};
 
 // Close modal on overlay click
 document.getElementById('modalOverlay').addEventListener('click', function(e){
