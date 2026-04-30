@@ -326,6 +326,13 @@ async function loadMessages(){
   }
 }
 
+// Start the app
+async function init(){
+  await loadGroupSettings();
+  await loadMessages();
+}
+init();
+
 // Scroll
 window.scrollToBottom = function(){ const b=document.getElementById('chatBody'); b.scrollTop=b.scrollHeight; };
 const scrollBtn = document.getElementById('scrollBtn');
