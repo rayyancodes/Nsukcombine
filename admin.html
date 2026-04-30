@@ -218,6 +218,22 @@
       </div>
     </div>
 
+    <!-- ADMIN PROFILE SETTINGS -->
+    <div class="group-settings" style="margin-bottom:14px">
+      <h3>👤 Admin Profile</h3>
+      <div class="gs-row">
+        <div class="gs-avatar" id="adminAvatar" onclick="document.getElementById('adminIconFile').click()">
+          🧑
+          <div class="gs-avatar-overlay">📷</div>
+        </div>
+        <input type="file" id="adminIconFile" accept="image/*" style="display:none" onchange="previewAdminIcon(this)">
+        <div class="gs-fields">
+          <input type="text" id="adminName" placeholder="Admin display name e.g. Raayan">
+          <button class="gs-save" id="adminSaveBtn" onclick="saveAdminSettings()">💾 Save Profile</button>
+        </div>
+      </div>
+    </div>
+
     <div class="composer">
       <h3>📢 Post New Announcement</h3>
       <textarea id="annText" placeholder="Type your announcement..."></textarea>
@@ -603,7 +619,56 @@ window.switchTab = function(tab){
   document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
   document.getElementById('tab-courses').classList.toggle('active',      tab==='courses');
   document.getElementById('tab-announcements').classList.toggle('active', tab==='announcements');
-  if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); }
+  if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
+};
+
+// ── ADMIN PROFILE ────────────────────────────────────────────
+let selectedAdminIconFile = null;
+
+async function loadAdminSettings(){
+  try {
+    const snap = await getDoc(doc(db,'settings','admin'));
+    if(snap.exists()){
+      const d = snap.data();
+      if(d.name) document.getElementById('adminName').value = d.name;
+      if(d.avatarUrl){
+        document.getElementById('adminAvatar').innerHTML = `<img src="${d.avatarUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+      }
+    }
+  } catch(e){ console.error(e); }
+}
+
+window.previewAdminIcon = function(input){
+  selectedAdminIconFile = input.files[0];
+  if(!selectedAdminIconFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('adminAvatar').innerHTML = `<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+  };
+  reader.readAsDataURL(selectedAdminIconFile);
+};
+
+window.saveAdminSettings = async function(){
+  const name = document.getElementById('adminName').value.trim();
+  const btn = document.getElementById('adminSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  try {
+    let avatarUrl = null;
+    if(selectedAdminIconFile){
+      avatarUrl = await uploadToCloudinary(selectedAdminIconFile);
+      selectedAdminIconFile = null;
+    }
+    const data = {};
+    if(name) data.name = name;
+    if(avatarUrl) data.avatarUrl = avatarUrl;
+    if(Object.keys(data).length){
+      await setDoc(doc(db,'settings','admin'), data, {merge:true});
+      showToast('✅ Admin profile saved!');
+    } else {
+      showToast('⚠️ Nothing to save.');
+    }
+  } catch(e){ showToast('❌ Error: ' + e.message); }
+  btn.disabled = false; btn.textContent = '💾 Save Profile';
 };
 
 // ── GROUP SETTINGS ────────────────────────────────────────────

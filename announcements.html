@@ -60,15 +60,16 @@
   .b-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
   .bubble{max-width:82%;border-radius:8px;border-top-left-radius:0;padding:6px 9px 8px;position:relative;word-break:break-word;line-height:1.45;background:var(--wa-bubble);border:1px solid var(--wa-bubble-border)}
   .bubble::before{content:'';position:absolute;top:0;left:-8px;width:0;height:0;border-top:8px solid var(--wa-bubble);border-left:8px solid transparent}
-  .sender{font-size:13px;font-weight:600;color:var(--wa-name);margin-bottom:2px}
-  .badge{display:inline-block;font-size:10px;background:rgba(0,168,132,.2);color:var(--wa-green);border:1px solid rgba(0,168,132,.3);border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:600}
+  .sender{font-size:13px;font-weight:600;color:var(--wa-name);margin-bottom:3px;display:flex;align-items:center;gap:6px}
+  .sender-name{color:var(--wa-name);font-weight:700}
+  .badge{font-size:10px;background:rgba(0,168,132,.2);color:var(--wa-green);border:1px solid rgba(0,168,132,.3);border-radius:4px;padding:2px 6px;font-weight:700;white-space:nowrap}
   .msg-text{font-size:14.5px;color:var(--wa-text);white-space:pre-wrap}
   .msg-text a{color:var(--wa-green)}
   .msg-img{width:100%;max-width:280px;border-radius:6px;display:block;margin-bottom:4px;cursor:pointer}
   .img-cap{font-size:14px;color:var(--wa-text);margin-top:4px;white-space:pre-wrap}
-  .msg-meta{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:3px}
-  .msg-time{font-size:11px;color:var(--wa-meta)}
-  .ticks{font-size:13px;color:var(--wa-green)}
+  .msg-meta{display:flex;align-items:center;justify-content:flex-end;margin-top:4px;padding-top:2px}
+  .msg-time{font-size:11px;color:var(--wa-meta);letter-spacing:0.2px}
+  .ticks{display:none}
 
   /* REACTIONS */
   .reactions{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;margin-left:34px}
@@ -164,9 +165,10 @@ const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
 const EMOJIS = ['👍','❤️','😮','😂','😢','🙏','🔥','💯'];
-let allMessages = []; // store for search
+let allMessages = [];
 let lastDate = '';
 let msgCount = 0;
+let adminSettings = { name: 'Raayan', avatarUrl: null };
 
 // Visitor ID
 function getVisitorId(){
@@ -202,20 +204,20 @@ function renderMessage(id, data, prepend=false){
   row.className='msg-row'; row.id='msg-'+id;
   row.style.animationDelay=(msgCount*0.05)+'s'; msgCount++;
 
-  // Get group icon for bubble avatar
-  const groupIcon = document.getElementById('groupAvatar');
-  const avatarContent = groupIcon.querySelector('img')
-    ? `<img src="${groupIcon.querySelector('img').src}" alt="">`
-    : groupIcon.textContent;
+  // Use admin avatar if set, otherwise fallback emoji
+  const avatarContent = adminSettings.avatarUrl
+    ? `<img src="${adminSettings.avatarUrl}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : '🧑';
 
-  let bubbleInner = `<div class="sender">~ Raayan <span class="badge">Admin</span></div>`;
+  const adminName = adminSettings.name || "Raayan";
+  let bubbleInner = `<div class="sender"><span class="sender-name">${adminName}</span><span class="badge">Group Admin</span></div>`;
   if(data.imageUrl){
     bubbleInner += `<img class="msg-img" src="${data.imageUrl}" alt="" onclick="openLightbox('${data.imageUrl}')">`;
     if(data.text) bubbleInner += `<div class="img-cap">${linkify(data.text)}</div>`;
   } else {
     bubbleInner += `<div class="msg-text">${linkify(data.text)}</div>`;
   }
-  bubbleInner += `<div class="msg-meta"><span class="msg-time">${fmtTime(data.timestamp, data.clientTime)}</span><span class="ticks">✓✓</span></div>`;
+  bubbleInner += `<div class="msg-meta"><span class="msg-time">${fmtTime(data.timestamp, data.clientTime)}</span></div>`;
 
   const reactions = data.reactions || {};
   let rHTML = buildReactionHTML(id, reactions);
@@ -272,22 +274,32 @@ window.togglePicker = function(id){
   document.getElementById('picker-'+id)?.classList.toggle('open');
 };
 
-// Load group settings
+// Load group settings AND admin profile before rendering
 async function loadGroupSettings(){
   try {
-    const snap = await getDoc(doc(db,'settings','group'));
-    if(!snap.exists()) return;
-    const d = snap.data();
-    if(d.name){
-      document.getElementById('groupName').textContent = d.name;
-      document.title = d.name + ' – Announcements';
+    const [groupSnap, adminSnap] = await Promise.all([
+      getDoc(doc(db,'settings','group')),
+      getDoc(doc(db,'settings','admin'))
+    ]);
+
+    if(groupSnap.exists()){
+      const d = groupSnap.data();
+      if(d.name){
+        document.getElementById('groupName').textContent = d.name;
+        document.title = d.name + ' – Announcements';
+      }
+      if(d.iconUrl){
+        document.getElementById('groupAvatar').innerHTML = `<img src="${d.iconUrl}" alt="">`;
+      }
     }
-    if(d.iconUrl){
-      document.getElementById('groupAvatar').innerHTML = `<img src="${d.iconUrl}" alt="">`;
+
+    if(adminSnap.exists()){
+      const a = adminSnap.data();
+      if(a.name) adminSettings.name = a.name;
+      if(a.avatarUrl) adminSettings.avatarUrl = a.avatarUrl;
     }
   } catch(e){ console.error('Settings error:', e); }
 }
-loadGroupSettings();
 
 // Load messages once on page load
 async function loadMessages(){
@@ -313,7 +325,6 @@ async function loadMessages(){
     console.error(e);
   }
 }
-loadMessages();
 
 // Scroll
 window.scrollToBottom = function(){ const b=document.getElementById('chatBody'); b.scrollTop=b.scrollHeight; };
