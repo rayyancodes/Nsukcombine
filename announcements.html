@@ -288,11 +288,13 @@ onSnapshot(q, snap => {
   allMessages = [];
   snap.forEach(d => allMessages.push({id:d.id, ...d.data()}));
 
-  snap.docChanges().forEach(change => {
-    if(change.type==='added') renderMessage(change.doc.id, change.doc.data());
-    if(change.type==='modified') updateReactions(change.doc.id, change.doc.data().reactions||{});
-    if(change.type==='removed'){ const el=document.getElementById('msg-'+change.doc.id); if(el) el.remove(); }
-  });
+  // Full re-render on every snapshot
+  const container = document.getElementById('msgContainer');
+  container.innerHTML = '';
+  lastDate = '';
+  msgCount = 0;
+  allMessages.forEach(m => renderMessage(m.id, m));
+
   document.getElementById('annCount').textContent = snap.size + ' announcements';
   scrollToBottom();
 });
