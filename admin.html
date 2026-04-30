@@ -94,6 +94,21 @@
   .tab.active{border-color:var(--brand);background:var(--brand);color:#fff}
 
   /* ANNOUNCEMENT COMPOSER */
+  /* GROUP SETTINGS */
+  .group-settings{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+  .group-settings h3{font-size:14px;font-weight:800;color:var(--brand);margin-bottom:12px}
+  .gs-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .gs-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#005c4b,#128c7e);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden;border:3px solid var(--brand);cursor:pointer;position:relative}
+  .gs-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .gs-avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;opacity:0;transition:opacity .2s}
+  .gs-avatar:hover .gs-avatar-overlay{opacity:1}
+  .gs-fields{flex:1;display:flex;flex-direction:column;gap:8px;min-width:160px}
+  .gs-fields input{padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px}
+  .gs-fields input:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
+  .gs-save{padding:10px 20px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .gs-save:hover{background:#245f23}
+  .gs-save:disabled{opacity:.5;cursor:not-allowed}
+
   .composer{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
   .composer h3{font-size:14px;font-weight:800;color:var(--brand);margin-bottom:12px}
   .composer textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;resize:vertical;min-height:90px;font-family:inherit}
@@ -186,6 +201,23 @@
 
   <!-- ANNOUNCEMENTS SECTION -->
   <div id="section-announcements" style="display:none">
+
+    <!-- GROUP SETTINGS -->
+    <div class="group-settings">
+      <h3>⚙️ Group Settings</h3>
+      <div class="gs-row">
+        <div class="gs-avatar" id="gsAvatar" onclick="document.getElementById('gsIconFile').click()">
+          🎓
+          <div class="gs-avatar-overlay">📷</div>
+        </div>
+        <input type="file" id="gsIconFile" accept="image/*" style="display:none" onchange="previewGroupIcon(this)">
+        <div class="gs-fields">
+          <input type="text" id="gsName" placeholder="Group name e.g. NSUK 2026 Aspirants">
+          <button class="gs-save" id="gsSaveBtn" onclick="saveGroupSettings()">💾 Save Settings</button>
+        </div>
+      </div>
+    </div>
+
     <div class="composer">
       <h3>📢 Post New Announcement</h3>
       <textarea id="annText" placeholder="Type your announcement..."></textarea>
@@ -304,7 +336,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, onSnapshot, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -567,7 +599,56 @@ window.switchTab = function(tab){
   document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
   document.getElementById('tab-courses').classList.toggle('active',      tab==='courses');
   document.getElementById('tab-announcements').classList.toggle('active', tab==='announcements');
-  if(tab==='announcements') loadAnnouncements();
+  if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); }
+};
+
+// ── GROUP SETTINGS ────────────────────────────────────────────
+let selectedIconFile = null;
+
+async function loadGroupSettings(){
+  try {
+    const snap = await getDoc(doc(db,'settings','group'));
+    if(snap.exists()){
+      const d = snap.data();
+      if(d.name) document.getElementById('gsName').value = d.name;
+      if(d.iconUrl){
+        document.getElementById('gsAvatar').innerHTML = `<img src="${d.iconUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+      }
+    }
+  } catch(e){ console.error(e); }
+}
+
+window.previewGroupIcon = function(input){
+  selectedIconFile = input.files[0];
+  if(!selectedIconFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('gsAvatar').innerHTML = `<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+  };
+  reader.readAsDataURL(selectedIconFile);
+};
+
+window.saveGroupSettings = async function(){
+  const name = document.getElementById('gsName').value.trim();
+  const btn = document.getElementById('gsSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  try {
+    let iconUrl = null;
+    if(selectedIconFile){
+      iconUrl = await uploadToCloudinary(selectedIconFile);
+      selectedIconFile = null;
+    }
+    const data = {};
+    if(name) data.name = name;
+    if(iconUrl) data.iconUrl = iconUrl;
+    if(Object.keys(data).length){
+      await setDoc(doc(db,'settings','group'), data, {merge:true});
+      showToast('✅ Group settings saved!');
+    } else {
+      showToast('⚠️ Nothing to save.');
+    }
+  } catch(e){ showToast('❌ Error: ' + e.message); }
+  btn.disabled = false; btn.textContent = '💾 Save Settings';
 };
 
 // ── ANNOUNCEMENTS ─────────────────────────────────────────────
