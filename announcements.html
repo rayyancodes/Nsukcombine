@@ -189,7 +189,22 @@ function fmtDate(ts,fallback){
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 }
 function fmtFull(ts){ if(!ts) return ''; const d=ts.toDate?ts.toDate():new Date(ts); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
-function linkify(t){ if(!t) return ''; return t.replace(/https?:\/\/[^\s]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`); }
+function formatText(t){
+  if(!t) return '';
+  // Escape HTML first
+  t = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // WhatsApp formatting
+  t = t.replace(/```([\s\S]*?)```/g,'<code style="font-family:monospace;background:rgba(255,255,255,.1);padding:1px 4px;border-radius:4px;font-size:13px">$1</code>');
+  t = t.replace(/\*([^*\n]+)\*/g,'<strong>$1</strong>');
+  t = t.replace(/_([^_\n]+)_/g,'<em>$1</em>');
+  t = t.replace(/~([^~\n]+)~/g,'<s>$1</s>');
+  // Links
+  t = t.replace(/https?:\/\/[^\s<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener" style="color:var(--wa-green)">${u}</a>`);
+  // Line breaks
+  t = t.replace(/\n/g,'<br>');
+  return t;
+}
+function linkify(t){ return formatText(t); }
 
 // Render one message
 function renderMessage(id, data, prepend=false){
