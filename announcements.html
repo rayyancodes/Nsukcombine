@@ -96,7 +96,7 @@
   .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
   @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 
-  .scroll-btn{position:absolute;bottom:56px;right:16px;width:36px;height:36px;border-radius:50%;background:var(--wa-header);border:1px solid var(--wa-header-border);color:var(--wa-text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;opacity:0;transition:opacity .2s;z-index:5}
+  .scroll-btn{position:absolute;bottom:62px;right:12px;background:var(--wa-green);border:none;color:#fff;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:700;box-shadow:0 2px 12px rgba(0,0,0,.4);opacity:1;transition:opacity .3s,transform .3s;z-index:5;white-space:nowrap}
   .footer{background:var(--wa-header);border-top:1px solid var(--wa-header-border);padding:10px 16px;text-align:center;font-size:13px;color:var(--wa-dim);flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:6px}
   .chat-loading{text-align:center;padding:40px;color:var(--wa-dim);font-size:14px}
 </style>
@@ -139,7 +139,7 @@
     </div>
   </div>
 
-  <div class="scroll-btn" id="scrollBtn" onclick="scrollToBottom()">↓</div>
+  <div class="scroll-btn" id="scrollBtn" onclick="scrollToBottom()">↓ Latest</div>
   <div class="footer"><span>🔒</span><span>Only admins can send messages</span></div>
 </div>
 
@@ -334,7 +334,7 @@ async function loadMessages(){
       allMessages.forEach(m => renderMessage(m.id, m));
     }
     document.getElementById('annCount').textContent = snap.size + ' announcement' + (snap.size !== 1 ? 's' : '');
-    scrollToBottom();
+    // Don't auto-scroll — let user read from beginning
   } catch(e){
     document.getElementById('chatLoading').textContent = '❌ Failed to load. Please refresh the page.';
     console.error(e);
@@ -349,12 +349,23 @@ async function init(){
 init();
 
 // Scroll
-window.scrollToBottom = function(){ const b=document.getElementById('chatBody'); b.scrollTop=b.scrollHeight; };
+window.scrollToBottom = function(){
+  const b=document.getElementById('chatBody');
+  b.scrollTo({top:b.scrollHeight, behavior:'smooth'});
+};
 const scrollBtn = document.getElementById('scrollBtn');
+// Hide button only when user is already at the bottom
 document.getElementById('chatBody').addEventListener('scroll',function(){
   const dist=this.scrollHeight-this.scrollTop-this.clientHeight;
-  scrollBtn.style.opacity=dist>120?'1':'0';
-  scrollBtn.style.pointerEvents=dist>120?'auto':'none';
+  if(dist < 60){
+    scrollBtn.style.opacity='0';
+    scrollBtn.style.transform='translateY(10px)';
+    scrollBtn.style.pointerEvents='none';
+  } else {
+    scrollBtn.style.opacity='1';
+    scrollBtn.style.transform='translateY(0)';
+    scrollBtn.style.pointerEvents='auto';
+  }
 });
 
 // SEARCH
