@@ -28,7 +28,7 @@
   .hdr-icon{color:var(--wa-dim);font-size:20px;cursor:pointer;background:none;border:none;padding:0}
 
   /* SEARCH OVERLAY */
-  .search-overlay{position:absolute;inset:0;background:var(--wa-header);z-index:30;display:none;flex-direction:column}
+  .search-overlay{position:fixed;inset:0;background:var(--wa-chat-bg);z-index:999;display:none;flex-direction:column;max-width:430px;margin:0 auto}
   .search-overlay.open{display:flex}
   .search-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--wa-header-border)}
   .search-bar input{flex:1;background:rgba(255,255,255,.08);border:none;border-radius:8px;padding:8px 12px;color:var(--wa-text);font-size:14px;outline:none}
@@ -113,18 +113,20 @@
       <div class="hdr-sub" id="annCount">Loading...</div>
     </div>
     <div class="hdr-icons">
-      <button class="hdr-icon" onclick="openSearch()" title="Search">🔍</button>
+      <button class="hdr-icon" onclick="openSearch()" title="Search">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
     </div>
+  </div>
 
-    <!-- SEARCH OVERLAY -->
-    <div class="search-overlay" id="searchOverlay">
-      <div class="search-bar">
-        <button class="search-close" onclick="closeSearch()">‹</button>
-        <input type="text" id="searchInput" placeholder="Search announcements..." oninput="doSearch(this.value)" autofocus>
-      </div>
-      <div class="search-results" id="searchResults">
-        <div class="search-empty">Type to search announcements</div>
-      </div>
+  <!-- SEARCH OVERLAY — outside header -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-bar">
+      <button class="search-close" onclick="closeSearch()">‹</button>
+      <input type="text" id="searchInput" placeholder="Search announcements..." oninput="doSearch(this.value)">
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-empty">Type to search announcements</div>
     </div>
   </div>
 

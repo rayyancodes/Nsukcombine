@@ -17,6 +17,14 @@
   .hero .inner{max-width:880px;margin:0 auto;text-align:center}
   .hero h1{margin:0 0 8px} .hero p{margin:0 0 12px}
   .search input{width:min(560px,100%);padding:12px 14px;border-radius:12px;border:0}
+  .search-wrap{position:relative;display:inline-block;width:min(560px,100%)}
+  .search-drop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.15);z-index:200;display:none;max-height:320px;overflow-y:auto;border:1px solid var(--border)}
+  .search-drop.open{display:block}
+  .search-drop-item{padding:11px 16px;cursor:pointer;font-size:14px;font-weight:600;color:#122016;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .search-drop-item:last-child{border-bottom:none}
+  .search-drop-item:hover{background:var(--chip-bg);color:#2f7a2d}
+  .search-drop-item .fac-tag{font-size:11px;color:#888;font-weight:400;white-space:nowrap}
+  .search-drop-empty{padding:14px 16px;font-size:14px;color:#c0392b;font-weight:600;text-align:center}
   .faculty{margin:16px 0}
   .faculty-title{font-weight:800;margin:0 0 1px;display:inline-block;padding-bottom:1px;border-bottom:2px solid var(--brand)}
   .course{background:#fff;border:1px solid var(--border);border-radius:16px;margin:10px 0;box-shadow:var(--shadow);overflow:hidden}
@@ -104,7 +112,7 @@
     <h2>Are You an NSUK Aspirant?</h2>
     <p>Join our WhatsApp and Facebook groups to stay updated on NSUK 2026 admission news, Post-UTME dates, and connect with other aspirants.</p>
     <div class="popup-btns">
-      <a class="popup-btn-wa" href="https://chat.whatsapp.com/IRk8xbklrv3Dyz7yQZl0Bb" target="_blank" rel="noopener">
+      <a class="popup-btn-wa" href="https://chat.whatsapp.com/GQpZPh0mlAe9zJRsm7CXhL?mode=gi_t" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.59 2 2.16 6.43 2.16 11.88c0 2.1.61 4.06 1.78 5.73L2 22l4.53-1.86c1.61 1.04 3.47 1.59 5.51 1.59 5.45 0 9.88-4.43 9.88-9.88C21.92 6.43 17.49 2 12.04 2zm.02 17.66c-1.73 0-3.34-.51-4.71-1.47l-.34-.23-2.69 1.1.57-2.84-.19-.29a8 8 0 0 1-1.29-4.36c0-4.41 3.6-8.01 8.02-8.01 4.41 0 8.01 3.6 8.01 8.01 0 4.42-3.6 8.09-8.08 8.09zm4.64-5.71c-.25-.13-1.46-.72-1.69-.81-.23-.09-.39-.13-.55.13-.16.25-.63.81-.78.98-.14.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.47-1.4-1.72-.14-.25-.02-.39.11-.51.11-.1.25-.26.37-.39.13-.13.16-.22.24-.37.08-.16.04-.29-.02-.41-.06-.13-.55-1.31-.75-1.79-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.41.06-.62.29-.21.22-.82.8-.82 1.95s.84 2.26.96 2.42c.12.16 1.66 2.53 4.02 3.55.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.46-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.22-.16-.47-.29z"/></svg>
         Join WhatsApp Group
       </a>
@@ -122,7 +130,7 @@
     <h3>Are you an NSUK aspirant?</h3>
     <p>Join our WhatsApp and Facebook groups to stay informed with NSUK admission updates and connect with other aspirants.</p>
     <div class="cta-row">
-      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/IRk8xbklrv3Dyz7yQZl0Bb" target="_blank" rel="noopener">
+      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/GQpZPh0mlAe9zJRsm7CXhL?mode=gi_t" target="_blank" rel="noopener">
         <!-- WhatsApp icon (inline SVG) -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.59 2 2.16 6.43 2.16 11.88c0 2.1.61 4.06 1.78 5.73L2 22l4.53-1.86c1.61 1.04 3.47 1.59 5.51 1.59 5.45 0 9.88-4.43 9.88-9.88C21.92 6.43 17.49 2 12.04 2zm.02 17.66c-1.73 0-3.34-.51-4.71-1.47l-.34-.23-2.69 1.1.57-2.84-.19-.29a8 8 0 0 1-1.29-4.36c0-4.41 3.6-8.01 8.02-8.01 4.41 0 8.01 3.6 8.01 8.01 0 4.42-3.6 8.09-8.08 8.09zm4.64-5.71c-.25-.13-1.46-.72-1.69-.81-.23-.09-.39-.13-.55.13-.16.25-.63.81-.78.98-.14.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.47-1.4-1.72-.14-.25-.02-.39.11-.51.11-.1.25-.26.37-.39.13-.13.16-.22.24-.37.08-.16.04-.29-.02-.41-.06-.13-.55-1.31-.75-1.79-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.41.06-.62.29-.21.22-.82.8-.82 1.95s.84 2.26.96 2.42c.12.16 1.66 2.53 4.02 3.55.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.46-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.22-.16-.47-.29z"/></svg>
         Join WhatsApp group
@@ -138,7 +146,12 @@
 <section class="hero"><div class="inner">
   <h1>NSUK Subject Combination &amp; Cut-off Marks 2026</h1>
   <p>Know Your NSUK Cut-off Mark &amp; Find the Right JAMB and O’Level Subject Combinations for Your Course.</p>
-  <div class="search"><input id="search" placeholder="Search a course e.g. Accounting"></div>
+  <div class="search">
+    <div class="search-wrap">
+      <input id="search" placeholder="Search a course e.g. Accounting" autocomplete="off">
+      <div class="search-drop" id="searchDrop"></div>
+    </div>
+  </div>
   <div class="tip" id="tip-search">Search for a course or scroll down to browse all Faculties and courses.</div>
 </div></section>
 
@@ -186,7 +199,6 @@ const firebaseConfig = {
   messagingSenderId: "1009558767395",
   appId: "1:1009558767395:web:1a208eb6e7befa4632ae96"
 };
-
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
@@ -198,56 +210,32 @@ async function loadCourses(){
       const c = d.data();
       if(!grouped[c.faculty]) grouped[c.faculty] = [];
       grouped[c.faculty].push({
-        name:   c.name,
-        cutoff: c.cutoff,
-        jamb: {
-          compulsory:    c.jamb_compulsory    || [],
-          optional_pick: c.jamb_optional_pick || 0,
-          optional:      c.jamb_optional      || []
-        },
-        olevel: {
-          compulsory:    c.olevel_compulsory    || [],
-          optional_pick: c.olevel_optional_pick || 0,
-          optional:      c.olevel_optional      || []
-        }
+        name: c.name, cutoff: c.cutoff,
+        jamb: { compulsory: c.jamb_compulsory||[], optional_pick: c.jamb_optional_pick||0, optional: c.jamb_optional||[] },
+        olevel: { compulsory: c.olevel_compulsory||[], optional_pick: c.olevel_optional_pick||0, optional: c.olevel_optional||[] }
       });
     });
-
-    // Sort faculties and courses
     const data = Object.keys(grouped).sort().map(fac => ({
       faculty: fac,
       courses: grouped[fac].sort((a,b) => a.name.localeCompare(b.name))
     }));
-
-    // Store globally for search
     window.NSUK_DATA = data;
-
-    // Hide loader
     const loader = document.getElementById('loading-msg');
     if(loader) loader.style.display = 'none';
-
-    // Update stats count dynamically
-    let total = 0;
-    data.forEach(f => total += f.courses.length);
-    const statEl = document.querySelector('.stat-value');
-    if(statEl) statEl.textContent = total;
-
-    // Trigger render
     if(typeof window.nsukRender === 'function') window.nsukRender(data);
-
   } catch(e) {
     const loader = document.getElementById('loading-msg');
-    if(loader) loader.innerHTML = '❌ Failed to load courses. Please refresh the page.';
+    if(loader) loader.innerHTML = '❌ Failed to load courses. Please refresh.';
     console.error(e);
   }
 }
-
 loadCourses();
 </script>
 
+
 <script>
 (function(){
-  var data = window.NSUK_DATA || [];
+  var data = window.NSUK_DATA;
 
   // tiny closest() fallback for older browsers
   function closest(el, sel){
@@ -347,44 +335,84 @@ if(data && data.length) render(data);
     panel.classList.toggle('open');
   });
 
-  // Search
-  document.getElementById('search').addEventListener('input',function(e){
-    var q=e.target.value.trim().toLowerCase(); data=window.NSUK_DATA||[]; if(!q){render(data);return;}
-    var out=[];
+  // Search — dropdown suggestion style
+  var searchDrop = document.getElementById('searchDrop');
+
+  function closeDropdown(){
+    searchDrop.classList.remove('open');
+    searchDrop.innerHTML = '';
+  }
+
+  function scrollToCourse(courseName, facultyName){
+    document.getElementById('search').value = courseName;
+    closeDropdown();
+    // Render only the matching course
+    var data = window.NSUK_DATA || [];
+    var out = [];
     for(var gi=0; gi<data.length; gi++){
       var g=data[gi]; var matches=[];
       for(var ci=0; ci<(g.courses||[]).length; ci++){
         var c=g.courses[ci];
-        if((c.name||'').toLowerCase().indexOf(q)!==-1){ matches.push(c); }
+        if((c.name||'').toLowerCase() === courseName.toLowerCase()) matches.push(c);
       }
       if(matches.length) out.push({faculty:g.faculty,courses:matches});
     }
-    render(out);
+    if(out.length){
+      render(out);
+      // Scroll to results
+      setTimeout(function(){
+        var root = document.getElementById('root');
+        if(root) root.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 100);
+    }
+  }
+
+  document.getElementById('search').addEventListener('input', function(e){
+    var q = e.target.value.trim().toLowerCase();
+    if(!q){ closeDropdown(); return; }
+
+    data = window.NSUK_DATA || [];
+    var matches = [];
+    for(var gi=0; gi<data.length; gi++){
+      var g = data[gi];
+      for(var ci=0; ci<(g.courses||[]).length; ci++){
+        var c = g.courses[ci];
+        if((c.name||'').toLowerCase().indexOf(q) !== -1){
+          matches.push({name: c.name, faculty: g.faculty});
+        }
+      }
+    }
+
+    searchDrop.innerHTML = '';
+    if(matches.length === 0){
+      searchDrop.innerHTML = '<div class="search-drop-empty">❌ No result found. This course is not being offered at NSUK.</div>';
+    } else {
+      matches.forEach(function(m){
+        var item = document.createElement('div');
+        item.className = 'search-drop-item';
+        item.innerHTML = '<span>' + m.name + '</span><span class="fac-tag">' + m.faculty + '</span>';
+        item.addEventListener('mousedown', function(){
+          document.getElementById('search').value = m.name;
+          closeDropdown();
+          scrollToCourse(m.name, m.faculty);
+        });
+        searchDrop.appendChild(item);
+      });
+    }
+    searchDrop.classList.add('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.search-wrap')) closeDropdown();
+  });
+
+  document.getElementById('search').addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeDropdown();
   });
 })();
 </script>
 
-<!-- FAQ SECTION -->
-<div class="wrap">
-  <div class="faq-section">
-    <h2 class="faq-heading">Frequently Asked Questions</h2>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">1. What is the NSUK cut-off mark for 2026?</button><div class="faq-a"><p><strong>200 and above:</strong> Law, Community Health</p><p><strong>180 and above:</strong> Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition &amp; Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering</p><p><strong>170 and above:</strong> All other courses</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">2. Does NSUK accept second-choice candidates?</button><div class="faq-a"><p>❌ No. NSUK does not accept second-choice candidates. You must choose NSUK as your <strong>first choice</strong> on JAMB to be eligible.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">3. Does NSUK conduct physical Post-UTME screening?</button><div class="faq-a"><p>❌ No. The NSUK Post-UTME screening is <strong>completely online</strong>. All registrations are done online — you do not need to be physically present at the school.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">4. Can I combine WAEC and NECO results?</button><div class="faq-a"><p>✅ Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of <strong>two sittings</strong>.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">5. What type of O'Level results does NSUK accept?</button><div class="faq-a"><p>✅ NSUK accepts results from <strong>WAEC, NECO, NABTEB</strong> and <strong>NBAIS</strong>.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">6. What are the O'Level requirements for UTME candidates?</button><div class="faq-a"><p>UTME candidates must possess at least <strong>five (5) O'Level credit passes (C6 and above)</strong> in relevant subjects including <strong>English Language</strong> and <strong>Mathematics</strong>, at not more than <strong>two (2) sittings</strong> in WAEC, NECO, NABTEB and/or NBAIS.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">7. What happens if I choose the wrong subject combination?</button><div class="faq-a"><p>⚠️ The Post-UTME system will <strong>automatically disqualify you</strong>. Use this website to find the correct combination for your course before registering.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">8. Can I apply if my JAMB score is below the cut-off mark?</button><div class="faq-a"><p>❌ No. If your score is below the required cut-off for your preferred course, do a <strong>JAMB change of course</strong> to another course that matches both your score and subject combination. Use this website to find a suitable course.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">9. Can I use awaiting results for NSUK Post-UTME?</button><div class="faq-a"><p>✅ Yes. You can register while awaiting your result. However, you <strong>must upload your result before the portal closes</strong> or you will be automatically disqualified.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">10. Does NSUK accept Direct Entry candidates?</button><div class="faq-a"><p>✅ Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter <strong>200 level</strong> directly.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">11. What are the requirements for Direct Entry candidates?</button><div class="faq-a"><p>Direct Entry candidates must have one of: minimum Lower Credit in <strong>ND</strong> or Nasarawa State University Diploma, Merit in <strong>NCE</strong>, or <strong>8 points in IJMB</strong>.</p><p>✅ Must also possess five O'Level credit passes including English and Mathematics at not more than two sittings.</p><p>✅ Must upload O'Level results on JAMB profile at a JAMB accredited CBT centre.</p><p>⚠️ DE candidates into <strong>Community Health, Environmental Health Science</strong> and <strong>Health Information Management</strong> must be licensed by their respective professional bodies.</p></div></div>
-  </div>
-</div>
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the NSUK cut-off mark for 2026?","acceptedAnswer":{"@type":"Answer","text":"200 and above: Law, Community Health. 180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition & Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering. 170 and above: All other courses."}},{"@type":"Question","name":"Does NSUK accept second-choice candidates?","acceptedAnswer":{"@type":"Answer","text":"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB to be eligible."}},{"@type":"Question","name":"Does NSUK conduct physical Post-UTME screening?","acceptedAnswer":{"@type":"Answer","text":"No. The NSUK Post-UTME screening is completely online."}},{"@type":"Question","name":"Can I combine WAEC and NECO results?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK allows combination of WAEC and NECO results with a maximum of two sittings."}},{"@type":"Question","name":"What type of O'Level results does NSUK accept?","acceptedAnswer":{"@type":"Answer","text":"NSUK accepts WAEC, NECO, NABTEB and NBAIS."}},{"@type":"Question","name":"Can I use awaiting results for NSUK Post-UTME?","acceptedAnswer":{"@type":"Answer","text":"Yes, but you must upload your result before the portal closes or you will be disqualified."}},{"@type":"Question","name":"Does NSUK accept Direct Entry?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK accepts Direct Entry for every course. DE candidates enter 200 level directly."}}]}
-</script>
 <footer class="footer">
   <div class="inner">
     This site helps NSUK aspirants find the right subject combinations to avoid mistakes.
@@ -393,14 +421,5 @@ if(data && data.length) render(data);
   </div>
 </footer>
 
-<script>
-function closePopup(){ document.getElementById('popupOverlay').style.display='none'; }
-document.getElementById('popupOverlay').addEventListener('click',function(e){ if(e.target===this) closePopup(); });
-function toggleFaq(btn){
-  var a=btn.nextElementSibling, isOpen=btn.classList.contains('open');
-  document.querySelectorAll('.faq-q.open').forEach(function(b){ b.classList.remove('open'); b.nextElementSibling.style.display='none'; });
-  if(!isOpen){ btn.classList.add('open'); a.style.display='block'; }
-}
-</script>
 </body>
 </html>
