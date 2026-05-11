@@ -421,5 +421,14 @@ if(data && data.length) render(data);
   </div>
 </footer>
 
+<script>
+function closePopup(){ document.getElementById('popupOverlay').style.display='none'; }
+document.getElementById('popupOverlay').addEventListener('click',function(e){ if(e.target===this) closePopup(); });
+function toggleFaq(btn){
+  var a=btn.nextElementSibling, isOpen=btn.classList.contains('open');
+  document.querySelectorAll('.faq-q.open').forEach(function(b){ b.classList.remove('open'); b.nextElementSibling.style.display='none'; });
+  if(!isOpen){ btn.classList.add('open'); a.style.display='block'; }
+}
+</script>
 </body>
 </html>
