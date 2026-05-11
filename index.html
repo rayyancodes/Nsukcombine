@@ -369,7 +369,7 @@ if(data && data.length) render(data);
 
   document.getElementById('search').addEventListener('input', function(e){
     var q = e.target.value.trim().toLowerCase();
-    if(!q){ closeDropdown(); return; }
+    if(!q){ closeDropdown(); render(window.NSUK_DATA || []); return; }
 
     data = window.NSUK_DATA || [];
     var matches = [];
