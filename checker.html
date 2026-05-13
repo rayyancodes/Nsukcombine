@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NSUK Admission Checker 2026 – Am I Qualified?</title>
-<meta name="description" content="Check if you are qualified for admission into Nasarawa State University Keffi (NSUK) 2026. Verify your JAMB subjects, JAMB score, and O'Level results instantly.">
+<title>NSUK Course Finder 2026 – What Course Can I Study?</title>
+<meta name="description" content="Enter your JAMB subjects, score and O'Level results to find all NSUK courses you qualify for in 2026.">
 <meta name="robots" content="index, follow">
 <style>
   :root{
@@ -22,27 +22,11 @@
   .hero h1{font-size:22px;font-weight:800;margin-bottom:8px;line-height:1.3}
   .hero p{font-size:14px;opacity:.92;max-width:520px;margin:0 auto}
   .wrap{max-width:680px;margin:0 auto;padding:16px}
-  .steps{display:flex;gap:6px;margin:16px 0}
-  .step{flex:1;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center;box-shadow:var(--shadow);font-size:12px;font-weight:700;color:#2a392c}
-  .step span{display:block;font-size:20px;margin-bottom:2px}
   .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
   .card-title{font-weight:800;font-size:15px;margin-bottom:14px;color:var(--brand);display:flex;align-items:center;gap:8px}
   .card-title .num{background:var(--brand);color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-
-  /* LOADING */
+  .tip{background:#f0f7ef;border:1px solid var(--border);border-left:4px solid var(--brand-light);padding:10px 12px;border-radius:10px;color:#2a392c;margin:0 0 14px;font-size:13px}
   .page-loading{text-align:center;padding:60px 16px;color:var(--brand);font-weight:700;font-size:15px}
-
-  /* COURSE SEARCH */
-  .course-search-wrap{position:relative}
-  #courseSearch{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:#fff;color:#122016}
-  #courseSearch:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
-  .course-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:260px;overflow-y:auto;z-index:200;display:none;margin-top:4px}
-  .course-dropdown.open{display:block}
-  .course-option{padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;border-bottom:1px solid var(--border)}
-  .course-option:last-child{border-bottom:none}
-  .course-option:hover{background:var(--chip-bg);color:var(--brand)}
-  .fac-tag{font-size:11px;color:#888;font-weight:400;margin-left:6px}
-  .course-badge{display:none;margin-top:8px;padding:8px 12px;background:var(--chip-bg);border-radius:8px;font-size:13px;color:var(--brand);font-weight:700}
 
   /* SCORE */
   #jambScore{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-size:22px;font-weight:700;text-align:center;color:#122016}
@@ -58,8 +42,6 @@
   .locked-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
   .locked-name{font-size:14px;font-weight:700;color:var(--brand);flex:1}
   .lock-badge{font-size:11px;background:var(--brand);color:#fff;border-radius:999px;padding:2px 8px;white-space:nowrap}
-
-  /* SELECT ROW */
   .select-row{display:flex;gap:8px;align-items:center}
   .select-row .subj-sel{flex:1;min-width:0}
   select.slot-select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff;color:#2a392c;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%232f7a2d' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
@@ -74,40 +56,42 @@
   .remove-btn{background:none;border:none;color:#c0392b;font-size:18px;cursor:pointer;padding:0 0 0 4px;line-height:1;flex-shrink:0}
   .add-btn{display:flex;align-items:center;gap:6px;background:#fff;border:2px dashed var(--brand-light);border-radius:12px;padding:11px 14px;width:100%;cursor:pointer;font-size:14px;font-weight:700;color:var(--brand);margin-top:4px;transition:background .15s}
   .add-btn:hover{background:var(--chip-bg)}
-
-  /* COUNTER */
   .counter{font-size:13px;font-weight:700;margin:0 0 12px;padding:8px 12px;border-radius:8px;background:#f0f7ef}
   .counter.ok{color:var(--pass);background:#e8f5e9}
   .counter.bad{color:var(--fail);background:#fdecea}
   .counter.warn{color:var(--warn);background:#fff8e1}
 
-  /* CHECK BTN */
-  .check-btn{width:100%;padding:14px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px;transition:background .15s}
-  .check-btn:hover{background:#245f23}
-  .check-btn:active{transform:translateY(1px)}
+  /* FIND BTN */
+  .find-btn{width:100%;padding:14px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px;transition:background .15s}
+  .find-btn:hover{background:#245f23}
+  .find-btn:active{transform:translateY(1px)}
 
-  /* RESULT */
-  .result{border-radius:16px;padding:18px;margin-top:14px;display:none}
-  .result.show{display:block}
-  .result.qualified{background:#e8f5e9;border:2px solid var(--pass)}
-  .result.not-qualified{background:#fdecea;border:2px solid var(--fail)}
-  .result.partial{background:#fff8e1;border:2px solid var(--warn)}
-  .result-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-  .result-icon{font-size:32px;line-height:1}
-  .result-title{font-size:18px;font-weight:800}
-  .result.qualified .result-title{color:var(--pass)}
-  .result.not-qualified .result-title{color:var(--fail)}
-  .result.partial .result-title{color:var(--warn)}
-  .result-section{margin-bottom:12px}
-  .result-section h4{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;color:#2a392c}
-  .check-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;font-size:14px;line-height:1.5}
-  .check-row .icon{flex-shrink:0}
-  .advice-box{background:#fff;border-radius:10px;padding:12px;margin-top:8px;font-size:13px;line-height:1.6;color:#2a392c}
-  .advice-box strong{color:var(--brand)}
+  /* RESULTS */
+  .results-wrap{margin-top:14px;display:none}
+  .results-wrap.show{display:block}
+  .results-header{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);text-align:center}
+  .big-num{font-size:52px;font-weight:800;color:var(--brand);line-height:1}
+  .big-label{font-size:14px;color:#4a5a51;margin-top:6px}
+  .results-header.none .big-num{color:var(--fail)}
+
+  .faculty-group{margin-bottom:18px}
+  .faculty-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#888;margin-bottom:8px;padding:0 4px}
+  .course-result-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .course-result-name{font-size:15px;font-weight:800;color:#122016;margin-bottom:6px}
+  .course-result-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .meta-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+  .meta-badge.cutoff{background:#e8f5e9;color:var(--pass)}
+  .meta-badge.faculty{background:#f0f0f0;color:#555}
+  .course-result-reqs{font-size:12px;color:#4a5a51;line-height:1.6}
+  .course-result-reqs strong{color:#122016}
+
+  .no-results{background:#fdecea;border:1px solid var(--fail);border-radius:14px;padding:24px;text-align:center;margin-bottom:14px}
+  .no-results h3{color:var(--fail);font-size:16px;font-weight:800;margin-bottom:8px}
+  .no-results p{font-size:13px;color:#2a392c;line-height:1.6;margin-top:6px}
+
   .reset-btn{display:block;width:100%;padding:11px;background:#fff;border:1px solid var(--border);border-radius:12px;font-size:14px;font-weight:700;color:#2a392c;cursor:pointer;margin-top:10px;text-align:center}
   .reset-btn:hover{border-color:var(--brand);color:var(--brand)}
 
-  .tip{background:#f0f7ef;border:1px solid var(--border);border-left:4px solid var(--brand-light);padding:10px 12px;border-radius:10px;color:#2a392c;margin:0 0 14px;font-size:13px}
   .wa-banner{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin:14px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .wa-banner p{flex:1;font-size:13px;color:#2a392c;min-width:160px}
   .btn-wa{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;border:none;border-radius:999px;padding:9px 14px;font-weight:700;font-size:13px;text-decoration:none;white-space:nowrap}
@@ -118,78 +102,53 @@
 <body>
 
 <header class="topbar">
-  <div class="brand">NSUK Admission Checker 2026</div>
+  <div class="brand">NSUK Course Finder 2026</div>
   <a class="nav-link" href="index.html">← All Combinations</a>
 </header>
 
 <section class="hero">
-  <h1>Am I Qualified for NSUK 2026?</h1>
-  <p>Select your course, pick your subjects &amp; grades, enter your JAMB score to find out instantly.</p>
+  <h1>What Course Can I Study at NSUK?</h1>
+  <p>Enter your JAMB subjects, score and O'Level results — we'll show every course you qualify for.</p>
 </section>
 
-<!-- Loading state -->
 <div class="wrap" id="loadingWrap">
   <div class="page-loading">⏳ Loading course data...</div>
 </div>
 
-<!-- Main checker — hidden until data loads -->
-<div id="checkerWrap" style="display:none">
+<div id="mainWrap" style="display:none">
 <div class="wrap">
 
-  <div class="steps">
-    <div class="step"><span>🎓</span>Course</div>
-    <div class="step"><span>📝</span>JAMB</div>
-    <div class="step"><span>🔢</span>Score</div>
-    <div class="step"><span>📋</span>O'Level</div>
-    <div class="step"><span>✅</span>Check</div>
-  </div>
-
-  <!-- STEP 1 -->
+  <!-- STEP 1: JAMB SUBJECTS -->
   <div class="card">
-    <div class="card-title"><span class="num">1</span> Search &amp; Select Your Course</div>
-    <div class="course-search-wrap">
-      <input type="text" id="courseSearch" placeholder="Type your course e.g. Accounting, Law..." autocomplete="off">
-      <div class="course-dropdown" id="courseDropdown"></div>
-    </div>
-    <div class="course-badge" id="courseBadge"></div>
-  </div>
-
-  <!-- STEP 2: JAMB -->
-  <div class="card">
-    <div class="card-title"><span class="num">2</span> Your JAMB Subjects</div>
-    <div class="tip"><strong>Use of English</strong> is compulsory and already added. Select your other <strong>3 subjects</strong>.</div>
-    <div id="jambCounter" class="counter warn">1 of 4 subjects selected</div>
+    <div class="card-title"><span class="num">1</span> Your JAMB Subjects</div>
+    <div class="tip"><strong>Use of English</strong> is compulsory. Select your other <strong>3 subjects</strong>.</div>
+    <div id="jambCounter" class="counter warn">1 of 4 selected</div>
     <div id="jambSlots"></div>
   </div>
 
-  <!-- STEP 3: SCORE -->
+  <!-- STEP 2: JAMB SCORE -->
   <div class="card">
-    <div class="card-title"><span class="num">3</span> Enter Your JAMB Score</div>
+    <div class="card-title"><span class="num">2</span> Your JAMB Score</div>
     <input type="number" id="jambScore" placeholder="e.g. 210" min="0" max="400">
     <p class="score-hint">Enter your total JAMB UTME score (out of 400).</p>
   </div>
 
-  <!-- STEP 4: O'LEVEL -->
+  <!-- STEP 3: O'LEVEL -->
   <div class="card">
-    <div class="card-title"><span class="num">4</span> Your O'Level Subjects &amp; Grades</div>
-    <div class="tip">
-      <strong>English Language</strong> and <strong>Mathematics</strong> are compulsory — select your grade for each.
-      Add between <strong>3 and 7 more subjects</strong>. Only <strong>A1 – C6</strong> are passing grades.
-    </div>
-    <div id="olevelCounter" class="counter bad">0 of min 5 subjects graded</div>
+    <div class="card-title"><span class="num">3</span> Your O'Level Subjects &amp; Grades</div>
+    <div class="tip"><strong>English Language</strong> and <strong>Mathematics</strong> are already added. Select your grade for each, then add your other subjects. Only <strong>A1 – C6</strong> are passing grades.</div>
+    <div id="olevelCounter" class="counter bad">2 of min 5 subjects</div>
     <div id="olevelSlots"></div>
     <button class="add-btn" id="addOlevelBtn" onclick="addOlevelSlot()">＋ Add Subject</button>
   </div>
 
-  <button class="check-btn" onclick="checkQualification()">✅ Check My Qualification</button>
+  <button class="find-btn" onclick="findCourses()">🔍 Find My Courses</button>
 
-  <div class="result" id="result">
-    <div class="result-header">
-      <div class="result-icon" id="resultIcon"></div>
-      <div class="result-title" id="resultTitle"></div>
-    </div>
-    <div id="resultBody"></div>
-    <button class="reset-btn" onclick="resetForm()">🔄 Check Another Course</button>
+  <!-- RESULTS -->
+  <div class="results-wrap" id="resultsWrap">
+    <div class="results-header" id="resultsHeader"></div>
+    <div id="resultsList"></div>
+    <button class="reset-btn" onclick="resetForm()">🔄 Start Over</button>
   </div>
 
   <div class="wa-banner">
@@ -200,7 +159,7 @@
     </a>
   </div>
 </div>
-</div><!-- end checkerWrap -->
+</div>
 
 <footer class="footer">
   &copy; 2026 NSUK Aspirants Guide &nbsp;|&nbsp;
@@ -226,53 +185,39 @@ const db  = getFirestore(app);
 const GRADES      = ['A1','B2','B3','C4','C5','C6','D7','E8','F9'];
 const PASS_GRADES = ['A1','B2','B3','C4','C5','C6'];
 
-let ALL_COURSES    = [];
-let JAMB_SUBJECTS  = [];
-let OLEVEL_SUBJECTS= [];
-let selectedCourse = null;
-let olevelSlotCount= 0;
+let ALL_COURSES     = [];
+let JAMB_SUBJECTS   = [];
+let OLEVEL_SUBJECTS = [];
+let olevelSlotCount = 0;
 
-// ── Load from Firebase ───────────────────────────────────────
+// ── Load from Firebase ────────────────────────────────────────
 async function loadData(){
   try {
     const snap = await getDocs(collection(db,'courses'));
-    const grouped = {};
+    const jambSet={}, olevelSet={};
+
     snap.forEach(d => {
       const c = d.data();
-      if(!grouped[c.faculty]) grouped[c.faculty] = [];
-      grouped[c.faculty].push({
-        name: c.name, cutoff: c.cutoff,
+      ALL_COURSES.push({
+        faculty: c.faculty, name: c.name, cutoff: c.cutoff,
         jamb:  { compulsory: c.jamb_compulsory||[], optional_pick: c.jamb_optional_pick||0, optional: c.jamb_optional||[] },
         olevel:{ compulsory: c.olevel_compulsory||[], optional_pick: c.olevel_optional_pick||0, optional: c.olevel_optional||[] }
       });
+      [...(c.jamb_compulsory||[]),...(c.jamb_optional||[])].forEach(s=>{ if(s&&!s.includes('Any')) jambSet[s]=1; });
+      [...(c.olevel_compulsory||[]),...(c.olevel_optional||[])].forEach(s=>{ if(s&&!s.includes('Any')) olevelSet[s]=1; });
     });
 
-    // Build flat sorted course list
-    Object.keys(grouped).sort().forEach(fac => {
-      grouped[fac].sort((a,b)=>a.name.localeCompare(b.name)).forEach(c => {
-        ALL_COURSES.push({faculty: fac, name: c.name, data: c});
-      });
-    });
-
-    // Collect all unique subjects
-    const jambSet = {}, olevelSet = {};
-    snap.forEach(d => {
-      const c = d.data();
-      [...(c.jamb_compulsory||[]), ...(c.jamb_optional||[])].forEach(s => { if(s && !s.includes('Any')) jambSet[s]=1; });
-      [...(c.olevel_compulsory||[]), ...(c.olevel_optional||[])].forEach(s => { if(s && !s.includes('Any')) olevelSet[s]=1; });
-    });
     delete jambSet['Use of English'];
     delete olevelSet['English Language'];
     delete olevelSet['Mathematics'];
     JAMB_SUBJECTS   = Object.keys(jambSet).sort();
     OLEVEL_SUBJECTS = Object.keys(olevelSet).sort();
+    ALL_COURSES.sort((a,b)=>a.name.localeCompare(b.name));
 
-    // Show checker
-    document.getElementById('loadingWrap').style.display  = 'none';
-    document.getElementById('checkerWrap').style.display  = 'block';
+    document.getElementById('loadingWrap').style.display = 'none';
+    document.getElementById('mainWrap').style.display    = 'block';
     initJamb();
     initOlevel();
-    setupCourseSearch();
 
   } catch(e){
     document.getElementById('loadingWrap').innerHTML = `<div class="page-loading" style="color:red">❌ Failed to load. Please refresh.<br><small>${e.message}</small></div>`;
@@ -280,85 +225,55 @@ async function loadData(){
 }
 loadData();
 
-// ── Course search ────────────────────────────────────────────
-function setupCourseSearch(){
-  const cs = document.getElementById('courseSearch');
-  const dd = document.getElementById('courseDropdown');
-
-  function buildDropdown(q){
-    dd.innerHTML = '';
-    const qL = (q||'').toLowerCase();
-    const list = ALL_COURSES.filter(c => !qL || c.name.toLowerCase().includes(qL));
-    if(!list.length){
-      dd.innerHTML = '<div class="course-option" style="color:#888;cursor:default">No course found</div>';
-      return;
-    }
-    list.forEach(c => {
-      const d = document.createElement('div'); d.className='course-option';
-      d.innerHTML = c.name + `<span class="fac-tag">(${c.faculty})</span>`;
-      d.addEventListener('mousedown', () => pickCourse(c));
-      dd.appendChild(d);
-    });
-  }
-
-  cs.addEventListener('input',  () => { buildDropdown(cs.value); dd.classList.add('open'); });
-  cs.addEventListener('focus',  () => { buildDropdown(cs.value); dd.classList.add('open'); });
-  cs.addEventListener('blur',   () => setTimeout(() => dd.classList.remove('open'), 200));
+// ── Matching helper ───────────────────────────────────────────
+function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim(); }
+function matches(arr, req){
+  const rp=req.split('/').map(norm);
+  for(const a of arr){ const p=norm(a); for(const r of rp){ if(p===r||p.includes(r)||r.includes(p)) return true; } }
+  return false;
 }
 
-function pickCourse(c){
-  selectedCourse = c.data;
-  document.getElementById('courseSearch').value = c.name;
-  document.getElementById('courseDropdown').classList.remove('open');
-  const b = document.getElementById('courseBadge');
-  b.style.display = 'block';
-  b.innerHTML = `✅ <strong>${c.name}</strong> &nbsp;|&nbsp; Faculty of ${c.faculty} &nbsp;|&nbsp; Cut-off: <strong>${c.data.cutoff}</strong>`;
-  document.getElementById('result').className = 'result';
-}
-
-// ── JAMB slots ───────────────────────────────────────────────
+// ── JAMB slots ────────────────────────────────────────────────
 function initJamb(){
-  const wrap = document.getElementById('jambSlots'); wrap.innerHTML = '';
-  const s1 = document.createElement('div'); s1.className='slot locked';
-  s1.innerHTML = '<div class="slot-label">Subject 1</div><div class="locked-row"><span class="locked-name">Use of English</span><span class="lock-badge">Compulsory</span></div>';
+  const wrap=document.getElementById('jambSlots'); wrap.innerHTML='';
+  const s1=document.createElement('div'); s1.className='slot locked';
+  s1.innerHTML='<div class="slot-label">Subject 1</div><div class="locked-row"><span class="locked-name">Use of English</span><span class="lock-badge">Compulsory</span></div>';
   wrap.appendChild(s1);
   for(let i=2;i<=4;i++) wrap.appendChild(makeJambSlot(i));
   updateJambCounter();
 }
 
 function makeJambSlot(num){
-  const slot = document.createElement('div'); slot.className='slot'; slot.id='jamb-slot-'+num;
-  slot.innerHTML = `<div class="slot-label">Subject ${num}</div>`;
-  const row = document.createElement('div'); row.className='select-row';
-  const sel = document.createElement('select'); sel.className='slot-select subj-sel'; sel.id='jamb-sel-'+num;
+  const slot=document.createElement('div'); slot.className='slot'; slot.id='jamb-slot-'+num;
+  slot.innerHTML=`<div class="slot-label">Subject ${num}</div>`;
+  const row=document.createElement('div'); row.className='select-row';
+  const sel=document.createElement('select'); sel.className='slot-select subj-sel'; sel.id='jamb-sel-'+num;
   sel.addEventListener('change', onJambChange);
-  populateJambSelect(sel, '');
+  populateJambSelect(sel,'');
   row.appendChild(sel);
   slot.appendChild(row);
   return slot;
 }
 
 function populateJambSelect(sel, cur){
-  const taken = getJambSelected().filter(v => v && v!==cur);
-  sel.innerHTML = '<option value="">— Select Subject —</option>';
-  JAMB_SUBJECTS.forEach(s => {
+  const taken=getJambSelected().filter(v=>v&&v!==cur);
+  sel.innerHTML='<option value="">— Select Subject —</option>';
+  JAMB_SUBJECTS.forEach(s=>{
     if(taken.includes(s)) return;
-    const o = document.createElement('option'); o.value=s; o.textContent=s;
+    const o=document.createElement('option'); o.value=s; o.textContent=s;
     if(s===cur) o.selected=true;
     sel.appendChild(o);
   });
 }
 
-function getJambSelected(){
-  return [2,3,4].map(i => { const s=document.getElementById('jamb-sel-'+i); return s?s.value:''; });
-}
+function getJambSelected(){ return [2,3,4].map(i=>{ const s=document.getElementById('jamb-sel-'+i); return s?s.value:''; }); }
 
 function onJambChange(){
   for(let i=2;i<=4;i++){
     const sel=document.getElementById('jamb-sel-'+i); if(!sel) continue;
     const cur=sel.value;
     populateJambSelect(sel,cur);
-    sel.className = cur?'slot-select subj-sel chosen':'slot-select subj-sel';
+    sel.className=cur?'slot-select subj-sel chosen':'slot-select subj-sel';
     sel.closest('.slot').classList.toggle('filled',!!cur);
   }
   updateJambCounter();
@@ -368,11 +283,11 @@ function updateJambCounter(){
   const filled=getJambSelected().filter(v=>!!v).length;
   const total=filled+1;
   const el=document.getElementById('jambCounter');
-  el.textContent=total+' of 4 subjects selected'+(total===4?' ✓':' — pick '+(4-total)+' more');
+  el.textContent=total+' of 4 selected'+(total===4?' ✓':' — pick '+(4-total)+' more');
   el.className='counter '+(total===4?'ok':total>4?'bad':'warn');
 }
 
-// ── O'Level slots ────────────────────────────────────────────
+// ── O'Level slots ─────────────────────────────────────────────
 function initOlevel(){
   const wrap=document.getElementById('olevelSlots'); wrap.innerHTML='';
   olevelSlotCount=0;
@@ -383,11 +298,11 @@ function initOlevel(){
   updateOlevelCounter();
 }
 
-function makeLockedOlevelSlot(label, subjectName, gradeId){
+function makeLockedOlevelSlot(label, name, gradeId){
   const slot=document.createElement('div'); slot.className='slot locked';
   slot.innerHTML=`<div class="slot-label">${label}</div>`;
   const row=document.createElement('div'); row.className='locked-row';
-  const nameSpan=document.createElement('span'); nameSpan.className='locked-name'; nameSpan.textContent=subjectName;
+  const nameSpan=document.createElement('span'); nameSpan.className='locked-name'; nameSpan.textContent=name;
   const badge=document.createElement('span'); badge.className='lock-badge'; badge.textContent='Compulsory';
   const gradeSel=makeGradeSelect('grade-locked', updateOlevelCounter); gradeSel.id=gradeId;
   row.appendChild(nameSpan); row.appendChild(badge); row.appendChild(gradeSel);
@@ -438,9 +353,7 @@ function populateOlevelSubjSelect(sel, cur){
   });
 }
 
-function getOlevelSubjectsSelected(){
-  return Array.from(document.querySelectorAll('#olevelSlots select.subj-sel')).map(s=>s.value);
-}
+function getOlevelSubjectsSelected(){ return Array.from(document.querySelectorAll('#olevelSlots select.subj-sel')).map(s=>s.value); }
 
 function onOlevelChange(){
   document.querySelectorAll('#olevelSlots select.subj-sel').forEach(sel=>{
@@ -455,22 +368,10 @@ function onOlevelChange(){
 function updateOlevelCounter(){
   const filled=getOlevelSubjectsSelected().filter(v=>!!v).length;
   const total=filled+2;
-  const graded=getOlevelGraded();
   const el=document.getElementById('olevelCounter');
   if(total<5){ el.textContent=total+' of min 5 subjects — add '+(5-total)+' more'; el.className='counter bad'; }
   else if(total>9){ el.textContent=total+' subjects — max is 9!'; el.className='counter bad'; }
-  else if(graded<total){ el.textContent=total+' subjects selected — please add grades for all'; el.className='counter warn'; }
-  else { el.textContent=total+' subjects with grades ✓'; el.className='counter ok'; }
-}
-
-function getOlevelGraded(){
-  let graded=0;
-  const engG=document.getElementById('ol-grade-eng'); if(engG&&engG.value) graded++;
-  const mathG=document.getElementById('ol-grade-maths'); if(mathG&&mathG.value) graded++;
-  document.querySelectorAll('#olevelSlots select.subj-sel').forEach((sel,idx)=>{
-    if(sel.value){ const g=document.getElementById('ol-grade-'+(idx+1)); if(g&&g.value) graded++; }
-  });
-  return graded;
+  else { el.textContent=total+' subjects selected ✓'; el.className='counter ok'; }
 }
 
 function makeGradeSelect(cls, onChange){
@@ -487,22 +388,12 @@ function makeGradeSelect(cls, onChange){
   return sel;
 }
 
-// ── Matching ─────────────────────────────────────────────────
-function norm(s){ return s.toLowerCase().replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim(); }
-function matches(arr, req){
-  const rp=req.split('/').map(norm);
-  for(const a of arr){ const p=norm(a); for(const r of rp){ if(p===r||p.includes(r)||r.includes(p)) return true; } }
-  return false;
-}
-
-// ── Checker ──────────────────────────────────────────────────
-window.checkQualification = function(){
-  if(!selectedCourse){ alert('Please search and select your course first.'); return; }
-
-  const score = parseInt(document.getElementById('jambScore').value)||0;
+// ── FIND COURSES ──────────────────────────────────────────────
+window.findCourses = function(){
+  const score   = parseInt(document.getElementById('jambScore').value)||0;
   const jPicked = ['Use of English', ...getJambSelected().filter(v=>!!v)];
-  const oSubjects = ['English Language','Mathematics'];
-  const oGrades   = [
+  const oSubjects=['English Language','Mathematics'];
+  const oGrades=[
     document.getElementById('ol-grade-eng')?.value||'',
     document.getElementById('ol-grade-maths')?.value||''
   ];
@@ -510,92 +401,86 @@ window.checkQualification = function(){
     if(sel.value){ oSubjects.push(sel.value); const g=document.getElementById('ol-grade-'+(idx+1)); oGrades.push(g?g.value:''); }
   });
 
-  const issues=[], passed=[], warnings=[], missingOlevel=[];
-
-  // JAMB count
-  if(jPicked.length!==4) issues.push(`JAMB: Must select exactly <strong>4 subjects</strong>. You have <strong>${jPicked.length}</strong>.`);
-
-  // Score
-  if(score===0) warnings.push('JAMB score is <strong>0</strong>. Enter your actual score.');
-  else if(score<selectedCourse.cutoff) issues.push(`Your JAMB score <strong>${score}</strong> is below the cut-off of <strong>${selectedCourse.cutoff}</strong>.`);
-  else passed.push(`JAMB score <strong>${score}</strong> meets the cut-off of <strong>${selectedCourse.cutoff}</strong>. ✅`);
-
-  // JAMB compulsory
-  const j=selectedCourse.jamb, missingJ=[];
-  (j.compulsory||[]).forEach(r=>{ if(!matches(jPicked,r)) missingJ.push(r); });
-  if(missingJ.length) issues.push(`JAMB: Missing required subject(s): <strong>${missingJ.join(', ')}</strong>.`);
-  else if((j.compulsory||[]).length) passed.push('All required JAMB subjects covered. ✅');
-
-  // JAMB optional
-  if(j.optional_pick>0&&(j.optional||[]).length){
-    const jM=(j.optional||[]).filter(r=>matches(jPicked,r)).length;
-    if(jM<j.optional_pick) issues.push(`JAMB: Need at least <strong>${j.optional_pick}</strong> from: <em>${(j.optional||[]).join(', ')}</em>. Matched: <strong>${jM}</strong>.`);
-    else passed.push('JAMB optional subject requirement met. ✅');
-  }
-
-  // O'Level missing grades
+  // Validate
+  if(jPicked.length!==4){ alert('Please select all 4 JAMB subjects.'); return; }
+  if(score===0){ alert('Please enter your JAMB score.'); return; }
+  if(oSubjects.length<5){ alert("Please add at least 5 O'Level subjects."); return; }
   const missingGrades=oSubjects.filter((s,i)=>!oGrades[i]);
-  if(missingGrades.length) issues.push(`O'Level: Missing grade(s) for: <strong>${missingGrades.join(', ')}</strong>.`);
+  if(missingGrades.length){ alert('Please select grades for: '+missingGrades.join(', ')); return; }
 
-  // O'Level failing grades
-  const failedSubjects=oSubjects.filter((s,i)=>oGrades[i]&&!PASS_GRADES.includes(oGrades[i])).map((s,i)=>`${s} (${oGrades[oSubjects.indexOf(s)]})`);
-  if(failedSubjects.length) issues.push(`O'Level: Failing grade(s): <strong>${failedSubjects.join(', ')}</strong>. Only A1–C6 are acceptable.`);
-  else if(oSubjects.length&&!missingGrades.length) passed.push("All O'Level grades are passing (A1–C6). ✅");
+  // Only passing O'Level subjects count
+  const passingO=oSubjects.filter((s,i)=>PASS_GRADES.includes(oGrades[i]));
 
-  // O'Level count
-  if(oSubjects.length<5) issues.push(`O'Level: Minimum <strong>5 subjects</strong> required. You have <strong>${oSubjects.length}</strong>.`);
-  else if(oSubjects.length>9) warnings.push(`O'Level: Maximum is <strong>9 subjects</strong>. You have <strong>${oSubjects.length}</strong>.`);
-  else passed.push(`O'Level subject count valid: <strong>${oSubjects.length}</strong> subjects. ✅`);
-
-  // O'Level compulsory
-  const ol=selectedCourse.olevel;
-  const passingO=oSubjects.filter((s,i)=>oGrades[i]&&PASS_GRADES.includes(oGrades[i]));
-  (ol.compulsory||[]).forEach(r=>{ if(!matches(passingO,r)) missingOlevel.push(r); });
-  if(missingOlevel.length) issues.push(`O'Level: Missing compulsory credit(s): <strong>${missingOlevel.join(', ')}</strong>.`);
-  else if((ol.compulsory||[]).length) passed.push("All compulsory O'Level subjects passed. ✅");
-
-  // O'Level optional
-  if(ol.optional_pick>0&&(ol.optional||[]).length){
-    const oM=(ol.optional||[]).filter(r=>matches(passingO,r)).length;
-    if(oM<ol.optional_pick) issues.push(`O'Level: Need passes in at least <strong>${ol.optional_pick}</strong> from: <em>${(ol.optional||[]).join(', ')}</em>. Matched: <strong>${oM}</strong>.`);
-    else passed.push("O'Level optional requirement met. ✅");
+  // Match against every course
+  const qualified=[];
+  for(const course of ALL_COURSES){
+    if(score < course.cutoff) continue;
+    const jComp=course.jamb.compulsory||[];
+    if(jComp.some(r=>!matches(jPicked,r))) continue;
+    const jOpt=course.jamb.optional||[], jPick=course.jamb.optional_pick||0;
+    if(jPick>0&&jOpt.length&&jOpt.filter(r=>matches(jPicked,r)).length<jPick) continue;
+    const oComp=course.olevel.compulsory||[];
+    if(oComp.some(r=>!matches(passingO,r))) continue;
+    const oOpt=course.olevel.optional||[], oPick=course.olevel.optional_pick||0;
+    if(oPick>0&&oOpt.length&&oOpt.filter(r=>matches(passingO,r)).length<oPick) continue;
+    qualified.push(course);
   }
 
-  // Render result
-  const rDiv=document.getElementById('result'),rIcon=document.getElementById('resultIcon'),rTitle=document.getElementById('resultTitle'),rBody=document.getElementById('resultBody');
-  rDiv.className='result show';
-  let html='';
-  if(passed.length){ html+=`<div class="result-section"><h4>✅ What you got right</h4>${passed.map(p=>`<div class="check-row"><span class="icon">✅</span><span>${p}</span></div>`).join('')}</div>`; }
-  if(issues.length){ html+=`<div class="result-section"><h4>❌ Issues found</h4>${issues.map(i=>`<div class="check-row"><span class="icon">❌</span><span>${i}</span></div>`).join('')}</div>`; }
-  if(warnings.length){ html+=`<div class="result-section"><h4>⚠️ Warnings</h4>${warnings.map(w=>`<div class="check-row"><span class="icon">⚠️</span><span>${w}</span></div>`).join('')}</div>`; }
-
-  html+='<div class="advice-box">';
-  if(!issues.length&&!warnings.length){
-    rDiv.classList.add('qualified'); rIcon.textContent='🎉'; rTitle.textContent='You Are Qualified!';
-    html+=`<strong>Congratulations!</strong> You meet all requirements for <strong>${selectedCourse.name}</strong> at NSUK. Watch for the Post-UTME announcement and join our WhatsApp group to stay updated.`;
-  } else if(issues.length){
-    rDiv.classList.add('not-qualified'); rIcon.textContent='❌'; rTitle.textContent='Not Qualified Yet';
-    html+='<strong>Do not panic.</strong> ';
-    if(score>0&&score<selectedCourse.cutoff) html+='Consider a course with a lower cut-off. ';
-    if(failedSubjects.length) html+="Improve your failing O'Level grades through supplementary WAEC/NECO. ";
-    if(missingOlevel.length) html+='Missing compulsory O\'Level subjects can be obtained through supplementary exams. ';
-    html+='Join our WhatsApp group for guidance.';
-  } else {
-    rDiv.classList.add('partial'); rIcon.textContent='⚠️'; rTitle.textContent='Almost There!';
-    html+='Review the warnings above, correct them and try again.';
-  }
-  html+='</div>';
-  rBody.innerHTML=html;
-  rDiv.scrollIntoView({behavior:'smooth',block:'start'});
+  renderResults(qualified);
+  document.getElementById('resultsWrap').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
+function renderResults(courses){
+  const wrap   = document.getElementById('resultsWrap');
+  const header = document.getElementById('resultsHeader');
+  const list   = document.getElementById('resultsList');
+  wrap.classList.add('show');
+  list.innerHTML='';
+
+  if(!courses.length){
+    header.className='results-header none';
+    header.innerHTML='<div class="big-num">0</div><div class="big-label">courses found</div>';
+    list.innerHTML=`
+      <div class="no-results">
+        <h3>❌ No Qualifying Courses Found</h3>
+        <p>Based on your JAMB subjects, score and O'Level results, you don't currently qualify for any course at NSUK.</p>
+        <p>You can: do a JAMB change of subjects, improve your O'Level grades through supplementary WAEC/NECO, or join our WhatsApp group for guidance.</p>
+      </div>`;
+    return;
+  }
+
+  header.className='results-header';
+  header.innerHTML=`<div class="big-num">${courses.length}</div><div class="big-label">course${courses.length!==1?'s':''} you qualify for</div>`;
+
+  // Group by faculty
+  const grouped={};
+  courses.forEach(c=>{ if(!grouped[c.faculty]) grouped[c.faculty]=[]; grouped[c.faculty].push(c); });
+
+  Object.keys(grouped).sort().forEach(fac=>{
+    const group=document.createElement('div'); group.className='faculty-group';
+    group.innerHTML=`<div class="faculty-label">📂 ${fac}</div>`;
+    grouped[fac].forEach(c=>{
+      const card=document.createElement('div'); card.className='course-result-card';
+      card.innerHTML=`
+        <div class="course-result-name">${c.name}</div>
+        <div class="course-result-meta">
+          <span class="meta-badge cutoff">Cut-off: ${c.cutoff}</span>
+          <span class="meta-badge faculty">${fac}</span>
+        </div>
+        <div class="course-result-reqs">
+          <strong>JAMB required:</strong> ${(c.jamb.compulsory||[]).join(', ')}<br>
+          <strong>O'Level required:</strong> ${(c.olevel.compulsory||[]).join(', ')}
+        </div>`;
+      group.appendChild(card);
+    });
+    list.appendChild(group);
+  });
+}
+
 window.resetForm = function(){
-  selectedCourse=null;
-  document.getElementById('courseSearch').value='';
-  document.getElementById('courseBadge').style.display='none';
   document.getElementById('jambScore').value='';
+  document.getElementById('resultsWrap').classList.remove('show');
   initJamb(); initOlevel();
-  document.getElementById('result').className='result';
   window.scrollTo({top:0,behavior:'smooth'});
 };
 </script>
