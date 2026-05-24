@@ -20,6 +20,9 @@
   .login-btn{width:100%;padding:12px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
   .login-btn:hover{background:#245f23}
   .login-err{color:var(--fail);font-size:13px;margin-top:8px;display:none}
+  .forgot-link{background:none;border:none;font-size:13px;color:#888;cursor:pointer;text-decoration:underline;padding:0;margin-top:8px;display:block;width:100%;text-align:center}
+  .forgot-link:hover{color:var(--brand)}
+  .forgot-success{color:var(--pass);font-size:13px;margin-top:8px;display:none;text-align:center}
 
   /* ADMIN LAYOUT */
   .admin-wrap{display:none;max-width:900px;margin:0 auto;padding:16px}
@@ -159,10 +162,13 @@
   <div class="login-card">
     <div style="font-size:40px;margin-bottom:10px">🔐</div>
     <h1>NSUK Admin Panel</h1>
-    <p>Enter your password to continue</p>
-    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <p>Sign in to manage courses and announcements</p>
+    <input type="email" id="pwInput" placeholder="Email address" autocomplete="email" style="letter-spacing:normal;text-align:left" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()">
+    <input type="password" id="passInput" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="margin-top:0">
     <button class="login-btn" onclick="doLogin()">Login</button>
-    <div class="login-err" id="loginErr">❌ Incorrect password</div>
+    <div class="login-err" id="loginErr" style="display:none;margin-top:8px;font-size:13px;color:#c0392b"></div>
+    <button class="forgot-link" onclick="forgotPassword()">Forgot password?</button>
+    <div class="forgot-success" id="forgotSuccess">✅ Reset link sent! Check your email.</div>
   </div>
 </div>
 
@@ -357,6 +363,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -369,31 +376,76 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-// ── PASSWORD ─────────────────────────────────────────────────
-const ADMIN_PASSWORD = "nsuk@admin2026";
+const auth = getAuth(app);
 
 let allCourses = [];
 let editingId = null;
 let tags = { jambComp:[], jambOpt:[], olComp:[], olOpt:[] };
 
-// ── LOGIN ─────────────────────────────────────────────────────
-window.doLogin = function(){
-  const pw = document.getElementById('pwInput').value;
-  if(pw === ADMIN_PASSWORD){
-    document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('adminWrap').style.display = 'block';
+// ── FIREBASE AUTH LOGIN ───────────────────────────────────────
+// Listen for auth state changes — auto-restore session
+onAuthStateChanged(auth, user => {
+  if(user){
+    // User is logged in
+    document.getElementById('loginWrap').style.display  = 'none';
+    document.getElementById('adminWrap').style.display  = 'block';
     loadCourses();
   } else {
-    document.getElementById('loginErr').style.display = 'block';
-    document.getElementById('pwInput').value = '';
+    // Not logged in
+    document.getElementById('loginWrap').style.display  = 'flex';
+    document.getElementById('adminWrap').style.display  = 'none';
   }
+});
+
+window.doLogin = async function(){
+  const email = document.getElementById('pwInput').value.trim();
+  const pass  = document.getElementById('passInput').value;
+  const errEl = document.getElementById('loginErr');
+  const btn   = document.querySelector('.login-btn');
+
+  if(!email || !pass){ errEl.textContent='❌ Please enter your email and password.'; errEl.style.display='block'; return; }
+
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  errEl.style.display = 'none';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    // onAuthStateChanged will handle the rest
+  } catch(e){
+    let msg = '❌ Incorrect email or password.';
+    if(e.code === 'auth/too-many-requests') msg = '❌ Too many failed attempts. Try again later.';
+    if(e.code === 'auth/network-request-failed') msg = '❌ Network error. Check your connection.';
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = 'Login';
 };
 
-window.doLogout = function(){
-  document.getElementById('loginWrap').style.display = 'flex';
-  document.getElementById('adminWrap').style.display = 'none';
-  document.getElementById('pwInput').value = '';
+window.doLogout = async function(){
+  await signOut(auth);
+};
+
+window.forgotPassword = async function(){
+  const email = document.getElementById('pwInput').value.trim();
+  const errEl = document.getElementById('loginErr');
+  const successEl = document.getElementById('forgotSuccess');
+
+  if(!email){
+    errEl.textContent = '❌ Enter your email address first, then click Forgot password.';
+    errEl.style.display = 'block';
+    successEl.style.display = 'none';
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    successEl.style.display = 'block';
+    errEl.style.display = 'none';
+  } catch(e){
+    errEl.textContent = '❌ Could not send reset email. Check the email address.';
+    errEl.style.display = 'block';
+    successEl.style.display = 'none';
+  }
 };
 
 // ── LOAD ──────────────────────────────────────────────────────

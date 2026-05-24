@@ -89,8 +89,11 @@
   .popup-btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}
   .popup-btn-fb{display:flex;align-items:center;justify-content:center;gap:8px;background:#1877F2;color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}
   .popup-btn-wa svg,.popup-btn-fb svg{width:18px;height:18px;flex-shrink:0}
-  .popup-close{background:none;border:none;font-size:15px;color:#888;cursor:pointer;text-decoration:underline;padding:0}
-  .popup-close:hover{color:#122016}
+  .popup-x{position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;color:#aaa;cursor:pointer;line-height:1;padding:4px}
+  .popup-x:hover{color:#122016}
+  .popup-card{position:relative}
+  .popup-close{display:block;width:100%;padding:11px;background:#f5f7fb;border:1px solid #e7ece9;border-radius:10px;font-size:14px;font-weight:700;color:#2a392c;cursor:pointer;margin-top:4px}
+  .popup-close:hover{border-color:#2f7a2d;color:#2f7a2d}
   /* FAQ */
   .faq-section{margin:24px 0}
   .faq-heading{font-size:18px;font-weight:800;color:#2f7a2d;margin-bottom:16px}
@@ -108,15 +111,16 @@
 <!-- POPUP -->
 <div class="popup-overlay" id="popupOverlay">
   <div class="popup-card">
+    <button class="popup-x" onclick="closePopup()">✕</button>
     <div class="popup-icon">👋</div>
     <h2>Are You an NSUK Aspirant?</h2>
     <p>Join our WhatsApp and Facebook groups to stay updated on NSUK 2026 admission news, Post-UTME dates, and connect with other aspirants.</p>
     <div class="popup-btns">
-      <a class="popup-btn-wa" href="https://chat.whatsapp.com/IRk8xbklrv3Dyz7yQZl0Bb" target="_blank" rel="noopener">
+      <a class="popup-btn-wa" href="https://chat.whatsapp.com/GQpZPh0mlAe9zJRsm7CXhL?mode=gi_t" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.59 2 2.16 6.43 2.16 11.88c0 2.1.61 4.06 1.78 5.73L2 22l4.53-1.86c1.61 1.04 3.47 1.59 5.51 1.59 5.45 0 9.88-4.43 9.88-9.88C21.92 6.43 17.49 2 12.04 2zm.02 17.66c-1.73 0-3.34-.51-4.71-1.47l-.34-.23-2.69 1.1.57-2.84-.19-.29a8 8 0 0 1-1.29-4.36c0-4.41 3.6-8.01 8.02-8.01 4.41 0 8.01 3.6 8.01 8.01 0 4.42-3.6 8.09-8.08 8.09zm4.64-5.71c-.25-.13-1.46-.72-1.69-.81-.23-.09-.39-.13-.55.13-.16.25-.63.81-.78.98-.14.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.47-1.4-1.72-.14-.25-.02-.39.11-.51.11-.1.25-.26.37-.39.13-.13.16-.22.24-.37.08-.16.04-.29-.02-.41-.06-.13-.55-1.31-.75-1.79-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.41.06-.62.29-.21.22-.82.8-.82 1.95s.84 2.26.96 2.42c.12.16 1.66 2.53 4.02 3.55.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.46-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.22-.16-.47-.29z"/></svg>
         Join WhatsApp Group
       </a>
-      <a class="popup-btn-fb" href="https://www.facebook.com/share/g/1Etd77EAra/" target="_blank" rel="noopener">
+      <a class="popup-btn-fb" href="https://facebook.com/groups/923543080071805/" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path fill="currentColor" d="M22 12.06C22 6.5 17.52 2 11.94 2 6.38 2 1.9 6.5 1.9 12.06c0 5.02 3.66 9.19 8.43 9.95v-7.04H7.9v-2.9h2.43V9.94c0-2.4 1.43-3.72 3.62-3.72 1.05 0 2.16.19 2.16.19v2.37h-1.22c-1.2 0-1.57.75-1.57 1.52v1.83H16.1l-.38 2.9h-2.2V22c4.77-.76 8.48-4.93 8.48-9.94z"/></svg>
         Join Facebook Group
       </a>
@@ -130,12 +134,12 @@
     <h3>Are you an NSUK aspirant?</h3>
     <p>Join our WhatsApp and Facebook groups to stay informed with NSUK admission updates and connect with other aspirants.</p>
     <div class="cta-row">
-      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/IRk8xbklrv3Dyz7yQZl0Bb" target="_blank" rel="noopener">
+      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/GQpZPh0mlAe9zJRsm7CXhL?mode=gi_t" target="_blank" rel="noopener">
         <!-- WhatsApp icon (inline SVG) -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.59 2 2.16 6.43 2.16 11.88c0 2.1.61 4.06 1.78 5.73L2 22l4.53-1.86c1.61 1.04 3.47 1.59 5.51 1.59 5.45 0 9.88-4.43 9.88-9.88C21.92 6.43 17.49 2 12.04 2zm.02 17.66c-1.73 0-3.34-.51-4.71-1.47l-.34-.23-2.69 1.1.57-2.84-.19-.29a8 8 0 0 1-1.29-4.36c0-4.41 3.6-8.01 8.02-8.01 4.41 0 8.01 3.6 8.01 8.01 0 4.42-3.6 8.09-8.08 8.09zm4.64-5.71c-.25-.13-1.46-.72-1.69-.81-.23-.09-.39-.13-.55.13-.16.25-.63.81-.78.98-.14.16-.29.18-.54.06-.25-.13-1.06-.39-2.02-1.24-.75-.66-1.25-1.47-1.4-1.72-.14-.25-.02-.39.11-.51.11-.1.25-.26.37-.39.13-.13.16-.22.24-.37.08-.16.04-.29-.02-.41-.06-.13-.55-1.31-.75-1.79-.2-.48-.4-.41-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.41.06-.62.29-.21.22-.82.8-.82 1.95s.84 2.26.96 2.42c.12.16 1.66 2.53 4.02 3.55.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.46-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.22-.16-.47-.29z"/></svg>
         Join WhatsApp group
       </a>
-      <a class="btn btn-facebook" href="https://www.facebook.com/share/g/1Etd77EAra/" target="_blank" rel="noopener">
+      <a class="btn btn-facebook" href="https://facebook.com/groups/923543080071805/" target="_blank" rel="noopener">
         <!-- Facebook icon (inline SVG) -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22 12.06C22 6.5 17.52 2 11.94 2 6.38 2 1.9 6.5 1.9 12.06c0 5.02 3.66 9.19 8.43 9.95v-7.04H7.9v-2.9h2.43V9.94c0-2.4 1.43-3.72 3.62-3.72 1.05 0 2.16.19 2.16.19v2.37h-1.22c-1.2 0-1.57.75-1.57 1.52v1.83H16.1l-.38 2.9h-2.2V22c4.77-.76 8.48-4.93 8.48-9.94z"/></svg>
         Join Facebook group
@@ -160,8 +164,13 @@
   
 <div class="spacer"></div>
   
-<div class="tip" id="tip-cards">Click or tap a course to see its subject combination.</div>
+
 <div class="controls"><button id="expandAll" class="btn-ghost">Expand all</button><button id="collapseAll" class="btn-ghost">Collapse all</button></div>
+<div id="loading-msg" style="text-align:center;padding:32px;color:#2f7a2d;font-size:14px;line-height:1.8">
+  <div style="font-size:28px;margin-bottom:8px">⏳</div>
+  <div style="font-weight:700;font-size:15px">Please wait while the courses load...</div>
+  <div style="color:#888;font-size:13px;margin-top:6px">If it takes too long, check your internet connection.</div>
+</div>
 <div id="root"></div>
 <div class="spacer"></div>
 <div class="stats">
@@ -185,7 +194,6 @@
     </a>
   </div></div>
 
-<div id="loading-msg" style="text-align:center;padding:32px;color:#2f7a2d;font-weight:700;font-size:15px">⏳ Loading courses...</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -289,6 +297,7 @@ loadCourses();
       var g=groups[gi];
       var fac=el('div',{class:'faculty'});
       var ft=el('div',{class:'faculty-title'}); ft.appendChild(text('Faculty of '+g.faculty)); fac.appendChild(ft);
+      var facTip=el('div',{class:'tip',style:'margin:0 0 10px;font-size:12px'}); facTip.appendChild(text('Tap a course below to see its subject combination.')); fac.appendChild(facTip);
       for(var ci=0; ci<(g.courses||[]).length; ci++){
         var c=g.courses[ci];
         var card=el('div',{class:'course'});
@@ -411,6 +420,40 @@ if(data && data.length) render(data);
     if(e.key === 'Escape') closeDropdown();
   });
 })();
+</script>
+
+<!-- FAQ SECTION -->
+<div class="wrap">
+  <div class="faq-section">
+    <h2 class="faq-heading">Frequently Asked Questions</h2>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">1. What is the NSUK cut-off mark for 2026?</button><div class="faq-a"><p><strong>200 and above:</strong> Law, Community Health</p><p><strong>180 and above:</strong> Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition &amp; Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering</p><p><strong>170 and above:</strong> All other courses</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">2. Does NSUK accept second-choice candidates?</button><div class="faq-a"><p>❌ No. NSUK does not accept second-choice candidates. You must choose NSUK as your <strong>first choice</strong> on JAMB to be eligible.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">3. Does NSUK conduct physical Post-UTME screening?</button><div class="faq-a"><p>❌ No. The NSUK Post-UTME screening is <strong>completely online</strong>. All registrations are done online — you do not need to be physically present at the school.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">4. Can I combine WAEC and NECO results?</button><div class="faq-a"><p>✅ Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of <strong>two sittings</strong>.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">5. What type of O'Level results does NSUK accept?</button><div class="faq-a"><p>✅ NSUK accepts results from <strong>WAEC, NECO, NABTEB</strong> and <strong>NBAIS</strong>.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">6. What are the O'Level requirements for UTME candidates?</button><div class="faq-a"><p>UTME candidates must possess at least <strong>five (5) O'Level credit passes (C6 and above)</strong> in relevant subjects including <strong>English Language</strong> and <strong>Mathematics</strong>, at not more than <strong>two (2) sittings</strong> in WAEC, NECO, NABTEB and/or NBAIS.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">7. What happens if I choose the wrong subject combination?</button><div class="faq-a"><p>⚠️ The Post-UTME system will <strong>automatically disqualify you</strong>. Use this website to find the correct combination for your course before registering.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">8. Can I apply if my JAMB score is below the cut-off mark?</button><div class="faq-a"><p>❌ No. If your score is below the required cut-off for your preferred course, do a <strong>JAMB change of course</strong> to another course that matches both your score and subject combination. Use this website to find a suitable course.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">9. Can I use awaiting results for NSUK Post-UTME?</button><div class="faq-a"><p>✅ Yes. You can register while awaiting your result. However, you <strong>must upload your result before the portal closes</strong> or you will be automatically disqualified.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">10. Does NSUK accept Direct Entry candidates?</button><div class="faq-a"><p>✅ Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter <strong>200 level</strong> directly.</p></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">11. What are the requirements for Direct Entry candidates?</button><div class="faq-a"><p>Direct Entry candidates must have one of: minimum Lower Credit in <strong>ND</strong> or Nasarawa State University Diploma, Merit in <strong>NCE</strong>, or <strong>8 points in IJMB</strong>.</p><p>✅ Must also possess five O'Level credit passes including English and Mathematics at not more than two sittings.</p><p>✅ Must upload O'Level results on JAMB profile at a JAMB accredited CBT centre.</p><p>⚠️ DE candidates into <strong>Community Health, Environmental Health Science</strong> and <strong>Health Information Management</strong> must be licensed by their respective professional bodies.</p></div></div>
+
+  </div>
+</div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the NSUK cut-off mark for 2026?","acceptedAnswer":{"@type":"Answer","text":"200 and above: Law, Community Health. 180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition and Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering. 170 and above: All other courses."}},{"@type":"Question","name":"Does NSUK accept second-choice candidates?","acceptedAnswer":{"@type":"Answer","text":"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB."}},{"@type":"Question","name":"Does NSUK conduct physical Post-UTME screening?","acceptedAnswer":{"@type":"Answer","text":"No. The NSUK Post-UTME screening is completely online."}},{"@type":"Question","name":"Can I combine WAEC and NECO results?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK allows combination of WAEC and NECO results with a maximum of two sittings."}},{"@type":"Question","name":"Does NSUK accept Direct Entry?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK accepts Direct Entry for every course. DE candidates enter 200 level directly."}}]}
 </script>
 
 <footer class="footer">
