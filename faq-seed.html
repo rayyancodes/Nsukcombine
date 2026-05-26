@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FAQ Seeder</title>
+<style>body{font-family:sans-serif;max-width:600px;margin:40px auto;padding:16px} #log{background:#f5f5f5;padding:16px;border-radius:8px;height:400px;overflow-y:auto;font-size:13px;font-family:monospace;margin-top:12px} .btn{background:#2f7a2d;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px} .ok{color:#2f7a2d} .err{color:red}</style>
+</head>
+<body>
+<h2>FAQ Seeder</h2>
+<p>Click to upload all 11 FAQs to Firebase. Do this <strong>once only</strong>.</p>
+<button class="btn" onclick="seed()">Upload FAQs to Firebase</button>
+<div id="log"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+const firebaseConfig = {apiKey:"AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",authDomain:"nsuk-combination.firebaseapp.com",projectId:"nsuk-combination",storageBucket:"nsuk-combination.firebasestorage.app",messagingSenderId:"1009558767395",appId:"1:1009558767395:web:1a208eb6e7befa4632ae96"};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const FAQS = [
+  {order:1,question:"What is the NSUK cut-off mark for 2026?",answer:"200 and above: Law, Community Health.\n\n180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition and Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering.\n\n170 and above: All other courses."},
+  {order:2,question:"Does NSUK accept second-choice candidates?",answer:"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB to be eligible."},
+  {order:3,question:"Does NSUK conduct physical Post-UTME screening?",answer:"No. The NSUK Post-UTME screening is completely online. All registrations are done online — you do not need to be physically present at the school."},
+  {order:4,question:"Can I combine WAEC and NECO results?",answer:"Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of two sittings."},
+  {order:5,question:"What type of O'Level results does NSUK accept?",answer:"NSUK accepts results from WAEC, NECO, NABTEB and NBAIS."},
+  {order:6,question:"What are the O'Level requirements for UTME candidates?",answer:"UTME candidates must possess at least five (5) O'Level credit passes (C6 and above) in relevant subjects including English Language and Mathematics, at not more than two (2) sittings in WAEC, NECO, NABTEB and/or NBAIS."},
+  {order:7,question:"What happens if I choose the wrong subject combination?",answer:"The Post-UTME system will automatically disqualify you. Use this website to find the correct combination for your course before registering."},
+  {order:8,question:"Can I apply if my JAMB score is below the cut-off mark?",answer:"No. If your score is below the required cut-off for your preferred course, do a JAMB change of course to another course that matches both your score and subject combination."},
+  {order:9,question:"Can I use awaiting results for NSUK Post-UTME?",answer:"Yes. You can register while awaiting your result. However, you must upload your result before the portal closes or you will be automatically disqualified."},
+  {order:10,question:"Does NSUK accept Direct Entry candidates?",answer:"Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter 200 level directly."},
+  {order:11,question:"What are the requirements for Direct Entry candidates?",answer:"Direct Entry candidates must have one of: minimum Lower Credit in ND or Nasarawa State University Diploma, Merit in NCE, or 8 points in IJMB.\n\nMust also possess five O'Level credit passes including English and Mathematics at not more than two sittings, and upload O'Level results on JAMB profile.\n\nNote: DE candidates into Community Health, Environmental Health and Health Information Management must be licensed by their professional bodies."}
+];
+function log(msg,cls){const el=document.getElementById('log');el.innerHTML+=`<div class="${cls||''}">${msg}</div>`;el.scrollTop=el.scrollHeight;}
+window.seed=async function(){
+  log('Uploading FAQs...');
+  let ok=0;
+  for(const f of FAQS){
+    try{await addDoc(collection(db,'faqs'),f);log('FAQ '+f.order+': done','ok');ok++;}
+    catch(e){log('Failed: '+e.message,'err');}
+  }
+  log('<strong>Done! '+ok+'/'+FAQS.length+' uploaded.</strong>',ok===FAQS.length?'ok':'err');
+};
+</script>
+</body>
+</html>

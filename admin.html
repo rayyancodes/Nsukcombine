@@ -91,6 +91,17 @@
   .section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#2a392c;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--border)}
 
   /* TOAST */
+  /* FAQ ADMIN */
+  .faq-admin-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
+  .faq-admin-num{background:var(--brand);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-top:2px}
+  .faq-admin-body{flex:1;min-width:0}
+  .faq-admin-q{font-size:14px;font-weight:700;color:#122016;margin-bottom:4px}
+  .faq-admin-a{font-size:13px;color:#4a5a51;line-height:1.5;white-space:pre-wrap}
+  .faq-admin-actions{display:flex;gap:6px;margin-top:8px}
+  .btn-faq-edit{padding:5px 12px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+  .btn-faq-del{padding:5px 10px;background:#fdecea;color:var(--fail);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+  .btn-faq-del:hover{background:var(--fail);color:#fff}
+
   /* TABS */
   .tabs{display:flex;gap:8px;margin-bottom:16px}
   .tab{flex:1;padding:10px;border:2px solid var(--border);border-radius:10px;background:#fff;font-size:14px;font-weight:700;cursor:pointer;text-align:center;color:#666;transition:all .15s}
@@ -188,6 +199,7 @@
   <div class="tabs">
     <button class="tab active" id="tab-courses" onclick="switchTab('courses')">🎓 Courses</button>
     <button class="tab" id="tab-announcements" onclick="switchTab('announcements')">📢 Announcements</button>
+    <button class="tab" id="tab-faqs" onclick="switchTab('faqs')">❓ FAQs</button>
   </div>
 
   <!-- COURSES SECTION -->
@@ -256,6 +268,27 @@
       <button onclick="loadAnnouncements()" style="padding:6px 14px;background:#f0f7ef;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer">🔄 Refresh</button>
     </div>
     <div id="annList"><div class="ann-empty">No announcements yet.</div></div>
+  </div>
+</div>
+
+<!-- FAQ MODAL -->
+<div class="modal-overlay" id="faqModalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeFaqModal()">✕</button>
+    <h2 id="faqModalTitle">Add FAQ</h2>
+    <div class="form-group">
+      <label>Question</label>
+      <input type="text" id="faqQuestion" placeholder="e.g. What is the NSUK cut-off mark?">
+    </div>
+    <div class="form-group">
+      <label>Answer</label>
+      <textarea id="faqAnswer" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;min-height:120px;font-family:inherit;resize:vertical" placeholder="Type the answer here..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Order Number <span style="font-weight:400;color:#888">(controls display order)</span></label>
+      <input type="number" id="faqOrder" placeholder="e.g. 1, 2, 3..." min="1">
+    </div>
+    <button class="save-btn" id="faqSaveBtn" onclick="saveFaq()">💾 Save FAQ</button>
   </div>
 </div>
 
@@ -669,9 +702,12 @@ function showToast(msg){
 window.switchTab = function(tab){
   document.getElementById('section-courses').style.display      = tab==='courses'      ? 'block' : 'none';
   document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
+  document.getElementById('section-faqs').style.display         = tab==='faqs'         ? 'block' : 'none';
   document.getElementById('tab-courses').classList.toggle('active',      tab==='courses');
   document.getElementById('tab-announcements').classList.toggle('active', tab==='announcements');
+  document.getElementById('tab-faqs').classList.toggle('active',          tab==='faqs');
   if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
+  if(tab==='faqs') loadFaqs();
 };
 
 // ── ADMIN PROFILE ────────────────────────────────────────────
@@ -882,6 +918,87 @@ window.deleteAnnouncement = function(id){
   };
   document.getElementById('confirmOverlay').classList.add('open');
 };
+
+
+// ── FAQ MANAGEMENT ────────────────────────────────────────────
+let editingFaqId = null;
+
+async function loadFaqs(){
+  const list = document.getElementById('faqList');
+  list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
+  try {
+    const snap = await getDocs(query(collection(db,'faqs'), orderBy('order','asc')));
+    if(snap.empty){ list.innerHTML = '<div class="ann-empty">No FAQs yet. Click "+ Add FAQ" to create one.</div>'; return; }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const data = d.data();
+      const card = document.createElement('div'); card.className = 'faq-admin-card';
+      card.innerHTML = `
+        <div class="faq-admin-num">${data.order||'?'}</div>
+        <div class="faq-admin-body">
+          <div class="faq-admin-q">${data.question}</div>
+          <div class="faq-admin-a">${data.answer}</div>
+          <div class="faq-admin-actions">
+            <button class="btn-faq-edit" onclick="openFaqModal('${d.id}','${encodeURIComponent(data.question)}','${encodeURIComponent(data.answer)}',${data.order||1})">✏️ Edit</button>
+            <button class="btn-faq-del" onclick="deleteFaq('${d.id}','${data.question.substring(0,40)}')">🗑️ Delete</button>
+          </div>
+        </div>`;
+      list.appendChild(card);
+    });
+  } catch(e){ list.innerHTML = `<div class="ann-empty" style="color:red">❌ Error: ${e.message}</div>`; }
+}
+
+window.openFaqModal = function(id, q, a, order){
+  editingFaqId = id || null;
+  document.getElementById('faqModalTitle').textContent = id ? '✏️ Edit FAQ' : '➕ Add FAQ';
+  document.getElementById('faqQuestion').value = id ? decodeURIComponent(q) : '';
+  document.getElementById('faqAnswer').value   = id ? decodeURIComponent(a) : '';
+  document.getElementById('faqOrder').value    = id ? order : '';
+  document.getElementById('faqModalOverlay').classList.add('open');
+};
+
+window.closeFaqModal = function(){
+  document.getElementById('faqModalOverlay').classList.remove('open');
+  editingFaqId = null;
+};
+
+window.saveFaq = async function(){
+  const question = document.getElementById('faqQuestion').value.trim();
+  const answer   = document.getElementById('faqAnswer').value.trim();
+  const order    = parseInt(document.getElementById('faqOrder').value) || 1;
+  if(!question || !answer){ showToast('❌ Question and answer are required.'); return; }
+  const btn = document.getElementById('faqSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  try {
+    const data = { question, answer, order };
+    if(editingFaqId){
+      await setDoc(doc(db,'faqs',editingFaqId), data, {merge:true});
+    } else {
+      await addDoc(collection(db,'faqs'), data);
+    }
+    showToast('✅ FAQ saved!');
+    closeFaqModal();
+    await loadFaqs();
+  } catch(e){ showToast('❌ Error: ' + e.message); }
+  btn.disabled = false; btn.textContent = '💾 Save FAQ';
+};
+
+window.deleteFaq = function(id, preview){
+  document.getElementById('confirmMsg').textContent = `Delete FAQ: "${preview}..."?`;
+  document.getElementById('confirmYes').onclick = async function(){
+    closeConfirm();
+    try {
+      await deleteDoc(doc(db,'faqs',id));
+      showToast('🗑️ FAQ deleted.');
+      await loadFaqs();
+    } catch(e){ showToast('❌ Error: ' + e.message); }
+  };
+  document.getElementById('confirmOverlay').classList.add('open');
+};
+
+document.getElementById('faqModalOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeFaqModal();
+});
 
 // Close modal on overlay click
 document.getElementById('modalOverlay').addEventListener('click', function(e){

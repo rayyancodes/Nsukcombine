@@ -238,6 +238,30 @@ async function loadCourses(){
   }
 }
 loadCourses();
+loadFaqsFromFirebase();
+
+async function loadFaqsFromFirebase(){
+  try {
+    const { getDocs: gd, collection: col, query: q, orderBy: ob } = await import('https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js');
+    const snap = await gd(q(col(db,'faqs'), ob('order','asc')));
+    const container = document.getElementById('faqContainer');
+    if(!container) return;
+    if(snap.empty){ container.innerHTML = ''; return; }
+    let html = '';
+    let schemaItems = [];
+    snap.forEach(d => {
+      const f = d.data();
+      html += `<div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">${f.order}. ${f.question}</button><div class="faq-a"><p>${f.answer.replace(/\n/g,'</p><p>')}</p></div></div>`;
+      schemaItems.push({"@type":"Question","name":f.question,"acceptedAnswer":{"@type":"Answer","text":f.answer}});
+    });
+    container.innerHTML = html;
+    // Inject schema markup dynamically
+    const schema = document.createElement('script');
+    schema.type = 'application/ld+json';
+    schema.textContent = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":schemaItems});
+    document.head.appendChild(schema);
+  } catch(e){ console.error('FAQ load error:', e); }
+}
 </script>
 
 
@@ -423,38 +447,7 @@ if(data && data.length) render(data);
 </script>
 
 <!-- FAQ SECTION -->
-<div class="wrap">
-  <div class="faq-section">
-    <h2 class="faq-heading">Frequently Asked Questions</h2>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">1. What is the NSUK cut-off mark for 2026?</button><div class="faq-a"><p><strong>200 and above:</strong> Law, Community Health</p><p><strong>180 and above:</strong> Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition &amp; Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering</p><p><strong>170 and above:</strong> All other courses</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">2. Does NSUK accept second-choice candidates?</button><div class="faq-a"><p>❌ No. NSUK does not accept second-choice candidates. You must choose NSUK as your <strong>first choice</strong> on JAMB to be eligible.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">3. Does NSUK conduct physical Post-UTME screening?</button><div class="faq-a"><p>❌ No. The NSUK Post-UTME screening is <strong>completely online</strong>. All registrations are done online — you do not need to be physically present at the school.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">4. Can I combine WAEC and NECO results?</button><div class="faq-a"><p>✅ Yes. NSUK allows the combination of WAEC and NECO results, with a maximum of <strong>two sittings</strong>.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">5. What type of O'Level results does NSUK accept?</button><div class="faq-a"><p>✅ NSUK accepts results from <strong>WAEC, NECO, NABTEB</strong> and <strong>NBAIS</strong>.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">6. What are the O'Level requirements for UTME candidates?</button><div class="faq-a"><p>UTME candidates must possess at least <strong>five (5) O'Level credit passes (C6 and above)</strong> in relevant subjects including <strong>English Language</strong> and <strong>Mathematics</strong>, at not more than <strong>two (2) sittings</strong> in WAEC, NECO, NABTEB and/or NBAIS.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">7. What happens if I choose the wrong subject combination?</button><div class="faq-a"><p>⚠️ The Post-UTME system will <strong>automatically disqualify you</strong>. Use this website to find the correct combination for your course before registering.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">8. Can I apply if my JAMB score is below the cut-off mark?</button><div class="faq-a"><p>❌ No. If your score is below the required cut-off for your preferred course, do a <strong>JAMB change of course</strong> to another course that matches both your score and subject combination. Use this website to find a suitable course.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">9. Can I use awaiting results for NSUK Post-UTME?</button><div class="faq-a"><p>✅ Yes. You can register while awaiting your result. However, you <strong>must upload your result before the portal closes</strong> or you will be automatically disqualified.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">10. Does NSUK accept Direct Entry candidates?</button><div class="faq-a"><p>✅ Yes. NSUK accepts Direct Entry for every course. Direct Entry candidates skip 100 level and enter <strong>200 level</strong> directly.</p></div></div>
-
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">11. What are the requirements for Direct Entry candidates?</button><div class="faq-a"><p>Direct Entry candidates must have one of: minimum Lower Credit in <strong>ND</strong> or Nasarawa State University Diploma, Merit in <strong>NCE</strong>, or <strong>8 points in IJMB</strong>.</p><p>✅ Must also possess five O'Level credit passes including English and Mathematics at not more than two sittings.</p><p>✅ Must upload O'Level results on JAMB profile at a JAMB accredited CBT centre.</p><p>⚠️ DE candidates into <strong>Community Health, Environmental Health Science</strong> and <strong>Health Information Management</strong> must be licensed by their respective professional bodies.</p></div></div>
-
-  </div>
-</div>
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the NSUK cut-off mark for 2026?","acceptedAnswer":{"@type":"Answer","text":"200 and above: Law, Community Health. 180 and above: Computer Science, Cyber Security, Data Science, Environmental Health, Nutrition and Dietetics, Health Information Management, Chemical Engineering, Civil Engineering, Electrical Electronics Engineering. 170 and above: All other courses."}},{"@type":"Question","name":"Does NSUK accept second-choice candidates?","acceptedAnswer":{"@type":"Answer","text":"No. NSUK does not accept second-choice candidates. You must choose NSUK as your first choice on JAMB."}},{"@type":"Question","name":"Does NSUK conduct physical Post-UTME screening?","acceptedAnswer":{"@type":"Answer","text":"No. The NSUK Post-UTME screening is completely online."}},{"@type":"Question","name":"Can I combine WAEC and NECO results?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK allows combination of WAEC and NECO results with a maximum of two sittings."}},{"@type":"Question","name":"Does NSUK accept Direct Entry?","acceptedAnswer":{"@type":"Answer","text":"Yes. NSUK accepts Direct Entry for every course. DE candidates enter 200 level directly."}}]}
-</script>
+<div class="wrap"><div class="faq-section" id="faqSection"><h2 class="faq-heading">Frequently Asked Questions</h2><div id="faqContainer"><p style="color:#888;font-size:13px;text-align:center;padding:20px">Loading FAQs...</p></div></div></div>
 
 <footer class="footer">
   <div class="inner">
