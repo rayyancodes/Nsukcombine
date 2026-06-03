@@ -445,9 +445,15 @@ window.doLogin = async function(){
     await signInWithEmailAndPassword(auth, email, pass);
     // onAuthStateChanged will handle the rest
   } catch(e){
-    let msg = '❌ Incorrect email or password.';
+    console.error('Login error:', e.code, e.message);
+    let msg = '❌ ' + (e.message || 'Login failed. Try again.');
+    if(e.code === 'auth/invalid-email') msg = '❌ Invalid email address.';
+    if(e.code === 'auth/user-not-found') msg = '❌ No account found with this email.';
+    if(e.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
+    if(e.code === 'auth/invalid-credential') msg = '❌ Incorrect email or password.';
     if(e.code === 'auth/too-many-requests') msg = '❌ Too many failed attempts. Try again later.';
     if(e.code === 'auth/network-request-failed') msg = '❌ Network error. Check your connection.';
+    if(e.code === 'auth/unauthorized-domain') msg = '❌ This domain is not authorised in Firebase. Add nsukcombination.netlify.app to Firebase Auth settings.';
     errEl.textContent = msg;
     errEl.style.display = 'block';
   }
