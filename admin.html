@@ -874,12 +874,20 @@ async function loadAnnouncements(){
   const list = document.getElementById('annList');
   list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
   try {
-    const q = query(collection(db, 'announcements'), orderBy('timestamp', 'desc'));
-    const snap = await getDocs(q);
+    const snap = await getDocs(collection(db, 'announcements'));
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
     list.innerHTML = '';
-    snap.forEach(d => {
-      const data = d.data();
+    // Sort by timestamp descending client-side
+    const docs = [];
+    snap.forEach(d => docs.push({id: d.id, ...d.data()}));
+    docs.sort((a,b) => {
+      const ta = a.timestamp ? a.timestamp.toMillis() : new Date(a.clientTime||0).getTime();
+      const tb = b.timestamp ? b.timestamp.toMillis() : new Date(b.clientTime||0).getTime();
+      return tb - ta;
+    });
+    docs.forEach(data => {
+      const d = {id: data.id, data: () => data};
+      const data = d.data ? d.data() : d;
       const reactions = data.reactions || {};
       let reactionSummary = '';
       EMOJIS.forEach(e => {
@@ -927,11 +935,15 @@ async function loadFaqs(){
   const list = document.getElementById('faqList');
   list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
   try {
-    const snap = await getDocs(query(collection(db,'faqs'), orderBy('order','asc')));
+    const snap = await getDocs(collection(db,'faqs'));
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No FAQs yet. Click "+ Add FAQ" to create one.</div>'; return; }
     list.innerHTML = '';
-    snap.forEach(d => {
-      const data = d.data();
+    const faqDocs = [];
+    snap.forEach(d => faqDocs.push({id: d.id, ...d.data()}));
+    faqDocs.sort((a,b) => (a.order||0) - (b.order||0));
+    faqDocs.forEach(data => {
+      const d = {id: data.id, data: () => data};
+      const data = d.data ? d.data() : d;
       const card = document.createElement('div'); card.className = 'faq-admin-card';
       card.innerHTML = `
         <div class="faq-admin-num">${data.order||'?'}</div>
