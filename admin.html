@@ -490,7 +490,7 @@ window._forgotPassword = async function(){
 // ── LOAD ──────────────────────────────────────────────────────
 async function loadCourses(){
   try {
-    const snap = await db.collection( 'courses'));
+    const snap = await db.collection('courses').get();
     allCourses = [];
     snap.forEach(d => allCourses.push({ id: d.id, ...d.data() }));
     allCourses.sort((a,b) => a.name.localeCompare(b.name));
@@ -623,7 +623,7 @@ window._saveCourse = async function(){
   };
 
   try {
-    await db.doc( 'courses', id), data);
+    await db.collection('courses').doc(id).set(data);
     showToast('✅ Course saved successfully!');
     closeModal();
     await loadCourses();
@@ -639,7 +639,7 @@ window._confirmDelete = function(id, name){
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
     try {
-      await db.doc( 'courses', id));
+      await db.collection('courses').doc(id).delete();
       showToast('🗑️ Course deleted.');
       await loadCourses();
     } catch(e){ showToast('❌ Error: ' + e.message); }
@@ -880,7 +880,7 @@ async function loadAnnouncements(){
   const list = document.getElementById('annList');
   list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
   try {
-    const snap = await db.collection( 'announcements'));
+    const snap = await db.collection('announcements').get();
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
     list.innerHTML = '';
     // Sort by timestamp descending client-side
@@ -891,9 +891,8 @@ async function loadAnnouncements(){
       const tb = b.timestamp ? b.timestamp.toMillis() : new Date(b.clientTime||0).getTime();
       return tb - ta;
     });
-    docs.forEach(data => {
-      const d = {id: data.id, data: () => data};
-      const data = d.data ? d.data() : d;
+    docs.forEach(docItem => {
+      const data = docItem;
       const reactions = data.reactions || {};
       let reactionSummary = '';
       EMOJIS.forEach(e => {
@@ -908,7 +907,7 @@ async function loadAnnouncements(){
       card.innerHTML = `
         <div class="ann-header">
           <div class="ann-meta">📅 ${time}</div>
-          <button class="btn-ann-del" onclick="deleteAnnouncement('${d.id}')">🗑️ Delete</button>
+          <button class="btn-ann-del" onclick="deleteAnnouncement('${docItem.id}')">🗑️ Delete</button>
         </div>
         ${data.imageUrl ? `<img class="ann-img" src="${data.imageUrl}" alt="image">` : ''}
         ${data.text ? `<div class="ann-text">${data.text}</div>` : ''}
@@ -925,7 +924,7 @@ window._deleteAnnouncement = function(id){
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
     try {
-      await db.doc( 'announcements', id));
+      await db.collection('announcements').doc(id).delete();
       showToast('🗑️ Announcement deleted.');
       await loadAnnouncements();
     } catch(e){ showToast('❌ Error: ' + e.message); }
@@ -948,8 +947,6 @@ async function loadFaqs(){
     snap.forEach(d => faqDocs.push({id: d.id, ...d.data()}));
     faqDocs.sort((a,b) => (a.order||0) - (b.order||0));
     faqDocs.forEach(data => {
-      const d = {id: data.id, data: () => data};
-      const data = d.data ? d.data() : d;
       const card = document.createElement('div'); card.className = 'faq-admin-card';
       card.innerHTML = `
         <div class="faq-admin-num">${data.order||'?'}</div>
@@ -990,7 +987,7 @@ window._saveFaq = async function(){
   try {
     const data = { question, answer, order };
     if(editingFaqId){
-      await db.doc('faqs',editingFaqId), data, {merge:true});
+      await db.collection('faqs').doc(editingFaqId).set(data, {merge:true});
     } else {
       await db.collection('faqs').add(, data);
     }
