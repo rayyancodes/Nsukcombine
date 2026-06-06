@@ -393,6 +393,36 @@
 
 <div class="toast" id="toast"></div>
 
+<script>
+// Global stubs — these get replaced once the module loads
+function doLogin(){ if(window._doLogin) window._doLogin(); }
+function doLogout(){ if(window._doLogout) window._doLogout(); }
+function forgotPassword(){ if(window._forgotPassword) window._forgotPassword(); }
+function switchTab(t){ if(window._switchTab) window._switchTab(t); }
+function openAddModal(){ if(window._openAddModal) window._openAddModal(); }
+function openEditModal(id){ if(window._openEditModal) window._openEditModal(id); }
+function closeModal(){ if(window._closeModal) window._closeModal(); }
+function confirmDelete(id,n){ if(window._confirmDelete) window._confirmDelete(id,n); }
+function closeConfirm(){ if(window._closeConfirm) window._closeConfirm(); }
+function saveCourse(){ if(window._saveCourse) window._saveCourse(); }
+function deleteAnnouncement(id){ if(window._deleteAnnouncement) window._deleteAnnouncement(id); }
+function postAnnouncement(){ if(window._postAnnouncement) window._postAnnouncement(); }
+function previewImage(i){ if(window._previewImage) window._previewImage(i); }
+function previewGroupIcon(i){ if(window._previewGroupIcon) window._previewGroupIcon(i); }
+function previewAdminIcon(i){ if(window._previewAdminIcon) window._previewAdminIcon(i); }
+function saveGroupSettings(){ if(window._saveGroupSettings) window._saveGroupSettings(); }
+function saveAdminSettings(){ if(window._saveAdminSettings) window._saveAdminSettings(); }
+function addOlevelSlot(){ if(window._addOlevelSlot) window._addOlevelSlot(); }
+function removeTag(k,i){ if(window._removeTag) window._removeTag(k,i); }
+function handleTagKey(e,k){ if(window._handleTagKey) window._handleTagKey(e,k); }
+function addTagOnBlur(k){ if(window._addTagOnBlur) window._addTagOnBlur(k); }
+function focusTagInput(id){ if(window._focusTagInput) window._focusTagInput(id); }
+function openFaqModal(id,q,a,o){ if(window._openFaqModal) window._openFaqModal(id,q,a,o); }
+function closeFaqModal(){ if(window._closeFaqModal) window._closeFaqModal(); }
+function saveFaq(){ if(window._saveFaq) window._saveFaq(); }
+function deleteFaq(id,p){ if(window._deleteFaq) window._deleteFaq(id,p); }
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -430,7 +460,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-window.doLogin = async function(){
+window._doLogin = async function(){
   const email = document.getElementById('pwInput').value.trim();
   const pass  = document.getElementById('passInput').value;
   const errEl = document.getElementById('loginErr');
@@ -460,11 +490,11 @@ window.doLogin = async function(){
   btn.disabled = false; btn.textContent = 'Login';
 };
 
-window.doLogout = async function(){
+window._doLogout = async function(){
   await signOut(auth);
 };
 
-window.forgotPassword = async function(){
+window._forgotPassword = async function(){
   const email = document.getElementById('pwInput').value.trim();
   const errEl = document.getElementById('loginErr');
   const successEl = document.getElementById('forgotSuccess');
@@ -563,7 +593,7 @@ window.renderList = function(){
 };
 
 // ── MODAL ─────────────────────────────────────────────────────
-window.openAddModal = function(){
+window._openAddModal = function(){
   editingId = null;
   document.getElementById('modalTitle').textContent = '➕ Add New Course';
   document.getElementById('fName').value = '';
@@ -578,7 +608,7 @@ window.openAddModal = function(){
   document.getElementById('modalOverlay').classList.add('open');
 };
 
-window.openEditModal = function(id){
+window._openEditModal = function(id){
   const c = allCourses.find(x => x.id === id);
   if(!c) return;
   editingId = id;
@@ -595,12 +625,12 @@ window.openEditModal = function(id){
   document.getElementById('modalOverlay').classList.add('open');
 };
 
-window.closeModal = function(){
+window._closeModal = function(){
   document.getElementById('modalOverlay').classList.remove('open');
 };
 
 // ── SAVE ──────────────────────────────────────────────────────
-window.saveCourse = async function(){
+window._saveCourse = async function(){
   const name    = document.getElementById('fName').value.trim();
   const faculty = document.getElementById('fFaculty').value.trim();
   const cutoff  = parseInt(document.getElementById('fCutoff').value);
@@ -634,7 +664,7 @@ window.saveCourse = async function(){
 };
 
 // ── DELETE ────────────────────────────────────────────────────
-window.confirmDelete = function(id, name){
+window._confirmDelete = function(id, name){
   document.getElementById('confirmMsg').textContent = `Are you sure you want to delete "${name}"? This cannot be undone.`;
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
@@ -646,7 +676,7 @@ window.confirmDelete = function(id, name){
   };
   document.getElementById('confirmOverlay').classList.add('open');
 };
-window.closeConfirm = function(){ document.getElementById('confirmOverlay').classList.remove('open'); };
+window._closeConfirm = function(){ document.getElementById('confirmOverlay').classList.remove('open'); };
 
 // ── TAG INPUT ─────────────────────────────────────────────────
 function setTags(key, arr){
@@ -668,12 +698,12 @@ function renderTags(key){
   });
 }
 
-window.removeTag = function(key, idx){
+window._removeTag = function(key, idx){
   tags[key].splice(idx, 1);
   renderTags(key);
 };
 
-window.handleTagKey = function(e, key){
+window._handleTagKey = function(e, key){
   if(e.key === 'Enter' || e.key === ','){
     e.preventDefault();
     addTag(key, e.target.value);
@@ -684,7 +714,7 @@ window.handleTagKey = function(e, key){
   }
 };
 
-window.addTagOnBlur = function(key){
+window._addTagOnBlur = function(key){
   const inputId = key==='jambComp'?'jambCompInput':key==='jambOpt'?'jambOptInput':key==='olComp'?'olCompInput':'olOptInput';
   const val = document.getElementById(inputId).value;
   if(val.trim()){ addTag(key, val); document.getElementById(inputId).value = ''; }
@@ -695,7 +725,7 @@ function addTag(key, val){
   if(v && !tags[key].includes(v)){ tags[key].push(v); renderTags(key); }
 }
 
-window.focusTagInput = function(id){ document.getElementById(id).focus(); };
+window._focusTagInput = function(id){ document.getElementById(id).focus(); };
 
 // ── TOAST ─────────────────────────────────────────────────────
 function showToast(msg){
@@ -705,7 +735,7 @@ function showToast(msg){
 }
 
 // ── TABS ──────────────────────────────────────────────────────
-window.switchTab = function(tab){
+window._switchTab = function(tab){
   document.getElementById('section-courses').style.display      = tab==='courses'      ? 'block' : 'none';
   document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
   document.getElementById('section-faqs').style.display         = tab==='faqs'         ? 'block' : 'none';
@@ -732,7 +762,7 @@ async function loadAdminSettings(){
   } catch(e){ console.error(e); }
 }
 
-window.previewAdminIcon = function(input){
+window._previewAdminIcon = function(input){
   selectedAdminIconFile = input.files[0];
   if(!selectedAdminIconFile) return;
   const reader = new FileReader();
@@ -742,7 +772,7 @@ window.previewAdminIcon = function(input){
   reader.readAsDataURL(selectedAdminIconFile);
 };
 
-window.saveAdminSettings = async function(){
+window._saveAdminSettings = async function(){
   const name = document.getElementById('adminName').value.trim();
   const btn = document.getElementById('adminSaveBtn');
   btn.disabled = true; btn.textContent = 'Saving...';
@@ -781,7 +811,7 @@ async function loadGroupSettings(){
   } catch(e){ console.error(e); }
 }
 
-window.previewGroupIcon = function(input){
+window._previewGroupIcon = function(input){
   selectedIconFile = input.files[0];
   if(!selectedIconFile) return;
   const reader = new FileReader();
@@ -791,7 +821,7 @@ window.previewGroupIcon = function(input){
   reader.readAsDataURL(selectedIconFile);
 };
 
-window.saveGroupSettings = async function(){
+window._saveGroupSettings = async function(){
   const name = document.getElementById('gsName').value.trim();
   const btn = document.getElementById('gsSaveBtn');
   btn.disabled = true; btn.textContent = 'Saving...';
@@ -821,7 +851,7 @@ const EMOJIS = ['👍','❤️','😮','😂','😢','🙏','🔥','💯'];
 
 let selectedImageFile = null;
 
-window.previewImage = function(input){
+window._previewImage = function(input){
   selectedImageFile = input.files[0];
   if(!selectedImageFile) return;
   const preview = document.getElementById('imgPreview');
@@ -839,7 +869,7 @@ async function uploadToCloudinary(file){
   return data.secure_url;
 }
 
-window.postAnnouncement = async function(){
+window._postAnnouncement = async function(){
   const text = document.getElementById('annText').value.trim();
   if(!text && !selectedImageFile){ showToast('❌ Please write a message or attach an image.'); return; }
 
@@ -920,7 +950,7 @@ async function loadAnnouncements(){
   }
 }
 
-window.deleteAnnouncement = function(id){
+window._deleteAnnouncement = function(id){
   document.getElementById('confirmMsg').textContent = 'Are you sure you want to delete this announcement?';
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
@@ -966,7 +996,7 @@ async function loadFaqs(){
   } catch(e){ list.innerHTML = `<div class="ann-empty" style="color:red">❌ Error: ${e.message}</div>`; }
 }
 
-window.openFaqModal = function(id, q, a, order){
+window._openFaqModal = function(id, q, a, order){
   editingFaqId = id || null;
   document.getElementById('faqModalTitle').textContent = id ? '✏️ Edit FAQ' : '➕ Add FAQ';
   document.getElementById('faqQuestion').value = id ? decodeURIComponent(q) : '';
@@ -975,12 +1005,12 @@ window.openFaqModal = function(id, q, a, order){
   document.getElementById('faqModalOverlay').classList.add('open');
 };
 
-window.closeFaqModal = function(){
+window._closeFaqModal = function(){
   document.getElementById('faqModalOverlay').classList.remove('open');
   editingFaqId = null;
 };
 
-window.saveFaq = async function(){
+window._saveFaq = async function(){
   const question = document.getElementById('faqQuestion').value.trim();
   const answer   = document.getElementById('faqAnswer').value.trim();
   const order    = parseInt(document.getElementById('faqOrder').value) || 1;
@@ -1001,7 +1031,7 @@ window.saveFaq = async function(){
   btn.disabled = false; btn.textContent = '💾 Save FAQ';
 };
 
-window.deleteFaq = function(id, preview){
+window._deleteFaq = function(id, preview){
   document.getElementById('confirmMsg').textContent = `Delete FAQ: "${preview}..."?`;
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
