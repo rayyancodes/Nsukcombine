@@ -393,40 +393,10 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
-// Global stubs — these get replaced once the module loads
-function doLogin(){ if(window._doLogin) window._doLogin(); }
-function doLogout(){ if(window._doLogout) window._doLogout(); }
-function forgotPassword(){ if(window._forgotPassword) window._forgotPassword(); }
-function switchTab(t){ if(window._switchTab) window._switchTab(t); }
-function openAddModal(){ if(window._openAddModal) window._openAddModal(); }
-function openEditModal(id){ if(window._openEditModal) window._openEditModal(id); }
-function closeModal(){ if(window._closeModal) window._closeModal(); }
-function confirmDelete(id,n){ if(window._confirmDelete) window._confirmDelete(id,n); }
-function closeConfirm(){ if(window._closeConfirm) window._closeConfirm(); }
-function saveCourse(){ if(window._saveCourse) window._saveCourse(); }
-function deleteAnnouncement(id){ if(window._deleteAnnouncement) window._deleteAnnouncement(id); }
-function postAnnouncement(){ if(window._postAnnouncement) window._postAnnouncement(); }
-function previewImage(i){ if(window._previewImage) window._previewImage(i); }
-function previewGroupIcon(i){ if(window._previewGroupIcon) window._previewGroupIcon(i); }
-function previewAdminIcon(i){ if(window._previewAdminIcon) window._previewAdminIcon(i); }
-function saveGroupSettings(){ if(window._saveGroupSettings) window._saveGroupSettings(); }
-function saveAdminSettings(){ if(window._saveAdminSettings) window._saveAdminSettings(); }
-function addOlevelSlot(){ if(window._addOlevelSlot) window._addOlevelSlot(); }
-function removeTag(k,i){ if(window._removeTag) window._removeTag(k,i); }
-function handleTagKey(e,k){ if(window._handleTagKey) window._handleTagKey(e,k); }
-function addTagOnBlur(k){ if(window._addTagOnBlur) window._addTagOnBlur(k); }
-function focusTagInput(id){ if(window._focusTagInput) window._focusTagInput(id); }
-function openFaqModal(id,q,a,o){ if(window._openFaqModal) window._openFaqModal(id,q,a,o); }
-function closeFaqModal(){ if(window._closeFaqModal) window._closeFaqModal(); }
-function saveFaq(){ if(window._saveFaq) window._saveFaq(); }
-function deleteFaq(id,p){ if(window._deleteFaq) window._deleteFaq(id,p); }
-</script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, addDoc, orderBy, query, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -437,9 +407,9 @@ const firebaseConfig = {
   appId: "1:1009558767395:web:1a208eb6e7befa4632ae96"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 let allCourses = [];
 let editingId = null;
@@ -447,7 +417,7 @@ let tags = { jambComp:[], jambOpt:[], olComp:[], olOpt:[] };
 
 // ── FIREBASE AUTH LOGIN ───────────────────────────────────────
 // Listen for auth state changes — auto-restore session
-onAuthStateChanged(auth, user => {
+auth.onAuthStateChanged( user => {
   if(user){
     // User is logged in
     document.getElementById('loginWrap').style.display  = 'none';
@@ -472,7 +442,7 @@ window._doLogin = async function(){
   errEl.style.display = 'none';
 
   try {
-    await signInWithEmailAndPassword(auth, email, pass);
+    await auth.signInWithEmailAndPassword(email, pass);
     // onAuthStateChanged will handle the rest
   } catch(e){
     console.error('Login error:', e.code, e.message);
@@ -491,7 +461,7 @@ window._doLogin = async function(){
 };
 
 window._doLogout = async function(){
-  await signOut(auth);
+  await auth.signOut();
 };
 
 window._forgotPassword = async function(){
@@ -507,7 +477,7 @@ window._forgotPassword = async function(){
   }
 
   try {
-    await sendPasswordResetEmail(auth, email);
+    await auth.sendPasswordResetEmail(email);
     successEl.style.display = 'block';
     errEl.style.display = 'none';
   } catch(e){
@@ -520,7 +490,7 @@ window._forgotPassword = async function(){
 // ── LOAD ──────────────────────────────────────────────────────
 async function loadCourses(){
   try {
-    const snap = await getDocs(collection(db, 'courses'));
+    const snap = await db.collection( 'courses'));
     allCourses = [];
     snap.forEach(d => allCourses.push({ id: d.id, ...d.data() }));
     allCourses.sort((a,b) => a.name.localeCompare(b.name));
@@ -653,7 +623,7 @@ window._saveCourse = async function(){
   };
 
   try {
-    await setDoc(doc(db, 'courses', id), data);
+    await db.doc( 'courses', id), data);
     showToast('✅ Course saved successfully!');
     closeModal();
     await loadCourses();
@@ -669,7 +639,7 @@ window._confirmDelete = function(id, name){
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
     try {
-      await deleteDoc(doc(db, 'courses', id));
+      await db.doc( 'courses', id));
       showToast('🗑️ Course deleted.');
       await loadCourses();
     } catch(e){ showToast('❌ Error: ' + e.message); }
@@ -751,8 +721,8 @@ let selectedAdminIconFile = null;
 
 async function loadAdminSettings(){
   try {
-    const snap = await getDoc(doc(db,'settings','admin'));
-    if(snap.exists()){
+    const snap = (await db.collection('settings').doc('admin').get());
+    if(snap.exists){
       const d = snap.data();
       if(d.name) document.getElementById('adminName').value = d.name;
       if(d.avatarUrl){
@@ -786,7 +756,7 @@ window._saveAdminSettings = async function(){
     if(name) data.name = name;
     if(avatarUrl) data.avatarUrl = avatarUrl;
     if(Object.keys(data).length){
-      await setDoc(doc(db,'settings','admin'), data, {merge:true});
+      await db.collection('settings').doc('admin').set(data, {merge:true});
       showToast('✅ Admin profile saved!');
     } else {
       showToast('⚠️ Nothing to save.');
@@ -800,8 +770,8 @@ let selectedIconFile = null;
 
 async function loadGroupSettings(){
   try {
-    const snap = await getDoc(doc(db,'settings','group'));
-    if(snap.exists()){
+    const snap = (await db.collection('settings').doc('group').get());
+    if(snap.exists){
       const d = snap.data();
       if(d.name) document.getElementById('gsName').value = d.name;
       if(d.iconUrl){
@@ -835,7 +805,7 @@ window._saveGroupSettings = async function(){
     if(name) data.name = name;
     if(iconUrl) data.iconUrl = iconUrl;
     if(Object.keys(data).length){
-      await setDoc(doc(db,'settings','group'), data, {merge:true});
+      await db.collection('settings').doc('group').set(data, {merge:true});
       showToast('✅ Group settings saved!');
     } else {
       showToast('⚠️ Nothing to save.');
@@ -886,10 +856,10 @@ window._postAnnouncement = async function(){
     }
 
     // Use Firestore serverTimestamp — also store client time as fallback
-    await addDoc(collection(db, 'announcements'), {
+    await addDoc(db.collection( 'announcements'), {
       text: text || '',
       imageUrl: imageUrl || null,
-      timestamp: serverTimestamp(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       clientTime: new Date().toISOString(),
       reactions: {}
     });
@@ -910,7 +880,7 @@ async function loadAnnouncements(){
   const list = document.getElementById('annList');
   list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
   try {
-    const snap = await getDocs(collection(db, 'announcements'));
+    const snap = await db.collection( 'announcements'));
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
     list.innerHTML = '';
     // Sort by timestamp descending client-side
@@ -955,7 +925,7 @@ window._deleteAnnouncement = function(id){
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
     try {
-      await deleteDoc(doc(db, 'announcements', id));
+      await db.doc( 'announcements', id));
       showToast('🗑️ Announcement deleted.');
       await loadAnnouncements();
     } catch(e){ showToast('❌ Error: ' + e.message); }
@@ -971,7 +941,7 @@ async function loadFaqs(){
   const list = document.getElementById('faqList');
   list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
   try {
-    const snap = await getDocs(collection(db,'faqs'));
+    const snap = await db.collection('faqs').get();
     if(snap.empty){ list.innerHTML = '<div class="ann-empty">No FAQs yet. Click "+ Add FAQ" to create one.</div>'; return; }
     list.innerHTML = '';
     const faqDocs = [];
@@ -1020,9 +990,9 @@ window._saveFaq = async function(){
   try {
     const data = { question, answer, order };
     if(editingFaqId){
-      await setDoc(doc(db,'faqs',editingFaqId), data, {merge:true});
+      await db.doc('faqs',editingFaqId), data, {merge:true});
     } else {
-      await addDoc(collection(db,'faqs'), data);
+      await db.collection('faqs').add(, data);
     }
     showToast('✅ FAQ saved!');
     closeFaqModal();
@@ -1036,7 +1006,7 @@ window._deleteFaq = function(id, preview){
   document.getElementById('confirmYes').onclick = async function(){
     closeConfirm();
     try {
-      await deleteDoc(doc(db,'faqs',id));
+      await db.collection('faqs').doc(id).delete();
       showToast('🗑️ FAQ deleted.');
       await loadFaqs();
     } catch(e){ showToast('❌ Error: ' + e.message); }
