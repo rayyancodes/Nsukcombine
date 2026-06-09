@@ -165,6 +165,9 @@
   .confirm-yes{flex:1;padding:11px;background:var(--fail);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px}
   .confirm-no{flex:1;padding:11px;background:#f5f7fb;color:#122016;border:1px solid var(--border);border-radius:10px;font-weight:700;cursor:pointer;font-size:14px}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -393,9 +396,6 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script>
 
 const firebaseConfig = {
@@ -989,7 +989,7 @@ window._saveFaq = async function(){
     if(editingFaqId){
       await db.collection('faqs').doc(editingFaqId).set(data, {merge:true});
     } else {
-      await db.collection('faqs').add(, data);
+      await db.collection('faqs').add(data);
     }
     showToast('✅ FAQ saved!');
     closeFaqModal();
