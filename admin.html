@@ -397,7 +397,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
   authDomain: "nsuk-combination.firebaseapp.com",
@@ -406,637 +405,410 @@ const firebaseConfig = {
   messagingSenderId: "1009558767395",
   appId: "1:1009558767395:web:1a208eb6e7befa4632ae96"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db   = firebase.firestore();
 const auth = firebase.auth();
 
-let allCourses = [];
-let editingId = null;
-let tags = { jambComp:[], jambOpt:[], olComp:[], olOpt:[] };
+const TS = firebase.firestore.FieldValue.serverTimestamp;
+const CLOUDINARY_URL    = 'https://api.cloudinary.com/v1_1/dmcspzbsv/image/upload';
+const CLOUDINARY_PRESET = 'Nsuk-announcements';
+const EMOJIS = ['👍','❤️','😮','😂','😢','🙏','🔥','💯'];
 
-// ── FIREBASE AUTH LOGIN ───────────────────────────────────────
-// Listen for auth state changes — auto-restore session
-auth.onAuthStateChanged( user => {
-  if(user){
-    // User is logged in
-    document.getElementById('loginWrap').style.display  = 'none';
-    document.getElementById('adminWrap').style.display  = 'block';
-    loadCourses();
-  } else {
-    // Not logged in
-    document.getElementById('loginWrap').style.display  = 'flex';
-    document.getElementById('adminWrap').style.display  = 'none';
-  }
+let allCourses = [], editingId = null, editingFaqId = null;
+let tags = {jambComp:[], jambOpt:[], olComp:[], olOpt:[]};
+let selectedImageFile = null, selectedIconFile = null, selectedAdminIconFile = null;
+
+// ── AUTH ──────────────────────────────────────────────────────
+auth.onAuthStateChanged(user => {
+  document.getElementById('loginWrap').style.display  = user ? 'none' : 'flex';
+  document.getElementById('adminWrap').style.display  = user ? 'block' : 'none';
+  if(user) loadCourses();
 });
 
-window.doLogin = async function(){
+function doLogin(){
   const email = document.getElementById('pwInput').value.trim();
   const pass  = document.getElementById('passInput').value;
   const errEl = document.getElementById('loginErr');
   const btn   = document.querySelector('.login-btn');
+  if(!email||!pass){ errEl.textContent='❌ Enter email and password.'; errEl.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Logging in...'; errEl.style.display='none';
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e=>{
+      errEl.textContent = e.code==='auth/invalid-credential'||e.code==='auth/wrong-password' ? '❌ Incorrect email or password.' :
+                          e.code==='auth/too-many-requests' ? '❌ Too many attempts. Try later.' : '❌ '+e.message;
+      errEl.style.display='block';
+      btn.disabled=false; btn.textContent='Login';
+    });
+}
 
-  if(!email || !pass){ errEl.textContent='❌ Please enter your email and password.'; errEl.style.display='block'; return; }
+function doLogout(){ auth.signOut(); }
 
-  btn.disabled = true; btn.textContent = 'Logging in...';
-  errEl.style.display = 'none';
-
-  try {
-    await auth.signInWithEmailAndPassword(email, pass);
-    // onAuthStateChanged will handle the rest
-  } catch(e){
-    console.error('Login error:', e.code, e.message);
-    let msg = '❌ ' + (e.message || 'Login failed. Try again.');
-    if(e.code === 'auth/invalid-email') msg = '❌ Invalid email address.';
-    if(e.code === 'auth/user-not-found') msg = '❌ No account found with this email.';
-    if(e.code === 'auth/wrong-password') msg = '❌ Incorrect password.';
-    if(e.code === 'auth/invalid-credential') msg = '❌ Incorrect email or password.';
-    if(e.code === 'auth/too-many-requests') msg = '❌ Too many failed attempts. Try again later.';
-    if(e.code === 'auth/network-request-failed') msg = '❌ Network error. Check your connection.';
-    if(e.code === 'auth/unauthorized-domain') msg = '❌ This domain is not authorised in Firebase. Add nsukcombination.netlify.app to Firebase Auth settings.';
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
-  }
-  btn.disabled = false; btn.textContent = 'Login';
-};
-
-window.doLogout = async function(){
-  await auth.signOut();
-};
-
-window.forgotPassword = async function(){
+function forgotPassword(){
   const email = document.getElementById('pwInput').value.trim();
   const errEl = document.getElementById('loginErr');
-  const successEl = document.getElementById('forgotSuccess');
+  const sucEl = document.getElementById('forgotSuccess');
+  if(!email){ errEl.textContent='❌ Enter your email first.'; errEl.style.display='block'; sucEl.style.display='none'; return; }
+  auth.sendPasswordResetEmail(email)
+    .then(()=>{ sucEl.style.display='block'; errEl.style.display='none'; })
+    .catch(e=>{ errEl.textContent='❌ '+e.message; errEl.style.display='block'; sucEl.style.display='none'; });
+}
 
-  if(!email){
-    errEl.textContent = '❌ Enter your email address first, then click Forgot password.';
-    errEl.style.display = 'block';
-    successEl.style.display = 'none';
-    return;
-  }
+// ── TABS ──────────────────────────────────────────────────────
+function switchTab(tab){
+  ['courses','announcements','faqs'].forEach(t=>{
+    document.getElementById('section-'+t).style.display = t===tab ? 'block' : 'none';
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
+  if(tab==='faqs') loadFaqs();
+}
 
-  try {
-    await auth.sendPasswordResetEmail(email);
-    successEl.style.display = 'block';
-    errEl.style.display = 'none';
-  } catch(e){
-    errEl.textContent = '❌ Could not send reset email. Check the email address.';
-    errEl.style.display = 'block';
-    successEl.style.display = 'none';
-  }
-};
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
 
-// ── LOAD ──────────────────────────────────────────────────────
-async function loadCourses(){
-  try {
-    const snap = await db.collection('courses').get();
+// ── COURSES ───────────────────────────────────────────────────
+function loadCourses(){
+  db.collection('courses').get().then(snap=>{
     allCourses = [];
-    snap.forEach(d => allCourses.push({ id: d.id, ...d.data() }));
-    allCourses.sort((a,b) => a.name.localeCompare(b.name));
-
-    // Stats
-    const faculties = [...new Set(allCourses.map(c => c.faculty))];
+    snap.forEach(d=>allCourses.push({id:d.id,...d.data()}));
+    allCourses.sort((a,b)=>a.name.localeCompare(b.name));
+    const faculties=[...new Set(allCourses.map(c=>c.faculty))].sort();
     document.getElementById('statCourses').textContent = allCourses.length;
     document.getElementById('statFaculties').textContent = faculties.length;
     document.getElementById('statUpdated').textContent = new Date().toLocaleDateString('en-GB');
-
     // Faculty filter
-    const sel = document.getElementById('facultyFilter');
-    sel.innerHTML = '<option value="">All Faculties</option>';
-    faculties.sort().forEach(f => {
-      const o = document.createElement('option'); o.value = f; o.textContent = f;
-      sel.appendChild(o);
-    });
-
-    // Datalist for faculty input
-    const dl = document.getElementById('facultyList');
-    dl.innerHTML = '';
-    faculties.forEach(f => { const o = document.createElement('option'); o.value = f; dl.appendChild(o); });
-
+    const sel=document.getElementById('facultyFilter');
+    sel.innerHTML='<option value="">All Faculties</option>';
+    faculties.forEach(f=>{ const o=document.createElement('option'); o.value=f; o.textContent=f; sel.appendChild(o); });
+    // Datalist
+    const dl=document.getElementById('facultyList'); dl.innerHTML='';
+    faculties.forEach(f=>{ const o=document.createElement('option'); o.value=f; dl.appendChild(o); });
     renderList();
-  } catch(e){
-    document.getElementById('courseList').innerHTML = `<div class="loading" style="color:red">Error loading: ${e.message}</div>`;
-  }
+  }).catch(e=>{ document.getElementById('courseList').innerHTML=`<div class="loading" style="color:red">Error: ${e.message}</div>`; });
 }
 
-// ── RENDER LIST ───────────────────────────────────────────────
-window.renderList = function(){
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const fac = document.getElementById('facultyFilter').value;
-  const list = document.getElementById('courseList');
-
-  let filtered = allCourses.filter(c => {
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.faculty.toLowerCase().includes(q);
-    const matchF = !fac || c.faculty === fac;
-    return matchQ && matchF;
-  });
-
-  if(!filtered.length){ list.innerHTML = '<div class="loading">No courses found.</div>'; return; }
-
-  // Group by faculty
-  const grouped = {};
-  filtered.forEach(c => { if(!grouped[c.faculty]) grouped[c.faculty]=[]; grouped[c.faculty].push(c); });
-
-  let html = '';
-  Object.keys(grouped).sort().forEach(fac => {
-    html += `<div class="faculty-group">📂 ${fac}</div>`;
-    grouped[fac].forEach(c => {
-      const badgeClass = c.cutoff >= 200 ? 'high' : '';
-      html += `
-      <div class="course-card">
+function renderList(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const fac=document.getElementById('facultyFilter').value;
+  const list=document.getElementById('courseList');
+  let filtered=allCourses.filter(c=>(!q||c.name.toLowerCase().includes(q)||c.faculty.toLowerCase().includes(q))&&(!fac||c.faculty===fac));
+  if(!filtered.length){ list.innerHTML='<div class="loading">No courses found.</div>'; return; }
+  const grouped={};
+  filtered.forEach(c=>{ if(!grouped[c.faculty]) grouped[c.faculty]=[]; grouped[c.faculty].push(c); });
+  let html='';
+  Object.keys(grouped).sort().forEach(fac=>{
+    html+=`<div class="faculty-group">📂 ${fac}</div>`;
+    grouped[fac].forEach(c=>{
+      html+=`<div class="course-card">
         <div class="course-header">
-          <div class="course-info">
-            <div class="course-name">${c.name}</div>
-            <div class="course-meta">JAMB: ${(c.jamb_compulsory||[]).join(', ')} · O'Level: ${(c.olevel_compulsory||[]).join(', ')}</div>
-          </div>
-          <span class="cutoff-badge ${badgeClass}">Cut-off: ${c.cutoff}</span>
+          <div class="course-info"><div class="course-name">${c.name}</div><div class="course-meta">JAMB: ${(c.jamb_compulsory||[]).join(', ')}</div></div>
+          <span class="cutoff-badge">${c.cutoff}</span>
           <div class="course-actions">
             <button class="btn-edit" onclick="openEditModal('${c.id}')">✏️ Edit</button>
-            <button class="btn-del" onclick="confirmDelete('${c.id}','${c.name.replace(/'/g,"\\'")}')">🗑️</button>
+            <button class="btn-del" onclick="confirmDelete('${c.id}','${c.name.replace(/'/g,"\'")}')">🗑️</button>
           </div>
         </div>
       </div>`;
     });
   });
-  list.innerHTML = html;
-};
+  list.innerHTML=html;
+}
 
-// ── MODAL ─────────────────────────────────────────────────────
-window.openAddModal = function(){
-  editingId = null;
-  document.getElementById('modalTitle').textContent = '➕ Add New Course';
-  document.getElementById('fName').value = '';
-  document.getElementById('fFaculty').value = '';
-  document.getElementById('fCutoff').value = '170';
-  document.getElementById('fJambPick').value = '1';
-  document.getElementById('fOlPick').value = '2';
-  setTags('jambComp', []);
-  setTags('jambOpt', []);
-  setTags('olComp', ['English Language','Mathematics']);
-  setTags('olOpt', []);
+function openAddModal(){
+  editingId=null;
+  document.getElementById('modalTitle').textContent='➕ Add New Course';
+  document.getElementById('fName').value=''; document.getElementById('fFaculty').value='';
+  document.getElementById('fCutoff').value='170'; document.getElementById('fJambPick').value='1'; document.getElementById('fOlPick').value='2';
+  setTags('jambComp',[]); setTags('jambOpt',[]); setTags('olComp',['English Language','Mathematics']); setTags('olOpt',[]);
   document.getElementById('modalOverlay').classList.add('open');
-};
+}
 
-window.openEditModal = function(id){
-  const c = allCourses.find(x => x.id === id);
-  if(!c) return;
-  editingId = id;
-  document.getElementById('modalTitle').textContent = '✏️ Edit: ' + c.name;
-  document.getElementById('fName').value = c.name;
-  document.getElementById('fFaculty').value = c.faculty;
-  document.getElementById('fCutoff').value = c.cutoff;
-  document.getElementById('fJambPick').value = c.jamb_optional_pick || 0;
-  document.getElementById('fOlPick').value = c.olevel_optional_pick || 0;
-  setTags('jambComp', c.jamb_compulsory || []);
-  setTags('jambOpt',  c.jamb_optional   || []);
-  setTags('olComp',   c.olevel_compulsory || []);
-  setTags('olOpt',    c.olevel_optional   || []);
+function openEditModal(id){
+  const c=allCourses.find(x=>x.id===id); if(!c) return;
+  editingId=id;
+  document.getElementById('modalTitle').textContent='✏️ Edit: '+c.name;
+  document.getElementById('fName').value=c.name; document.getElementById('fFaculty').value=c.faculty;
+  document.getElementById('fCutoff').value=c.cutoff;
+  document.getElementById('fJambPick').value=c.jamb_optional_pick||0; document.getElementById('fOlPick').value=c.olevel_optional_pick||0;
+  setTags('jambComp',c.jamb_compulsory||[]); setTags('jambOpt',c.jamb_optional||[]);
+  setTags('olComp',c.olevel_compulsory||[]); setTags('olOpt',c.olevel_optional||[]);
   document.getElementById('modalOverlay').classList.add('open');
-};
+}
 
-window.closeModal = function(){
-  document.getElementById('modalOverlay').classList.remove('open');
-};
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
 
-// ── SAVE ──────────────────────────────────────────────────────
-window.saveCourse = async function(){
-  const name    = document.getElementById('fName').value.trim();
-  const faculty = document.getElementById('fFaculty').value.trim();
-  const cutoff  = parseInt(document.getElementById('fCutoff').value);
+function saveCourse(){
+  const name=document.getElementById('fName').value.trim();
+  const faculty=document.getElementById('fFaculty').value.trim();
+  const cutoff=parseInt(document.getElementById('fCutoff').value);
+  if(!name||!faculty){ showToast('❌ Name and faculty required.'); return; }
+  const btn=document.getElementById('saveBtn'); btn.disabled=true; btn.textContent='Saving...';
+  const id=editingId||(faculty+'_'+name).replace(/[^a-zA-Z0-9]/g,'_');
+  const data={name,faculty,cutoff,
+    jamb_compulsory:tags.jambComp, jamb_optional_pick:parseInt(document.getElementById('fJambPick').value), jamb_optional:tags.jambOpt,
+    olevel_compulsory:tags.olComp, olevel_optional_pick:parseInt(document.getElementById('fOlPick').value), olevel_optional:tags.olOpt};
+  db.collection('courses').doc(id).set(data)
+    .then(()=>{ showToast('✅ Course saved!'); closeModal(); loadCourses(); })
+    .catch(e=>showToast('❌ '+e.message))
+    .finally(()=>{ btn.disabled=false; btn.textContent='💾 Save Changes'; });
+}
 
-  if(!name || !faculty){ showToast('❌ Course name and faculty are required'); return; }
-
-  const btn = document.getElementById('saveBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
-
-  const id = editingId || (faculty + '_' + name).replace(/[^a-zA-Z0-9]/g, '_');
-
-  const data = {
-    name, faculty, cutoff,
-    jamb_compulsory:    tags.jambComp,
-    jamb_optional_pick: parseInt(document.getElementById('fJambPick').value),
-    jamb_optional:      tags.jambOpt,
-    olevel_compulsory:  tags.olComp,
-    olevel_optional_pick: parseInt(document.getElementById('fOlPick').value),
-    olevel_optional:    tags.olOpt
-  };
-
-  try {
-    await db.collection('courses').doc(id).set(data);
-    showToast('✅ Course saved successfully!');
-    closeModal();
-    await loadCourses();
-  } catch(e){
-    showToast('❌ Error: ' + e.message);
-  }
-  btn.disabled = false; btn.textContent = '💾 Save Changes';
-};
-
-// ── DELETE ────────────────────────────────────────────────────
-window.confirmDelete = function(id, name){
-  document.getElementById('confirmMsg').textContent = `Are you sure you want to delete "${name}"? This cannot be undone.`;
-  document.getElementById('confirmYes').onclick = async function(){
+function confirmDelete(id,name){
+  document.getElementById('confirmMsg').textContent=`Delete "${name}"?`;
+  document.getElementById('confirmYes').onclick=function(){
     closeConfirm();
-    try {
-      await db.collection('courses').doc(id).delete();
-      showToast('🗑️ Course deleted.');
-      await loadCourses();
-    } catch(e){ showToast('❌ Error: ' + e.message); }
+    db.collection('courses').doc(id).delete()
+      .then(()=>{ showToast('🗑️ Deleted.'); loadCourses(); })
+      .catch(e=>showToast('❌ '+e.message));
   };
   document.getElementById('confirmOverlay').classList.add('open');
-};
-window.closeConfirm = function(){ document.getElementById('confirmOverlay').classList.remove('open'); };
+}
+
+function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('open'); }
 
 // ── TAG INPUT ─────────────────────────────────────────────────
-function setTags(key, arr){
-  tags[key] = [...arr];
-  renderTags(key);
-}
-
+function setTags(key,arr){ tags[key]=[...arr]; renderTags(key); }
 function renderTags(key){
-  const wrapId = key==='jambComp'?'jambCompWrap':key==='jambOpt'?'jambOptWrap':key==='olComp'?'olCompWrap':'olOptWrap';
-  const inputId = key==='jambComp'?'jambCompInput':key==='jambOpt'?'jambOptInput':key==='olComp'?'olCompInput':'olOptInput';
-  const wrap = document.getElementById(wrapId);
-  const input = document.getElementById(inputId);
-  // Remove old tags
-  wrap.querySelectorAll('.tag').forEach(t => t.remove());
-  tags[key].forEach((t,i) => {
-    const tag = document.createElement('span'); tag.className = 'tag';
-    tag.innerHTML = `${t}<button class="tag-remove" onclick="removeTag('${key}',${i})">×</button>`;
-    wrap.insertBefore(tag, input);
+  const ids={jambComp:['jambCompWrap','jambCompInput'],jambOpt:['jambOptWrap','jambOptInput'],olComp:['olCompWrap','olCompInput'],olOpt:['olOptWrap','olOptInput']};
+  const [wrapId,inputId]=ids[key];
+  const wrap=document.getElementById(wrapId), input=document.getElementById(inputId);
+  wrap.querySelectorAll('.tag').forEach(t=>t.remove());
+  tags[key].forEach((t,i)=>{
+    const tag=document.createElement('span'); tag.className='tag';
+    tag.innerHTML=`${t}<button class="tag-remove" onclick="removeTag('${key}',${i})">×</button>`;
+    wrap.insertBefore(tag,input);
   });
 }
-
-window.removeTag = function(key, idx){
-  tags[key].splice(idx, 1);
-  renderTags(key);
-};
-
-window.handleTagKey = function(e, key){
-  if(e.key === 'Enter' || e.key === ','){
-    e.preventDefault();
-    addTag(key, e.target.value);
-    e.target.value = '';
-  } else if(e.key === 'Backspace' && e.target.value === '' && tags[key].length){
-    tags[key].pop();
-    renderTags(key);
-  }
-};
-
-window.addTagOnBlur = function(key){
-  const inputId = key==='jambComp'?'jambCompInput':key==='jambOpt'?'jambOptInput':key==='olComp'?'olCompInput':'olOptInput';
-  const val = document.getElementById(inputId).value;
-  if(val.trim()){ addTag(key, val); document.getElementById(inputId).value = ''; }
-};
-
-function addTag(key, val){
-  const v = val.replace(/,/g,'').trim();
-  if(v && !tags[key].includes(v)){ tags[key].push(v); renderTags(key); }
+function removeTag(key,idx){ tags[key].splice(idx,1); renderTags(key); }
+function handleTagKey(e,key){
+  if(e.key==='Enter'||e.key===','){ e.preventDefault(); addTag(key,e.target.value); e.target.value=''; }
+  else if(e.key==='Backspace'&&e.target.value===''&&tags[key].length){ tags[key].pop(); renderTags(key); }
 }
-
-window.focusTagInput = function(id){ document.getElementById(id).focus(); };
-
-// ── TOAST ─────────────────────────────────────────────────────
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+function addTagOnBlur(key){
+  const ids={jambComp:'jambCompInput',jambOpt:'jambOptInput',olComp:'olCompInput',olOpt:'olOptInput'};
+  const val=document.getElementById(ids[key]).value;
+  if(val.trim()){ addTag(key,val); document.getElementById(ids[key]).value=''; }
 }
+function addTag(key,val){ const v=val.replace(/,/g,'').trim(); if(v&&!tags[key].includes(v)){ tags[key].push(v); renderTags(key); } }
+function focusTagInput(id){ document.getElementById(id).focus(); }
 
-// ── TABS ──────────────────────────────────────────────────────
-window.switchTab = function(tab){
-  // Hide all sections
-  document.getElementById('section-courses').style.display       = 'none';
-  document.getElementById('section-announcements').style.display = 'none';
-  document.getElementById('section-faqs').style.display          = 'none';
-  // Remove active from all tabs
-  document.getElementById('tab-courses').classList.remove('active');
-  document.getElementById('tab-announcements').classList.remove('active');
-  document.getElementById('tab-faqs').classList.remove('active');
-  // Show selected section and mark tab active
-  document.getElementById('section-' + tab).style.display = 'block';
-  document.getElementById('tab-' + tab).classList.add('active');
-  // Load data for selected tab
-  if(tab==='announcements'){ window.loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
-  if(tab==='faqs') window.loadFaqs();
-};
-
-// ── ADMIN PROFILE ────────────────────────────────────────────
-let selectedAdminIconFile = null;
-
-async function loadAdminSettings(){
-  try {
-    const snap = (await db.collection('settings').doc('admin').get());
-    if(snap.exists){
-      const d = snap.data();
-      if(d.name) document.getElementById('adminName').value = d.name;
-      if(d.avatarUrl){
-        document.getElementById('adminAvatar').innerHTML = `<img src="${d.avatarUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
-      }
-    }
-  } catch(e){ console.error(e); }
-}
-
-window.previewAdminIcon = function(input){
-  selectedAdminIconFile = input.files[0];
-  if(!selectedAdminIconFile) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('adminAvatar').innerHTML = `<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`;
-  };
-  reader.readAsDataURL(selectedAdminIconFile);
-};
-
-window.saveAdminSettings = async function(){
-  const name = document.getElementById('adminName').value.trim();
-  const btn = document.getElementById('adminSaveBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
-  try {
-    let avatarUrl = null;
-    if(selectedAdminIconFile){
-      avatarUrl = await uploadToCloudinary(selectedAdminIconFile);
-      selectedAdminIconFile = null;
-    }
-    const data = {};
-    if(name) data.name = name;
-    if(avatarUrl) data.avatarUrl = avatarUrl;
-    if(Object.keys(data).length){
-      await db.collection('settings').doc('admin').set(data, {merge:true});
-      showToast('✅ Admin profile saved!');
-    } else {
-      showToast('⚠️ Nothing to save.');
-    }
-  } catch(e){ showToast('❌ Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = '💾 Save Profile';
-};
-
-// ── GROUP SETTINGS ────────────────────────────────────────────
-let selectedIconFile = null;
-
-async function loadGroupSettings(){
-  try {
-    const snap = (await db.collection('settings').doc('group').get());
-    if(snap.exists){
-      const d = snap.data();
-      if(d.name) document.getElementById('gsName').value = d.name;
-      if(d.iconUrl){
-        document.getElementById('gsAvatar').innerHTML = `<img src="${d.iconUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
-      }
-    }
-  } catch(e){ console.error(e); }
-}
-
-window.previewGroupIcon = function(input){
-  selectedIconFile = input.files[0];
-  if(!selectedIconFile) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('gsAvatar').innerHTML = `<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`;
-  };
-  reader.readAsDataURL(selectedIconFile);
-};
-
-window.saveGroupSettings = async function(){
-  const name = document.getElementById('gsName').value.trim();
-  const btn = document.getElementById('gsSaveBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
-  try {
-    let iconUrl = null;
-    if(selectedIconFile){
-      iconUrl = await uploadToCloudinary(selectedIconFile);
-      selectedIconFile = null;
-    }
-    const data = {};
-    if(name) data.name = name;
-    if(iconUrl) data.iconUrl = iconUrl;
-    if(Object.keys(data).length){
-      await db.collection('settings').doc('group').set(data, {merge:true});
-      showToast('✅ Group settings saved!');
-    } else {
-      showToast('⚠️ Nothing to save.');
-    }
-  } catch(e){ showToast('❌ Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = '💾 Save Settings';
-};
-
-// ── ANNOUNCEMENTS ─────────────────────────────────────────────
-const CLOUDINARY_URL    = 'https://api.cloudinary.com/v1_1/dmcspzbsv/image/upload';
-const CLOUDINARY_PRESET = 'Nsuk-announcements';
-const EMOJIS = ['👍','❤️','😮','😂','😢','🙏','🔥','💯'];
-
-let selectedImageFile = null;
-
-window.previewImage = function(input){
-  selectedImageFile = input.files[0];
-  if(!selectedImageFile) return;
-  const preview = document.getElementById('imgPreview');
-  preview.src = URL.createObjectURL(selectedImageFile);
-  preview.style.display = 'block';
-};
-
+// ── CLOUDINARY UPLOAD ─────────────────────────────────────────
 async function uploadToCloudinary(file){
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_PRESET);
-  const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-  const data = await res.json();
-  if(!data.secure_url) throw new Error('Cloudinary upload failed');
+  const fd=new FormData(); fd.append('file',file); fd.append('upload_preset',CLOUDINARY_PRESET);
+  const res=await fetch(CLOUDINARY_URL,{method:'POST',body:fd});
+  const data=await res.json();
+  if(!data.secure_url) throw new Error('Upload failed');
   return data.secure_url;
 }
 
-window.postAnnouncement = async function(){
-  const text = document.getElementById('annText').value.trim();
-  if(!text && !selectedImageFile){ showToast('❌ Please write a message or attach an image.'); return; }
-
-  const btn = document.getElementById('postBtn');
-  const progress = document.getElementById('uploadProgress');
-  btn.disabled = true; btn.textContent = 'Posting...';
-
-  try {
-    let imageUrl = null;
-    if(selectedImageFile){
-      progress.style.display = 'inline';
-      imageUrl = await uploadToCloudinary(selectedImageFile);
-      progress.style.display = 'none';
-    }
-
-    // Use Firestore serverTimestamp — also store client time as fallback
-    await db.collection('announcements').add({
-      text: text || '',
-      imageUrl: imageUrl || null,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      clientTime: new Date().toISOString(),
-      reactions: {}
+// ── ANNOUNCEMENTS ─────────────────────────────────────────────
+function loadAnnouncements(){
+  const list=document.getElementById('annList');
+  list.innerHTML='<div class="ann-empty">⏳ Loading...</div>';
+  db.collection('announcements').get().then(snap=>{
+    if(snap.empty){ list.innerHTML='<div class="ann-empty">No announcements yet.</div>'; return; }
+    const docs=[];
+    snap.forEach(d=>docs.push({id:d.id,...d.data()}));
+    docs.sort((a,b)=>{
+      const ta=a.timestamp?a.timestamp.toMillis():new Date(a.clientTime||0).getTime();
+      const tb=b.timestamp?b.timestamp.toMillis():new Date(b.clientTime||0).getTime();
+      return tb-ta;
     });
-
-    document.getElementById('annText').value = '';
-    document.getElementById('imgPreview').style.display = 'none';
-    document.getElementById('annImage').value = '';
-    selectedImageFile = null;
-    showToast('✅ Announcement posted!');
-    await loadAnnouncements(); // refresh list
-  } catch(e){
-    showToast('❌ Error: ' + e.message);
-  }
-  btn.disabled = false; btn.textContent = 'Send ✓';
-};
-
-window.loadAnnouncements = async function(){
-  const list = document.getElementById('annList');
-  list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
-  try {
-    const snap = await db.collection('announcements').get();
-    if(snap.empty){ list.innerHTML = '<div class="ann-empty">No announcements yet.</div>'; return; }
-    list.innerHTML = '';
-    // Sort by timestamp descending client-side
-    const docs = [];
-    snap.forEach(d => docs.push({id: d.id, ...d.data()}));
-    docs.sort((a,b) => {
-      const ta = a.timestamp ? a.timestamp.toMillis() : new Date(a.clientTime||0).getTime();
-      const tb = b.timestamp ? b.timestamp.toMillis() : new Date(b.clientTime||0).getTime();
-      return tb - ta;
-    });
-    docs.forEach(docItem => {
-      const data = docItem;
-      const reactions = data.reactions || {};
-      let reactionSummary = '';
-      EMOJIS.forEach(e => {
-        const voters = reactions['e' + EMOJIS.indexOf(e)] || [];
-        if(voters.length) reactionSummary += `<span class="ann-reaction-badge">${e} ${voters.length}</span>`;
-      });
-      const time = data.timestamp
-        ? data.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})
-        : data.clientTime ? new Date(data.clientTime).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : 'Just now';
-      const card = document.createElement('div');
-      card.className = 'ann-card';
-      card.innerHTML = `
+    list.innerHTML='';
+    docs.forEach(item=>{
+      const reactions=item.reactions||{};
+      let rSummary='';
+      EMOJIS.forEach(e=>{ const voters=reactions['e'+EMOJIS.indexOf(e)]||[]; if(voters.length) rSummary+=`<span class="ann-reaction-badge">${e} ${voters.length}</span>`; });
+      const time=item.timestamp?item.timestamp.toDate().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):item.clientTime?new Date(item.clientTime).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Just now';
+      const card=document.createElement('div'); card.className='ann-card';
+      card.innerHTML=`
         <div class="ann-header">
           <div class="ann-meta">📅 ${time}</div>
           <div style="display:flex;gap:6px">
-            <button class="btn-edit" onclick="editAnnouncement('${docItem.id}','${encodeURIComponent(data.text||'')}')">✏️ Edit</button>
-            <button class="btn-ann-del" onclick="deleteAnnouncement('${docItem.id}')">🗑️ Delete</button>
+            <button class="btn-edit" onclick="editAnnouncement('${item.id}')">✏️ Edit</button>
+            <button class="btn-ann-del" onclick="deleteAnnouncement('${item.id}')">🗑️ Delete</button>
           </div>
         </div>
-        ${data.imageUrl ? `<img class="ann-img" src="${data.imageUrl}" alt="image">` : ''}
-        ${data.text ? `<div class="ann-text">${data.text}</div>` : ''}
-        ${reactionSummary ? `<div class="ann-reactions">${reactionSummary}</div>` : ''}`;
+        ${item.imageUrl?`<img class="ann-img" src="${item.imageUrl}" alt="image">`:''}
+        ${item.text?`<div class="ann-text">${item.text}</div>`:''}
+        ${rSummary?`<div class="ann-reactions">${rSummary}`:''}`;
       list.appendChild(card);
     });
-  } catch(e){
-    list.innerHTML = `<div class="ann-empty" style="color:red">❌ Error loading: ${e.message}</div>`;
-  }
+  }).catch(e=>{ list.innerHTML=`<div class="ann-empty" style="color:red">❌ ${e.message}</div>`; });
 }
 
-window.editAnnouncement = function(id, encodedText){
-  const text = decodeURIComponent(encodedText);
-  const newText = prompt('Edit announcement:', text);
-  if(newText === null) return; // cancelled
-  db.collection('announcements').doc(id).update({ text: newText })
-    .then(() => { showToast('✅ Announcement updated!'); window.loadAnnouncements(); })
-    .catch(e => showToast('❌ Error: ' + e.message));
-};
+function editAnnouncement(id){
+  const docs=document.querySelectorAll('.ann-card');
+  // Find text from DOM
+  const newText=prompt('Edit announcement text:');
+  if(newText===null) return;
+  db.collection('announcements').doc(id).update({text:newText})
+    .then(()=>{ showToast('✅ Updated!'); loadAnnouncements(); })
+    .catch(e=>showToast('❌ '+e.message));
+}
 
-window.deleteAnnouncement = function(id){
-  document.getElementById('confirmMsg').textContent = 'Are you sure you want to delete this announcement?';
-  document.getElementById('confirmYes').onclick = async function(){
+function deleteAnnouncement(id){
+  document.getElementById('confirmMsg').textContent='Delete this announcement?';
+  document.getElementById('confirmYes').onclick=function(){
     closeConfirm();
-    try {
-      await db.collection('announcements').doc(id).delete();
-      showToast('🗑️ Announcement deleted.');
-      await loadAnnouncements();
-    } catch(e){ showToast('❌ Error: ' + e.message); }
+    db.collection('announcements').doc(id).delete()
+      .then(()=>{ showToast('🗑️ Deleted.'); loadAnnouncements(); })
+      .catch(e=>showToast('❌ '+e.message));
   };
   document.getElementById('confirmOverlay').classList.add('open');
-};
+}
 
+function previewImage(input){
+  selectedImageFile=input.files[0];
+  if(!selectedImageFile) return;
+  const preview=document.getElementById('imgPreview');
+  preview.src=URL.createObjectURL(selectedImageFile); preview.style.display='block';
+}
 
-// ── FAQ MANAGEMENT ────────────────────────────────────────────
-let editingFaqId = null;
-
-window.loadFaqs = async function(){
-  const list = document.getElementById('faqList');
-  list.innerHTML = '<div class="ann-empty">⏳ Loading...</div>';
+async function postAnnouncement(){
+  const text=document.getElementById('annText').value.trim();
+  if(!text&&!selectedImageFile){ showToast('❌ Write a message or attach an image.'); return; }
+  const btn=document.getElementById('postBtn'); const progress=document.getElementById('uploadProgress');
+  btn.disabled=true; btn.textContent='Posting...';
   try {
-    const snap = await db.collection('faqs').get();
-    if(snap.empty){ list.innerHTML = '<div class="ann-empty">No FAQs yet. Click "+ Add FAQ" to create one.</div>'; return; }
-    list.innerHTML = '';
-    const faqDocs = [];
-    snap.forEach(d => faqDocs.push({id: d.id, ...d.data()}));
-    faqDocs.sort((a,b) => (a.order||0) - (b.order||0));
-    faqDocs.forEach(data => {
-      const card = document.createElement('div'); card.className = 'faq-admin-card';
-      card.innerHTML = `
-        <div class="faq-admin-num">${data.order||'?'}</div>
+    let imageUrl=null;
+    if(selectedImageFile){ progress.style.display='inline'; imageUrl=await uploadToCloudinary(selectedImageFile); progress.style.display='none'; }
+    await db.collection('announcements').add({text:text||'', imageUrl:imageUrl||null, timestamp:TS(), clientTime:new Date().toISOString(), reactions:{}});
+    document.getElementById('annText').value=''; document.getElementById('imgPreview').style.display='none';
+    document.getElementById('annImage').value=''; selectedImageFile=null;
+    showToast('✅ Posted!'); loadAnnouncements();
+  } catch(e){ showToast('❌ '+e.message); }
+  btn.disabled=false; btn.textContent='Send ✓';
+}
+
+// ── GROUP SETTINGS ────────────────────────────────────────────
+function loadGroupSettings(){
+  db.collection('settings').doc('group').get().then(snap=>{
+    if(!snap.exists) return;
+    const d=snap.data();
+    if(d.name) document.getElementById('gsName').value=d.name;
+    if(d.iconUrl) document.getElementById('gsAvatar').innerHTML=`<img src="${d.iconUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+  }).catch(e=>console.error(e));
+}
+
+function previewGroupIcon(input){
+  selectedIconFile=input.files[0]; if(!selectedIconFile) return;
+  const reader=new FileReader(); reader.onload=e=>{ document.getElementById('gsAvatar').innerHTML=`<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`; }; reader.readAsDataURL(selectedIconFile);
+}
+
+async function saveGroupSettings(){
+  const name=document.getElementById('gsName').value.trim();
+  const btn=document.getElementById('gsSaveBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    let iconUrl=null;
+    if(selectedIconFile){ iconUrl=await uploadToCloudinary(selectedIconFile); selectedIconFile=null; }
+    const data={}; if(name) data.name=name; if(iconUrl) data.iconUrl=iconUrl;
+    if(Object.keys(data).length){ await db.collection('settings').doc('group').set(data,{merge:true}); showToast('✅ Group settings saved!'); }
+    else showToast('⚠️ Nothing to save.');
+  } catch(e){ showToast('❌ '+e.message); }
+  btn.disabled=false; btn.textContent='💾 Save Settings';
+}
+
+// ── ADMIN PROFILE ─────────────────────────────────────────────
+function loadAdminSettings(){
+  db.collection('settings').doc('admin').get().then(snap=>{
+    if(!snap.exists) return;
+    const d=snap.data();
+    if(d.name) document.getElementById('adminName').value=d.name;
+    if(d.avatarUrl) document.getElementById('adminAvatar').innerHTML=`<img src="${d.avatarUrl}" alt=""><div class="gs-avatar-overlay">📷</div>`;
+  }).catch(e=>console.error(e));
+}
+
+function previewAdminIcon(input){
+  selectedAdminIconFile=input.files[0]; if(!selectedAdminIconFile) return;
+  const reader=new FileReader(); reader.onload=e=>{ document.getElementById('adminAvatar').innerHTML=`<img src="${e.target.result}" alt=""><div class="gs-avatar-overlay">📷</div>`; }; reader.readAsDataURL(selectedAdminIconFile);
+}
+
+async function saveAdminSettings(){
+  const name=document.getElementById('adminName').value.trim();
+  const btn=document.getElementById('adminSaveBtn'); btn.disabled=true; btn.textContent='Saving...';
+  try {
+    let avatarUrl=null;
+    if(selectedAdminIconFile){ avatarUrl=await uploadToCloudinary(selectedAdminIconFile); selectedAdminIconFile=null; }
+    const data={}; if(name) data.name=name; if(avatarUrl) data.avatarUrl=avatarUrl;
+    if(Object.keys(data).length){ await db.collection('settings').doc('admin').set(data,{merge:true}); showToast('✅ Admin profile saved!'); }
+    else showToast('⚠️ Nothing to save.');
+  } catch(e){ showToast('❌ '+e.message); }
+  btn.disabled=false; btn.textContent='💾 Save Profile';
+}
+
+// ── FAQS ──────────────────────────────────────────────────────
+function loadFaqs(){
+  const list=document.getElementById('faqList');
+  list.innerHTML='<div class="ann-empty">⏳ Loading...</div>';
+  db.collection('faqs').get().then(snap=>{
+    if(snap.empty){ list.innerHTML='<div class="ann-empty">No FAQs yet. Click "+ Add FAQ" to create one.</div>'; return; }
+    const faqs=[];
+    snap.forEach(d=>faqs.push({id:d.id,...d.data()}));
+    faqs.sort((a,b)=>(a.order||0)-(b.order||0));
+    list.innerHTML='';
+    faqs.forEach(faq=>{
+      const card=document.createElement('div'); card.className='faq-admin-card';
+      card.innerHTML=`
+        <div class="faq-admin-num">${faq.order||'?'}</div>
         <div class="faq-admin-body">
-          <div class="faq-admin-q">${data.question}</div>
-          <div class="faq-admin-a">${data.answer}</div>
+          <div class="faq-admin-q">${faq.question}</div>
+          <div class="faq-admin-a">${faq.answer}</div>
           <div class="faq-admin-actions">
-            <button class="btn-faq-edit" onclick="openFaqModal('${data.id}','${encodeURIComponent(data.question)}','${encodeURIComponent(data.answer)}',${data.order||1})">✏️ Edit</button>
-            <button class="btn-faq-del" onclick="deleteFaq('${data.id}','${data.question.substring(0,40)}')">🗑️ Delete</button>
+            <button class="btn-faq-edit" onclick="openFaqModal('${faq.id}','${encodeURIComponent(faq.question)}','${encodeURIComponent(faq.answer)}',${faq.order||1})">✏️ Edit</button>
+            <button class="btn-faq-del" onclick="deleteFaq('${faq.id}','${faq.question.substring(0,40)}')">🗑️ Delete</button>
           </div>
         </div>`;
       list.appendChild(card);
     });
-  } catch(e){ list.innerHTML = `<div class="ann-empty" style="color:red">❌ Error: ${e.message}</div>`; }
+  }).catch(e=>{ list.innerHTML=`<div class="ann-empty" style="color:red">❌ ${e.message}</div>`; });
 }
 
-window.openFaqModal = function(id, q, a, order){
-  editingFaqId = id || null;
-  document.getElementById('faqModalTitle').textContent = id ? '✏️ Edit FAQ' : '➕ Add FAQ';
-  document.getElementById('faqQuestion').value = id ? decodeURIComponent(q) : '';
-  document.getElementById('faqAnswer').value   = id ? decodeURIComponent(a) : '';
-  document.getElementById('faqOrder').value    = id ? order : '';
+function openFaqModal(id,q,a,order){
+  editingFaqId=id||null;
+  document.getElementById('faqModalTitle').textContent=id?'✏️ Edit FAQ':'➕ Add FAQ';
+  document.getElementById('faqQuestion').value=id?decodeURIComponent(q):'';
+  document.getElementById('faqAnswer').value=id?decodeURIComponent(a):'';
+  document.getElementById('faqOrder').value=id?order:'';
   document.getElementById('faqModalOverlay').classList.add('open');
-};
+}
 
-window.closeFaqModal = function(){
-  document.getElementById('faqModalOverlay').classList.remove('open');
-  editingFaqId = null;
-};
+function closeFaqModal(){ document.getElementById('faqModalOverlay').classList.remove('open'); editingFaqId=null; }
 
-window.saveFaq = async function(){
-  const question = document.getElementById('faqQuestion').value.trim();
-  const answer   = document.getElementById('faqAnswer').value.trim();
-  const order    = parseInt(document.getElementById('faqOrder').value) || 1;
-  if(!question || !answer){ showToast('❌ Question and answer are required.'); return; }
-  const btn = document.getElementById('faqSaveBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
+async function saveFaq(){
+  const question=document.getElementById('faqQuestion').value.trim();
+  const answer=document.getElementById('faqAnswer').value.trim();
+  const order=parseInt(document.getElementById('faqOrder').value)||1;
+  if(!question||!answer){ showToast('❌ Question and answer required.'); return; }
+  const btn=document.getElementById('faqSaveBtn'); btn.disabled=true; btn.textContent='Saving...';
   try {
-    const data = { question, answer, order };
-    if(editingFaqId){
-      await db.collection('faqs').doc(editingFaqId).set(data, {merge:true});
-    } else {
-      await db.collection('faqs').add(data);
-    }
-    showToast('✅ FAQ saved!');
-    closeFaqModal();
-    await loadFaqs();
-  } catch(e){ showToast('❌ Error: ' + e.message); }
-  btn.disabled = false; btn.textContent = '💾 Save FAQ';
-};
+    const data={question,answer,order};
+    if(editingFaqId){ await db.collection('faqs').doc(editingFaqId).set(data,{merge:true}); }
+    else { await db.collection('faqs').add(data); }
+    showToast('✅ FAQ saved!'); closeFaqModal(); loadFaqs();
+  } catch(e){ showToast('❌ '+e.message); }
+  btn.disabled=false; btn.textContent='💾 Save FAQ';
+}
 
-window.deleteFaq = function(id, preview){
-  document.getElementById('confirmMsg').textContent = `Delete FAQ: "${preview}..."?`;
-  document.getElementById('confirmYes').onclick = async function(){
+function deleteFaq(id,preview){
+  document.getElementById('confirmMsg').textContent=`Delete FAQ: "${preview}..."?`;
+  document.getElementById('confirmYes').onclick=function(){
     closeConfirm();
-    try {
-      await db.collection('faqs').doc(id).delete();
-      showToast('🗑️ FAQ deleted.');
-      await loadFaqs();
-    } catch(e){ showToast('❌ Error: ' + e.message); }
+    db.collection('faqs').doc(id).delete()
+      .then(()=>{ showToast('🗑️ FAQ deleted.'); loadFaqs(); })
+      .catch(e=>showToast('❌ '+e.message));
   };
   document.getElementById('confirmOverlay').classList.add('open');
-};
+}
 
-document.getElementById('faqModalOverlay').addEventListener('click', function(e){
-  if(e.target === this) closeFaqModal();
-});
-
-// Close modal on overlay click
-document.getElementById('modalOverlay').addEventListener('click', function(e){
-  if(e.target === this) closeModal();
-});
+// ── MODAL CLOSE ON OVERLAY CLICK ──────────────────────────────
+document.getElementById('modalOverlay').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.getElementById('faqModalOverlay').addEventListener('click', function(e){ if(e.target===this) closeFaqModal(); });
 </script>
+
 </body>
 </html>
