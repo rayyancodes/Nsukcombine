@@ -706,14 +706,20 @@ function showToast(msg){
 
 // ── TABS ──────────────────────────────────────────────────────
 window.switchTab = function(tab){
-  document.getElementById('section-courses').style.display      = tab==='courses'      ? 'block' : 'none';
-  document.getElementById('section-announcements').style.display= tab==='announcements'? 'block' : 'none';
-  document.getElementById('section-faqs').style.display         = tab==='faqs'         ? 'block' : 'none';
-  document.getElementById('tab-courses').classList.toggle('active',      tab==='courses');
-  document.getElementById('tab-announcements').classList.toggle('active', tab==='announcements');
-  document.getElementById('tab-faqs').classList.toggle('active',          tab==='faqs');
-  if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
-  if(tab==='faqs') loadFaqs();
+  // Hide all sections
+  document.getElementById('section-courses').style.display       = 'none';
+  document.getElementById('section-announcements').style.display = 'none';
+  document.getElementById('section-faqs').style.display          = 'none';
+  // Remove active from all tabs
+  document.getElementById('tab-courses').classList.remove('active');
+  document.getElementById('tab-announcements').classList.remove('active');
+  document.getElementById('tab-faqs').classList.remove('active');
+  // Show selected section and mark tab active
+  document.getElementById('section-' + tab).style.display = 'block';
+  document.getElementById('tab-' + tab).classList.add('active');
+  // Load data for selected tab
+  if(tab==='announcements'){ window.loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
+  if(tab==='faqs') window.loadFaqs();
 };
 
 // ── ADMIN PROFILE ────────────────────────────────────────────
@@ -966,8 +972,8 @@ window.loadFaqs = async function(){
           <div class="faq-admin-q">${data.question}</div>
           <div class="faq-admin-a">${data.answer}</div>
           <div class="faq-admin-actions">
-            <button class="btn-faq-edit" onclick="openFaqModal('${d.id}','${encodeURIComponent(data.question)}','${encodeURIComponent(data.answer)}',${data.order||1})">✏️ Edit</button>
-            <button class="btn-faq-del" onclick="deleteFaq('${d.id}','${data.question.substring(0,40)}')">🗑️ Delete</button>
+            <button class="btn-faq-edit" onclick="openFaqModal('${data.id}','${encodeURIComponent(data.question)}','${encodeURIComponent(data.answer)}',${data.order||1})">✏️ Edit</button>
+            <button class="btn-faq-del" onclick="deleteFaq('${data.id}','${data.question.substring(0,40)}')">🗑️ Delete</button>
           </div>
         </div>`;
       list.appendChild(card);
