@@ -272,6 +272,19 @@
     </div>
     <div id="annList"><div class="ann-empty">No announcements yet.</div></div>
   </div>
+
+  <!-- FAQS SECTION -->
+  <div id="section-faqs" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:800;color:#2a392c">❓ Manage FAQs</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="loadFaqs()" style="padding:8px 14px;background:#f0f7ef;border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer">🔄 Refresh</button>
+        <button onclick="openFaqModal()" style="padding:8px 14px;background:var(--brand);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer">＋ Add FAQ</button>
+      </div>
+    </div>
+    <div id="faqList"><div class="ann-empty">Click Refresh to load FAQs.</div></div>
+  </div>
+
 </div>
 
 <!-- FAQ MODAL -->
