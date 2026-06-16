@@ -55,6 +55,10 @@
 
   /* BUBBLES */
   .msg-row{display:flex;padding:2px 8px;align-items:flex-end;gap:6px;animation:fadeUp .3s ease both}
+  .msg-row.highlighted{animation:highlight 2s ease;}
+  @keyframes highlight{0%,100%{background:transparent}20%,80%{background:rgba(0,168,132,.15);border-radius:8px}}
+  .copy-link-btn{font-size:10px;color:var(--wa-dim);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;margin-top:2px;display:block;text-align:right;text-decoration:underline}
+  .copy-link-btn:hover{color:var(--wa-green)}
   @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   .b-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#005c4b,#128c7e);display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:18px;overflow:hidden}
   .b-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -235,6 +239,7 @@ function renderMessage(id, data, prepend=false){
     bubbleInner += `<div class="msg-text">${linkify(data.text)}</div>`;
   }
   bubbleInner += `<div class="msg-meta"><span class="msg-time">${fmtTime(data.timestamp, data.clientTime)}</span></div>`;
+  bubbleInner += `<button class="copy-link-btn" onclick="copyLink('${id}')">🔗 Copy link</button>`;
 
   const reactions = data.reactions || {};
   let rHTML = buildReactionHTML(id, reactions);
@@ -349,6 +354,48 @@ async function init(){
   await loadMessages();
 }
 init();
+
+// Copy direct link to clipboard
+window.copyLink = function(id){
+  const url = window.location.origin + window.location.pathname + '#msg-' + id;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=> showLinkToast('🔗 Link copied!'));
+  } else {
+    // Fallback for older browsers
+    const el = document.createElement('input');
+    el.value = url; document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    showLinkToast('🔗 Link copied!');
+  }
+};
+
+function showLinkToast(msg){
+  let toast = document.getElementById('linkToast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'linkToast';
+    toast.style.cssText = 'position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#122016;color:#fff;padding:8px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:999;white-space:nowrap;transition:opacity .3s';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ toast.style.opacity='0'; }, 2000);
+}
+
+// Auto-scroll to message if URL has a hash
+function checkHash(){
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#msg-')){
+    const el = document.getElementById(hash.slice(1));
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('highlighted');
+      setTimeout(()=>el.classList.remove('highlighted'), 2500);
+    }
+  }
+}
 
 // Scroll
 window.scrollToBottom = function(){
