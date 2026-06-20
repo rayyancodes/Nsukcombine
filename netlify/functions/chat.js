@@ -8,16 +8,14 @@ exports.handler = async function (event) {
 
   if (!GEMINI_KEY) {
     console.log('ERROR: GEMINI_API_KEY environment variable is missing');
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Server is missing GEMINI_API_KEY.' })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: 'Server is missing GEMINI_API_KEY.' }) };
   }
 
   try {
     const { systemInstruction, contents } = JSON.parse(event.body);
 
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    // Using gemini-1.5-flash — wider free tier availability than 2.0
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
 
     const response = await fetch(GEMINI_URL, {
       method: 'POST',
@@ -30,8 +28,6 @@ exports.handler = async function (event) {
     });
 
     const data = await response.json();
-
-    // Log the full response so we can see it in Netlify function logs
     console.log('Gemini status:', response.status);
     console.log('Gemini response:', JSON.stringify(data));
 
@@ -43,9 +39,6 @@ exports.handler = async function (event) {
 
   } catch (error) {
     console.log('FUNCTION ERROR:', error.message);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
   }
 };
