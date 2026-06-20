@@ -1,7 +1,4 @@
 // Netlify serverless function — keeps the Gemini API key secret on the server side.
-// The browser never sees this key. It is read from an environment variable
-// that you set in the Netlify dashboard (Site settings → Environment variables).
-
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
@@ -10,9 +7,10 @@ exports.handler = async function (event) {
   const GEMINI_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_KEY) {
+    console.log('ERROR: GEMINI_API_KEY environment variable is missing');
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Server is missing GEMINI_API_KEY. Set it in Netlify environment variables.' })
+      body: JSON.stringify({ error: 'Server is missing GEMINI_API_KEY.' })
     };
   }
 
@@ -33,6 +31,10 @@ exports.handler = async function (event) {
 
     const data = await response.json();
 
+    // Log the full response so we can see it in Netlify function logs
+    console.log('Gemini status:', response.status);
+    console.log('Gemini response:', JSON.stringify(data));
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -40,6 +42,7 @@ exports.handler = async function (event) {
     };
 
   } catch (error) {
+    console.log('FUNCTION ERROR:', error.message);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message })
