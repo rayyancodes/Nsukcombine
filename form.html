@@ -80,6 +80,33 @@
   .complete-card p{font-size:14px;color:#4a5a51;line-height:1.6}
 
   .loading-screen{text-align:center;padding:60px 16px;color:var(--brand);font-weight:700}
+
+  /* WELCOME BACK SCREEN */
+  .welcome-card{background:#fff;border:2px solid var(--brand);border-radius:18px;padding:28px 22px;box-shadow:var(--shadow);text-align:center;margin-top:24px}
+  .welcome-card .icon{font-size:48px;margin-bottom:12px}
+  .welcome-card h2{font-size:19px;font-weight:800;color:var(--brand);margin-bottom:6px}
+  .welcome-card .candidate-name{font-size:16px;font-weight:700;color:#122016;margin-bottom:4px}
+  .welcome-card .jamb-no{font-size:13px;color:#888;margin-bottom:20px}
+  .welcome-card p{font-size:14px;color:#4a5a51;line-height:1.6;margin-bottom:18px}
+
+  /* INCOMPLETE BADGE */
+  .status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-left:8px}
+  .status-badge.incomplete{background:#fff3cd;color:#856404}
+  .status-badge.complete{background:var(--chip-bg);color:var(--brand)}
+
+  /* REVIEW SCREEN */
+  .review-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+  .review-note{background:#fff8e1;border:1px solid #ffe08a;border-radius:12px;padding:14px;font-size:13px;color:#7a5c00;line-height:1.6;margin-bottom:18px;text-align:center}
+  .review-section{margin-bottom:18px}
+  .review-section-title{font-size:13px;font-weight:800;color:var(--brand);margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px}
+  .review-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:13px;border-bottom:1px solid #f5f5f5}
+  .review-row:last-child{border-bottom:none}
+  .review-label{color:#888;flex-shrink:0}
+  .review-value{color:#122016;font-weight:600;text-align:right}
+  .back-edit-btn{width:100%;padding:13px;background:#fff;border:2px solid var(--warn);color:var(--warn);border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px}
+  .back-edit-btn:hover{background:#fff8e1}
+  .confirm-submit-btn{width:100%;padding:14px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer}
+  .confirm-submit-btn:hover{background:#245f23}
 </style>
 </head>
 <body>
@@ -109,6 +136,19 @@
     </div>
   </div>
 
+  <!-- WELCOME BACK SCREEN (for completed forms) -->
+  <div id="welcomeBackScreen" style="display:none">
+    <div class="welcome-card">
+      <div class="icon">👋</div>
+      <h2>Welcome Back!</h2>
+      <div class="candidate-name" id="wbName"></div>
+      <div class="jamb-no" id="wbJamb"></div>
+      <p>Your form has already been submitted. Would you like to review or edit your details?</p>
+      <button class="option-btn primary" onclick="editCompletedForm()">✏️ Edit My Form</button>
+      <button class="option-btn secondary" onclick="location.reload()">⬅ No, I'm Done</button>
+    </div>
+  </div>
+
   <!-- STEP 1: SHOW TRACKING ID -->
   <div id="idRevealScreen" style="display:none">
     <div class="id-card">
@@ -131,7 +171,7 @@
 
   <!-- STEP 3: FORM -->
   <div id="formScreen" style="display:none">
-    <div class="tracking-pill">🔖 <span id="formTrackingId"></span></div>
+    <div class="tracking-pill">🔖 <span id="formTrackingId"></span><span class="status-badge incomplete" id="statusBadge">⏳ Incomplete</span></div>
 
     <div class="progress-bar-wrap">
       <div class="progress-label"><span id="progressText">Part 1 of 2</span><span id="progressPercent">0%</span></div>
@@ -197,7 +237,8 @@
       </div>
 
       <div class="nav-buttons">
-        <button class="nav-btn next" style="margin-left:auto" onclick="goToPartB()">Next: Next of Kin →</button>
+        <button class="nav-btn back" disabled style="opacity:.3;cursor:default">← Previous</button>
+        <button class="nav-btn next" onclick="goToPartB()">Next: Next of Kin →</button>
       </div>
     </div>
 
@@ -237,9 +278,40 @@
       </div>
 
       <div class="nav-buttons">
-        <button class="nav-btn back" onclick="goToPartA()">← Back</button>
-        <button class="nav-btn next" onclick="finishForm()">Finish ✓</button>
+        <button class="nav-btn back" onclick="goToPartA()">← Previous</button>
+        <button class="nav-btn next" onclick="goToReview()">Review →</button>
       </div>
+    </div>
+  </div>
+
+  <!-- STEP 3.5: REVIEW SCREEN -->
+  <div id="reviewScreen" style="display:none">
+    <div class="tracking-pill">🔖 <span id="reviewTrackingId"></span></div>
+    <div class="review-card">
+      <div class="review-note">⚠️ <strong>Please make sure everything has been filled correctly and all information are correct.</strong> Take your time to review before submitting.</div>
+
+      <div class="review-section">
+        <div class="review-section-title">Part A — Personal Information</div>
+        <div class="review-row"><span class="review-label">JAMB Reg. Number</span><span class="review-value" id="rv-jambNumber"></span></div>
+        <div class="review-row"><span class="review-label">Email</span><span class="review-value" id="rv-email"></span></div>
+        <div class="review-row"><span class="review-label">Place of Birth</span><span class="review-value" id="rv-placeOfBirth"></span></div>
+        <div class="review-row"><span class="review-label">Date of Birth</span><span class="review-value" id="rv-dob"></span></div>
+        <div class="review-row"><span class="review-label">Marital Status</span><span class="review-value" id="rv-maritalStatus"></span></div>
+        <div class="review-row"><span class="review-label">Phone Number</span><span class="review-value" id="rv-phone"></span></div>
+        <div class="review-row"><span class="review-label">LGA</span><span class="review-value" id="rv-lga"></span></div>
+        <div class="review-row"><span class="review-label">Hometown</span><span class="review-value" id="rv-hometown"></span></div>
+      </div>
+
+      <div class="review-section">
+        <div class="review-section-title">Part B — Next of Kin</div>
+        <div class="review-row"><span class="review-label">Name</span><span class="review-value" id="rv-nokName"></span></div>
+        <div class="review-row"><span class="review-label">Phone</span><span class="review-value" id="rv-nokPhone"></span></div>
+        <div class="review-row"><span class="review-label">Relationship</span><span class="review-value" id="rv-nokRelationship"></span></div>
+        <div class="review-row"><span class="review-label">Address</span><span class="review-value" id="rv-nokAddress"></span></div>
+      </div>
+
+      <button class="back-edit-btn" onclick="backToEditFromReview()">✏️ Made a mistake? Click to go back</button>
+      <button class="confirm-submit-btn" onclick="finishForm()">✅ Confirm &amp; Submit</button>
     </div>
   </div>
 
@@ -359,13 +431,7 @@ async function resumeForm(){
     const data = snap.data();
     currentTrackingId = data.trackingId;
 
-    if(data.status === 'completed'){
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('completeTrackingId').textContent = currentTrackingId;
-      document.getElementById('completeScreen').style.display = 'block';
-      return;
-    }
-
+    // Pre-fill all fields regardless of status
     ALL_FIELDS.forEach(f => {
       if(data[f] !== undefined){
         const el = document.getElementById(f);
@@ -373,9 +439,21 @@ async function resumeForm(){
       }
     });
 
+    if(data.status === 'completed'){
+      // Show "Welcome back" screen with JAMB number
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('wbName').textContent = 'JAMB Reg. No: ' + (data.jambNumber || 'N/A');
+      document.getElementById('wbJamb').textContent = 'Tracking ID: ' + currentTrackingId;
+      document.getElementById('welcomeBackScreen').style.display = 'block';
+      return;
+    }
+
+    // Incomplete — go straight back to where they stopped
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('formScreen').style.display = 'block';
     document.getElementById('formTrackingId').textContent = currentTrackingId;
+    document.getElementById('statusBadge').className = 'status-badge incomplete';
+    document.getElementById('statusBadge').textContent = '⏳ Incomplete';
 
     if(data.currentPart === 'B'){ goToPartB(true); } else { goToPartA(); }
     updateProgress();
@@ -386,6 +464,16 @@ async function resumeForm(){
     errEl.textContent = '❌ Error loading form: ' + e.message;
     errEl.style.display = 'block';
   }
+}
+
+function editCompletedForm(){
+  document.getElementById('welcomeBackScreen').style.display = 'none';
+  document.getElementById('formScreen').style.display = 'block';
+  document.getElementById('formTrackingId').textContent = currentTrackingId;
+  document.getElementById('statusBadge').className = 'status-badge complete';
+  document.getElementById('statusBadge').textContent = '✅ Completed (Editing)';
+  goToPartA();
+  updateProgress();
 }
 
 function onFieldChange(fieldId){
@@ -426,6 +514,7 @@ async function goToPartB(skipValidation){
 
   document.getElementById('partA').style.display = 'none';
   document.getElementById('partB').style.display = 'block';
+  document.getElementById('reviewScreen').style.display = 'none';
 
   const docId = currentTrackingId.replace('/', '-');
   await db.collection('registrations').doc(docId).set({ currentPart: 'B' }, { merge: true });
@@ -434,12 +523,46 @@ async function goToPartB(skipValidation){
 
 function goToPartA(){
   document.getElementById('partB').style.display = 'none';
+  document.getElementById('reviewScreen').style.display = 'none';
+  document.getElementById('partA').style.display = 'block';
+  updateProgress();
+}
+
+function goToReview(){
+  const missing = FIELDS_B.filter(f => !document.getElementById(f).value.trim());
+  if(missing.length){ alert('Please fill in all fields in Part B before continuing.'); return; }
+
+  document.getElementById('partB').style.display = 'none';
+  document.getElementById('partA').style.display = 'none';
+  document.getElementById('reviewScreen').style.display = 'block';
+  document.getElementById('reviewTrackingId').textContent = currentTrackingId;
+
+  // Populate review values
+  const labels = {
+    maritalStatus: {Single:'Single', Married:'Married'},
+    nokRelationship: {Father:'Father', Mother:'Mother', Brother:'Brother', Sister:'Sister'}
+  };
+  ALL_FIELDS.forEach(f => {
+    const el = document.getElementById(f);
+    const rv = document.getElementById('rv-' + f);
+    if(el && rv) rv.textContent = el.value || '—';
+  });
+
+  document.getElementById('progressText').textContent = 'Review';
+  document.getElementById('progressPercent').textContent = '100%';
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function backToEditFromReview(){
+  document.getElementById('reviewScreen').style.display = 'none';
   document.getElementById('partA').style.display = 'block';
   updateProgress();
 }
 
 function updateProgress(){
   const partBVisible = document.getElementById('partB').style.display === 'block';
+  const reviewVisible = document.getElementById('reviewScreen').style.display === 'block';
+  if(reviewVisible) return; // handled separately in goToReview
   document.getElementById('progressText').textContent = partBVisible ? 'Part 2 of 2 — Next of Kin' : 'Part 1 of 2 — Personal Info';
   const totalFilled = ALL_FIELDS.filter(f => document.getElementById(f).value.trim()).length;
   const percent = Math.round((totalFilled / ALL_FIELDS.length) * 100);
