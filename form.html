@@ -11,28 +11,28 @@
     --border:#1f1f1f;--chip-bg:#e6f3e6;--fail:#c0392b;--warn:#e67e22;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#1a1a1a;min-height:100vh;font-size:17px}
+  body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#1a1a1a;min-height:100vh;font-size:15px}
   .wrap{max-width:580px;margin:0 auto;padding:0 16px 50px}
 
   /* SOLID HEADER BAR */
-  .topbar{text-align:center;padding:26px 16px;background:var(--brand);color:#fff;border-radius:0 0 16px 16px;margin-bottom:18px}
-  .topbar h1{font-size:24px;font-weight:800;letter-spacing:.3px;margin-bottom:4px}
-  .topbar p{font-size:15px;opacity:.92}
+  .topbar{text-align:center;padding:18px 16px;background:var(--brand);color:#fff;border-radius:0 0 14px 14px;margin-bottom:16px}
+  .topbar h1{font-size:19px;font-weight:800;letter-spacing:.2px;margin-bottom:3px}
+  .topbar p{font-size:13px;opacity:.92}
 
   /* SECTION HEADER STRIP (like "Enter details of your current tasks") */
   .section-strip{background:#e3e6ea;color:#2a2a2a;text-align:center;padding:10px 14px;font-size:14px;font-weight:600;border-radius:6px;margin-bottom:22px}
 
   /* FLAT CARD */
   .landing-card,.id-card,.welcome-card,.complete-card,.form-card,.review-card{
-    background:#fff;border:2px solid var(--border);border-radius:10px;padding:26px 22px;margin-bottom:18px;
+    background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px 18px;margin-bottom:16px;
   }
   .landing-card,.id-card,.welcome-card,.complete-card{text-align:center;margin-top:8px}
 
-  .landing-icon{font-size:52px;margin-bottom:14px}
-  .landing-card h2{font-size:22px;font-weight:800;color:var(--brand);margin-bottom:12px}
-  .landing-card p{font-size:16px;color:#3a3a3a;line-height:1.6;margin-bottom:24px}
+  .landing-icon{font-size:42px;margin-bottom:12px}
+  .landing-card h2{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:10px}
+  .landing-card p{font-size:14px;color:#3a3a3a;line-height:1.6;margin-bottom:20px}
 
-  .option-btn{display:block;width:100%;padding:18px;border-radius:8px;font-size:17px;font-weight:700;cursor:pointer;border:2px solid var(--border);margin-bottom:14px;transition:all .15s}
+  .option-btn{display:block;width:100%;padding:14px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;border:2px solid var(--border);margin-bottom:12px;transition:all .15s}
   .option-btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
   .option-btn.primary:hover{background:var(--brand-dark)}
   .option-btn.secondary{background:#fff;color:var(--brand);border-color:var(--brand)}
@@ -40,80 +40,80 @@
 
   .resume-box{display:none;margin-top:18px;text-align:left}
   .resume-box.show{display:block}
-  .resume-box label{display:block;font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
-  .resume-box input{width:100%;padding:16px 14px;border:2px solid var(--border);border-radius:8px;font-size:18px;text-align:center;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .resume-box label{display:block;font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:8px}
+  .resume-box input{width:100%;padding:13px 14px;border:2px solid var(--border);border-radius:8px;font-size:16px;text-align:center;font-weight:700;letter-spacing:1px;text-transform:uppercase}
   .resume-box input:focus{outline:none;border-color:var(--brand)}
-  .resume-error{color:var(--fail);font-size:14px;margin-top:10px;display:none;text-align:center;font-weight:600}
-  .resume-go{margin-top:14px;width:100%;padding:16px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer}
+  .resume-error{color:var(--fail);font-size:13px;margin-top:8px;display:none;text-align:center;font-weight:600}
+  .resume-go{margin-top:12px;width:100%;padding:13px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
   .resume-go:hover{background:var(--brand-dark)}
 
   .id-card{border-color:var(--brand)}
-  .id-card .icon{font-size:48px;margin-bottom:14px}
-  .id-card h2{font-size:21px;font-weight:800;color:var(--brand);margin-bottom:8px}
-  .id-card .sub{font-size:15px;color:#3a3a3a;margin-bottom:20px}
-  .id-display{background:var(--chip-bg);border:2px dashed var(--brand);border-radius:8px;padding:20px;margin-bottom:18px}
-  .id-text{font-size:26px;font-weight:800;color:var(--brand);letter-spacing:1px;word-break:break-all}
-  .copy-btn{margin-top:12px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .id-card .icon{font-size:38px;margin-bottom:10px}
+  .id-card h2{font-size:17px;font-weight:800;color:var(--brand);margin-bottom:6px}
+  .id-card .sub{font-size:13px;color:#3a3a3a;margin-bottom:16px}
+  .id-display{background:var(--chip-bg);border:2px dashed var(--brand);border-radius:8px;padding:16px;margin-bottom:14px}
+  .id-text{font-size:21px;font-weight:800;color:var(--brand);letter-spacing:.5px;word-break:break-all}
+  .copy-btn{margin-top:10px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
   .copy-btn:hover{background:var(--brand-dark)}
   .copy-btn.copied{background:var(--brand-dark)}
-  .warning-box{background:#fff8e1;border:2px solid #e6c200;border-radius:8px;padding:16px;font-size:15px;color:#6b5200;line-height:1.6;text-align:left;margin-bottom:20px;font-weight:500}
-  .continue-btn{width:100%;padding:18px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:17px;font-weight:800;cursor:pointer}
+  .warning-box{background:#fff8e1;border:2px solid #e6c200;border-radius:8px;padding:13px;font-size:13px;color:#6b5200;line-height:1.6;text-align:left;margin-bottom:16px;font-weight:500}
+  .continue-btn{width:100%;padding:14px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
   .continue-btn:hover{background:var(--brand-dark)}
 
-  .progress-bar-wrap{background:#fff;border:2px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:18px}
-  .progress-label{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#2a2a2a;margin-bottom:8px}
+  .progress-bar-wrap{background:#fff;border:2px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:14px}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#2a2a2a;margin-bottom:6px}
   .progress-track{height:10px;background:#e3e6ea;border-radius:999px;overflow:hidden}
   .progress-fill{height:100%;background:var(--brand);border-radius:999px;transition:width .3s}
-  .tracking-pill{display:inline-flex;align-items:center;gap:8px;background:var(--chip-bg);color:var(--brand);padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;margin-bottom:16px;border:2px solid var(--brand)}
+  .tracking-pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip-bg);color:var(--brand);padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;margin-bottom:14px;border:2px solid var(--brand)}
 
-  .part-title{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:4px}
-  .part-sub{font-size:14px;color:#666;margin-bottom:20px}
-  .field-group{margin-bottom:20px}
-  .field-group label{display:block;font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:8px}
-  .field-group .hint{font-size:13px;color:#666;font-weight:400;margin-top:6px;line-height:1.6}
-  .field-group input, .field-group select{width:100%;padding:14px 14px;border:2px solid var(--border);border-radius:8px;font-size:16px;color:#1a1a1a;background:#fff}
+  .part-title{font-size:16px;font-weight:800;color:var(--brand);margin-bottom:4px}
+  .part-sub{font-size:12px;color:#666;margin-bottom:16px}
+  .field-group{margin-bottom:16px}
+  .field-group label{display:block;font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+  .field-group .hint{font-size:11.5px;color:#666;font-weight:400;margin-top:5px;line-height:1.5}
+  .field-group input, .field-group select{width:100%;padding:11px 12px;border:2px solid var(--border);border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff}
   .field-group input:focus, .field-group select:focus{outline:none;border-color:var(--brand)}
   .field-group.saved input, .field-group.saved select{border-color:var(--brand);background:#f7fdf6}
-  .save-indicator{font-size:13px;color:var(--brand);margin-top:6px;display:none;align-items:center;gap:5px;font-weight:600}
+  .save-indicator{font-size:11.5px;color:var(--brand);margin-top:5px;display:none;align-items:center;gap:5px;font-weight:600}
   .save-indicator.show{display:flex}
 
-  .nav-buttons{display:flex;gap:12px;margin-top:24px}
-  .nav-btn{flex:1;padding:16px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;border:2px solid var(--border)}
+  .nav-buttons{display:flex;gap:10px;margin-top:18px}
+  .nav-btn{flex:1;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:2px solid var(--border)}
   .nav-btn.back{background:#fff;color:#1a1a1a}
   .nav-btn.next{background:var(--brand);color:#fff;border-color:var(--brand)}
   .nav-btn.next:hover{background:var(--brand-dark)}
 
   .complete-card{border-color:var(--brand)}
-  .complete-card .icon{font-size:60px;margin-bottom:16px}
-  .complete-card h2{font-size:22px;font-weight:800;color:var(--brand);margin-bottom:12px}
-  .complete-card p{font-size:16px;color:#3a3a3a;line-height:1.7}
+  .complete-card .icon{font-size:46px;margin-bottom:12px}
+  .complete-card h2{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:10px}
+  .complete-card p{font-size:14px;color:#3a3a3a;line-height:1.6}
 
-  .loading-screen{text-align:center;padding:70px 16px;color:var(--brand);font-weight:700;font-size:17px}
+  .loading-screen{text-align:center;padding:50px 16px;color:var(--brand);font-weight:700;font-size:15px}
 
   /* WELCOME BACK SCREEN */
   .welcome-card{border-color:var(--brand)}
-  .welcome-card .icon{font-size:52px;margin-bottom:14px}
-  .welcome-card h2{font-size:22px;font-weight:800;color:var(--brand);margin-bottom:8px}
-  .welcome-card .candidate-name{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
-  .welcome-card .jamb-no{font-size:14px;color:#666;margin-bottom:24px}
-  .welcome-card p{font-size:16px;color:#3a3a3a;line-height:1.6;margin-bottom:22px}
+  .welcome-card .icon{font-size:42px;margin-bottom:12px}
+  .welcome-card h2{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:6px}
+  .welcome-card .candidate-name{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:5px}
+  .welcome-card .jamb-no{font-size:12px;color:#666;margin-bottom:18px}
+  .welcome-card p{font-size:14px;color:#3a3a3a;line-height:1.6;margin-bottom:18px}
 
   /* INCOMPLETE BADGE */
-  .status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;margin-left:10px}
+  .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:6px;font-size:10.5px;font-weight:700;margin-left:8px}
   .status-badge.incomplete{background:#fff3cd;color:#7a5c00;border:1px solid #e6c200}
   .status-badge.complete{background:var(--chip-bg);color:var(--brand);border:1px solid var(--brand)}
 
   /* REVIEW SCREEN */
-  .review-note{background:#fff8e1;border:2px solid #e6c200;border-radius:8px;padding:16px;font-size:15px;color:#6b5200;line-height:1.6;margin-bottom:22px;text-align:center;font-weight:500}
-  .review-section{margin-bottom:22px}
-  .review-section-title{font-size:16px;font-weight:800;color:var(--brand);margin-bottom:12px;border-bottom:2px solid var(--border);padding-bottom:8px}
-  .review-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;font-size:15px;border-bottom:1px solid #eee}
+  .review-note{background:#fff8e1;border:2px solid #e6c200;border-radius:8px;padding:13px;font-size:13px;color:#6b5200;line-height:1.6;margin-bottom:18px;text-align:center;font-weight:500}
+  .review-section{margin-bottom:18px}
+  .review-section-title{font-size:14px;font-weight:800;color:var(--brand);margin-bottom:10px;border-bottom:2px solid var(--border);padding-bottom:6px}
+  .review-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px;border-bottom:1px solid #eee}
   .review-row:last-child{border-bottom:none}
   .review-label{color:#666;flex-shrink:0}
   .review-value{color:#1a1a1a;font-weight:700;text-align:right}
-  .back-edit-btn{width:100%;padding:16px;background:#fff;border:2px solid var(--warn);color:var(--warn);border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px}
+  .back-edit-btn{width:100%;padding:13px;background:#fff;border:2px solid var(--warn);color:var(--warn);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px}
   .back-edit-btn:hover{background:#fff8e1}
-  .confirm-submit-btn{width:100%;padding:18px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:17px;font-weight:800;cursor:pointer}
+  .confirm-submit-btn{width:100%;padding:14px;background:var(--brand);color:#fff;border:2px solid var(--brand);border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
   .confirm-submit-btn:hover{background:var(--brand-dark)}
 </style>
 </head>
@@ -446,6 +446,7 @@ async function startNewForm(){
   document.getElementById('trackingIdDisplay').textContent = trackingId;
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('idRevealScreen').style.display = 'block';
+  window.scrollTo(0, 0);
 }
 
 function copyTrackingId(){
@@ -470,6 +471,7 @@ function proceedToForm(){
   document.getElementById('formScreen').style.display = 'block';
   document.getElementById('formTrackingId').textContent = currentTrackingId;
   updateProgress();
+  window.scrollTo(0, 0);
 }
 
 async function resumeForm(){
@@ -509,6 +511,7 @@ async function resumeForm(){
       document.getElementById('wbName').textContent = 'JAMB Reg. No: ' + (data.jambNumber || 'N/A');
       document.getElementById('wbJamb').textContent = 'Tracking ID: ' + currentTrackingId;
       document.getElementById('welcomeBackScreen').style.display = 'block';
+      window.scrollTo(0, 0);
       return;
     }
 
@@ -521,6 +524,7 @@ async function resumeForm(){
 
     if(data.currentPart === 'B'){ goToPartB(true); } else { goToPartA(); }
     updateProgress();
+    window.scrollTo(0, 0);
 
   } catch(e){
     document.getElementById('loadingScreen').style.display = 'none';
@@ -538,6 +542,7 @@ function editCompletedForm(){
   document.getElementById('statusBadge').textContent = '✅ Completed (Editing)';
   goToPartA();
   updateProgress();
+  window.scrollTo(0, 0);
 }
 
 function onFieldChange(fieldId){
@@ -583,6 +588,7 @@ async function goToPartB(skipValidation){
   const docId = currentTrackingId.replace('/', '-');
   await db.collection('registrations').doc(docId).set({ currentPart: 'B' }, { merge: true });
   updateProgress();
+  window.scrollTo(0, 0);
 }
 
 function goToPartA(){
@@ -590,6 +596,7 @@ function goToPartA(){
   document.getElementById('reviewScreen').style.display = 'none';
   document.getElementById('partA').style.display = 'block';
   updateProgress();
+  window.scrollTo(0, 0);
 }
 
 function goToReview(){
@@ -615,12 +622,14 @@ function goToReview(){
   document.getElementById('progressText').textContent = 'Review';
   document.getElementById('progressPercent').textContent = '100%';
   document.getElementById('progressFill').style.width = '100%';
+  window.scrollTo(0, 0);
 }
 
 function backToEditFromReview(){
   document.getElementById('reviewScreen').style.display = 'none';
   document.getElementById('partA').style.display = 'block';
   updateProgress();
+  window.scrollTo(0, 0);
 }
 
 function updateProgress(){
@@ -646,10 +655,12 @@ async function finishForm(){
     }, { merge: true });
 
     document.getElementById('formScreen').style.display = 'none';
+    document.getElementById('reviewScreen').style.display = 'none';
     document.getElementById('completeTrackingId').textContent = currentTrackingId;
     const waMsg = encodeURIComponent(`Hello Admin Raayan, I just completed my NSUK Post-UTME form. My tracking ID is: ${currentTrackingId}`);
-    document.getElementById('waBtn').href = `https://wa.me/2349057025252?text=${waMsg}`;
+    document.getElementById('waBtn').href = `https://wa.me/2349057205252?text=${waMsg}`;
     document.getElementById('completeScreen').style.display = 'block';
+    window.scrollTo(0, 0);
   } catch(e){ alert('Error submitting form: ' + e.message); }
 }
 
