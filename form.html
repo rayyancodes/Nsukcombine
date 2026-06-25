@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSUK Post-UTME Registration Form 2026</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --bg:#f5f7fb;--brand:#2f7a2d;--brand-light:#72c264;
+    --border:#e7ece9;--shadow:0 1px 1px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06);
+    --chip-bg:#e6f3e6;--fail:#c0392b;--warn:#e67e22;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:#122016;min-height:100vh}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+
+  .topbar{text-align:center;padding:20px 16px;background:var(--brand);color:#fff}
+  .topbar h1{font-size:18px;font-weight:800;margin-bottom:4px}
+  .topbar p{font-size:13px;opacity:.9}
+
+  .landing-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:28px 22px;box-shadow:var(--shadow);text-align:center;margin-top:24px}
+  .landing-icon{font-size:48px;margin-bottom:14px}
+  .landing-card h2{font-size:19px;font-weight:800;color:var(--brand);margin-bottom:10px}
+  .landing-card p{font-size:14px;color:#4a5a51;line-height:1.6;margin-bottom:22px}
+  .option-btn{display:block;width:100%;padding:16px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;border:none;margin-bottom:12px;transition:all .15s}
+  .option-btn.primary{background:var(--brand);color:#fff}
+  .option-btn.primary:hover{background:#245f23}
+  .option-btn.secondary{background:#fff;color:var(--brand);border:2px solid var(--brand)}
+  .option-btn.secondary:hover{background:var(--chip-bg)}
+
+  .resume-box{display:none;margin-top:14px;text-align:left}
+  .resume-box.show{display:block}
+  .resume-box input{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:12px;font-size:15px;text-align:center;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .resume-box input:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
+  .resume-error{color:var(--fail);font-size:13px;margin-top:8px;display:none;text-align:center}
+  .resume-go{margin-top:10px;width:100%;padding:13px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer}
+  .resume-go:hover{background:#245f23}
+
+  .id-card{background:#fff;border:2px solid var(--brand);border-radius:18px;padding:28px 22px;box-shadow:var(--shadow);text-align:center;margin-top:24px}
+  .id-card .icon{font-size:44px;margin-bottom:12px}
+  .id-card h2{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:6px}
+  .id-card .sub{font-size:13px;color:#4a5a51;margin-bottom:18px}
+  .id-display{background:var(--chip-bg);border:2px dashed var(--brand);border-radius:14px;padding:18px;margin-bottom:14px}
+  .id-text{font-size:24px;font-weight:800;color:var(--brand);letter-spacing:1px;word-break:break-all}
+  .copy-btn{margin-top:10px;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .copy-btn:hover{background:#245f23}
+  .copy-btn.copied{background:#1a5c1a}
+  .warning-box{background:#fff8e1;border:1px solid #ffe08a;border-radius:12px;padding:14px;font-size:13px;color:#7a5c00;line-height:1.6;text-align:left;margin-bottom:18px}
+  .continue-btn{width:100%;padding:15px;background:var(--brand);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer}
+  .continue-btn:hover{background:#245f23}
+
+  .progress-bar-wrap{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#4a5a51;margin-bottom:6px}
+  .progress-track{height:8px;background:#eee;border-radius:999px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--brand);border-radius:999px;transition:width .3s}
+  .tracking-pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip-bg);color:var(--brand);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:14px}
+
+  .form-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+  .part-title{font-size:15px;font-weight:800;color:var(--brand);margin-bottom:4px}
+  .part-sub{font-size:12px;color:#888;margin-bottom:16px}
+  .field-group{margin-bottom:16px}
+  .field-group label{display:block;font-size:13px;font-weight:700;color:#2a392c;margin-bottom:6px}
+  .field-group .hint{font-size:11px;color:#888;font-weight:400;margin-top:2px;line-height:1.5}
+  .field-group input, .field-group select{width:100%;padding:12px 13px;border:1px solid var(--border);border-radius:10px;font-size:14px;color:#122016;background:#fff}
+  .field-group input:focus, .field-group select:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
+  .field-group.saved input, .field-group.saved select{border-color:var(--brand)}
+  .save-indicator{font-size:11px;color:var(--brand);margin-top:4px;display:none;align-items:center;gap:4px}
+  .save-indicator.show{display:flex}
+
+  .nav-buttons{display:flex;gap:10px;margin-top:18px}
+  .nav-btn{flex:1;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none}
+  .nav-btn.back{background:#fff;border:1px solid var(--border);color:#2a392c}
+  .nav-btn.next{background:var(--brand);color:#fff}
+  .nav-btn.next:hover{background:#245f23}
+
+  .complete-card{background:#fff;border:2px solid var(--brand);border-radius:18px;padding:32px 22px;box-shadow:var(--shadow);text-align:center;margin-top:24px}
+  .complete-card .icon{font-size:56px;margin-bottom:14px}
+  .complete-card h2{font-size:19px;font-weight:800;color:var(--brand);margin-bottom:10px}
+  .complete-card p{font-size:14px;color:#4a5a51;line-height:1.6}
+
+  .loading-screen{text-align:center;padding:60px 16px;color:var(--brand);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🎓 NSUK Post-UTME Registration</h1>
+  <p>2026 Admission Cycle</p>
+</div>
+
+<div class="wrap">
+
+  <!-- STEP 0: LANDING -->
+  <div id="landingScreen">
+    <div class="landing-card">
+      <div class="landing-icon">📋</div>
+      <h2>Welcome, Aspirant!</h2>
+      <p>Fill out your Post-UTME registration details below. Your progress is saved automatically as you go.</p>
+      <button class="option-btn primary" onclick="startNewForm()">📝 Fill New Form</button>
+      <button class="option-btn secondary" onclick="showResumeBox()">🔍 Already Started? Continue</button>
+
+      <div class="resume-box" id="resumeBox">
+        <label style="font-size:13px;font-weight:700;color:#2a392c;display:block;margin-bottom:8px">Enter your Tracking ID</label>
+        <input type="text" id="resumeInput" placeholder="e.g. NSUK2026/207APUI">
+        <div class="resume-error" id="resumeError">❌ Tracking ID not found. Please check and try again.</div>
+        <button class="resume-go" onclick="resumeForm()">Continue Form →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: SHOW TRACKING ID -->
+  <div id="idRevealScreen" style="display:none">
+    <div class="id-card">
+      <div class="icon">🎉</div>
+      <h2>Your Tracking ID is Ready!</h2>
+      <div class="sub">Save this code — you'll need it to continue your form if you leave.</div>
+      <div class="id-display">
+        <div class="id-text" id="trackingIdDisplay">NSUK2026/XXXXXX</div>
+        <button class="copy-btn" id="copyIdBtn" onclick="copyTrackingId()">📋 Copy Code</button>
+      </div>
+      <div class="warning-box">
+        ⚠️ <strong>Important:</strong> Write down or screenshot this code now. If you close this page without saving it, you will need to start a new form — there is no way to recover a lost tracking ID.
+      </div>
+      <button class="continue-btn" onclick="proceedToForm()">I've Saved It — Continue to Form →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: LOADING -->
+  <div id="loadingScreen" class="loading-screen" style="display:none">⏳ Loading your form...</div>
+
+  <!-- STEP 3: FORM -->
+  <div id="formScreen" style="display:none">
+    <div class="tracking-pill">🔖 <span id="formTrackingId"></span></div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span id="progressText">Part 1 of 2</span><span id="progressPercent">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- PART A -->
+    <div class="form-card" id="partA">
+      <div class="part-title">Part A — Personal Information</div>
+      <div class="part-sub">All fields are required</div>
+
+      <div class="field-group" id="field-jambNumber">
+        <label>JAMB Registration Number</label>
+        <input type="text" id="jambNumber" placeholder="e.g. 20261234567AB" oninput="onFieldChange('jambNumber')">
+        <div class="save-indicator" id="saved-jambNumber">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-email">
+        <label>Active Email Address</label>
+        <input type="email" id="email" placeholder="yourname@email.com" oninput="onFieldChange('email')">
+        <div class="hint">⚠️ If you registered for NSUK Post-UTME before, you cannot reuse last year's email. Create a new one if needed — it can be different from your JAMB email.</div>
+        <div class="save-indicator" id="saved-email">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-placeOfBirth">
+        <label>Place of Birth</label>
+        <input type="text" id="placeOfBirth" placeholder="e.g. Lafia, Nasarawa State" oninput="onFieldChange('placeOfBirth')">
+        <div class="save-indicator" id="saved-placeOfBirth">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-dob">
+        <label>Date of Birth</label>
+        <input type="date" id="dob" onchange="onFieldChange('dob')">
+        <div class="save-indicator" id="saved-dob">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-maritalStatus">
+        <label>Marital Status</label>
+        <select id="maritalStatus" onchange="onFieldChange('maritalStatus')">
+          <option value="">— Select —</option>
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+        </select>
+        <div class="save-indicator" id="saved-maritalStatus">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-phone">
+        <label>Active Phone Number</label>
+        <input type="tel" id="phone" placeholder="e.g. 08012345678" oninput="onFieldChange('phone')">
+        <div class="save-indicator" id="saved-phone">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-lga">
+        <label>Local Government Area</label>
+        <input type="text" id="lga" placeholder="e.g. Keffi" oninput="onFieldChange('lga')">
+        <div class="save-indicator" id="saved-lga">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-hometown">
+        <label>Hometown</label>
+        <input type="text" id="hometown" placeholder="e.g. Akwanga" oninput="onFieldChange('hometown')">
+        <div class="save-indicator" id="saved-hometown">✅ Saved</div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn next" style="margin-left:auto" onclick="goToPartB()">Next: Next of Kin →</button>
+      </div>
+    </div>
+
+    <!-- PART B -->
+    <div class="form-card" id="partB" style="display:none">
+      <div class="part-title">Part B — Next of Kin</div>
+      <div class="part-sub">All fields are required</div>
+
+      <div class="field-group" id="field-nokName">
+        <label>Name of Next of Kin</label>
+        <input type="text" id="nokName" placeholder="Full name" oninput="onFieldChange('nokName')">
+        <div class="save-indicator" id="saved-nokName">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-nokPhone">
+        <label>Phone Number of Next of Kin</label>
+        <input type="tel" id="nokPhone" placeholder="e.g. 08012345678" oninput="onFieldChange('nokPhone')">
+        <div class="save-indicator" id="saved-nokPhone">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-nokRelationship">
+        <label>Relationship with Next of Kin</label>
+        <select id="nokRelationship" onchange="onFieldChange('nokRelationship')">
+          <option value="">— Select —</option>
+          <option value="Father">Father</option>
+          <option value="Mother">Mother</option>
+          <option value="Brother">Brother</option>
+          <option value="Sister">Sister</option>
+        </select>
+        <div class="save-indicator" id="saved-nokRelationship">✅ Saved</div>
+      </div>
+
+      <div class="field-group" id="field-nokAddress">
+        <label>Address of Next of Kin</label>
+        <input type="text" id="nokAddress" placeholder="Full address" oninput="onFieldChange('nokAddress')">
+        <div class="save-indicator" id="saved-nokAddress">✅ Saved</div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn back" onclick="goToPartA()">← Back</button>
+        <button class="nav-btn next" onclick="finishForm()">Finish ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: COMPLETE -->
+  <div id="completeScreen" style="display:none">
+    <div class="complete-card">
+      <div class="icon">✅</div>
+      <h2>Form Submitted Successfully!</h2>
+      <p>Thank you! Your details have been received. Keep your tracking ID safe: <strong id="completeTrackingId"></strong></p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyATb9V4tE-h9E4M91a01tQ0ek_eDNm7lPo",
+  authDomain: "utmeform.firebaseapp.com",
+  projectId: "utmeform",
+  storageBucket: "utmeform.firebasestorage.app",
+  messagingSenderId: "646274544885",
+  appId: "1:646274544885:web:1bbca34013dca01c0701bc"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let currentTrackingId = null;
+let saveTimers = {};
+
+const FIELDS_A = ['jambNumber','email','placeOfBirth','dob','maritalStatus','phone','lga','hometown'];
+const FIELDS_B = ['nokName','nokPhone','nokRelationship','nokAddress'];
+const ALL_FIELDS = [...FIELDS_A, ...FIELDS_B];
+
+function generateTrackingId(){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for(let i=0; i<6; i++) code += chars[Math.floor(Math.random()*chars.length)];
+  return 'NSUK2026/' + code;
+}
+
+function showResumeBox(){
+  document.getElementById('resumeBox').classList.add('show');
+}
+
+async function startNewForm(){
+  const btn = document.querySelector('.option-btn.primary');
+  btn.disabled = true; btn.textContent = 'Generating...';
+
+  let trackingId, exists = true, attempts = 0;
+  while(exists && attempts < 5){
+    trackingId = generateTrackingId();
+    const docId = trackingId.replace('/', '-');
+    const snap = await db.collection('registrations').doc(docId).get();
+    exists = snap.exists;
+    attempts++;
+  }
+
+  const docId = trackingId.replace('/', '-');
+  await db.collection('registrations').doc(docId).set({
+    trackingId: trackingId,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    status: 'in_progress',
+    currentPart: 'A'
+  });
+
+  currentTrackingId = trackingId;
+  document.getElementById('trackingIdDisplay').textContent = trackingId;
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('idRevealScreen').style.display = 'block';
+}
+
+function copyTrackingId(){
+  const text = document.getElementById('trackingIdDisplay').textContent;
+  const btn = document.getElementById('copyIdBtn');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = '✅ Copied!'; btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent='📋 Copy Code'; btn.classList.remove('copied'); }, 2000);
+    });
+  } else {
+    const el = document.createElement('input');
+    el.value = text; document.body.appendChild(el);
+    el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    btn.textContent = '✅ Copied!';
+    setTimeout(()=>{ btn.textContent='📋 Copy Code'; }, 2000);
+  }
+}
+
+function proceedToForm(){
+  document.getElementById('idRevealScreen').style.display = 'none';
+  document.getElementById('formScreen').style.display = 'block';
+  document.getElementById('formTrackingId').textContent = currentTrackingId;
+  updateProgress();
+}
+
+async function resumeForm(){
+  const input = document.getElementById('resumeInput').value.trim().toUpperCase();
+  const errEl = document.getElementById('resumeError');
+  if(!input){ errEl.textContent = '❌ Please enter your tracking ID.'; errEl.style.display='block'; return; }
+
+  const docId = input.replace('/', '-');
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('loadingScreen').style.display = 'block';
+
+  try {
+    const snap = await db.collection('registrations').doc(docId).get();
+    if(!snap.exists){
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('landingScreen').style.display = 'block';
+      errEl.textContent = '❌ Tracking ID not found. Please check and try again.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const data = snap.data();
+    currentTrackingId = data.trackingId;
+
+    if(data.status === 'completed'){
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('completeTrackingId').textContent = currentTrackingId;
+      document.getElementById('completeScreen').style.display = 'block';
+      return;
+    }
+
+    ALL_FIELDS.forEach(f => {
+      if(data[f] !== undefined){
+        const el = document.getElementById(f);
+        if(el){ el.value = data[f]; markFieldSaved(f); }
+      }
+    });
+
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('formScreen').style.display = 'block';
+    document.getElementById('formTrackingId').textContent = currentTrackingId;
+
+    if(data.currentPart === 'B'){ goToPartB(true); } else { goToPartA(); }
+    updateProgress();
+
+  } catch(e){
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('landingScreen').style.display = 'block';
+    errEl.textContent = '❌ Error loading form: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function onFieldChange(fieldId){
+  clearTimeout(saveTimers[fieldId]);
+  saveTimers[fieldId] = setTimeout(() => saveField(fieldId), 600);
+}
+
+async function saveField(fieldId){
+  const el = document.getElementById(fieldId);
+  const value = el.value.trim();
+  if(!value) return;
+
+  const docId = currentTrackingId.replace('/', '-');
+  try {
+    await db.collection('registrations').doc(docId).set({
+      [fieldId]: value,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    markFieldSaved(fieldId);
+  } catch(e){ console.error('Save error:', e); }
+}
+
+function markFieldSaved(fieldId){
+  const group = document.getElementById('field-' + fieldId);
+  const indicator = document.getElementById('saved-' + fieldId);
+  if(group) group.classList.add('saved');
+  if(indicator){
+    indicator.classList.add('show');
+    setTimeout(()=> indicator.classList.remove('show'), 2000);
+  }
+}
+
+async function goToPartB(skipValidation){
+  if(!skipValidation){
+    const missing = FIELDS_A.filter(f => !document.getElementById(f).value.trim());
+    if(missing.length){ alert('Please fill in all fields in Part A before continuing.'); return; }
+  }
+
+  document.getElementById('partA').style.display = 'none';
+  document.getElementById('partB').style.display = 'block';
+
+  const docId = currentTrackingId.replace('/', '-');
+  await db.collection('registrations').doc(docId).set({ currentPart: 'B' }, { merge: true });
+  updateProgress();
+}
+
+function goToPartA(){
+  document.getElementById('partB').style.display = 'none';
+  document.getElementById('partA').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const partBVisible = document.getElementById('partB').style.display === 'block';
+  document.getElementById('progressText').textContent = partBVisible ? 'Part 2 of 2 — Next of Kin' : 'Part 1 of 2 — Personal Info';
+  const totalFilled = ALL_FIELDS.filter(f => document.getElementById(f).value.trim()).length;
+  const percent = Math.round((totalFilled / ALL_FIELDS.length) * 100);
+  document.getElementById('progressPercent').textContent = percent + '%';
+  document.getElementById('progressFill').style.width = percent + '%';
+}
+
+async function finishForm(){
+  const missing = FIELDS_B.filter(f => !document.getElementById(f).value.trim());
+  if(missing.length){ alert('Please fill in all fields in Part B before finishing.'); return; }
+
+  const docId = currentTrackingId.replace('/', '-');
+  try {
+    await db.collection('registrations').doc(docId).set({
+      status: 'completed',
+      completedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    document.getElementById('formScreen').style.display = 'none';
+    document.getElementById('completeTrackingId').textContent = currentTrackingId;
+    document.getElementById('completeScreen').style.display = 'block';
+  } catch(e){ alert('Error submitting form: ' + e.message); }
+}
+
+ALL_FIELDS.forEach(f => {
+  const el = document.getElementById(f);
+  if(el) el.addEventListener('input', updateProgress);
+});
+</script>
+</body>
+</html>
