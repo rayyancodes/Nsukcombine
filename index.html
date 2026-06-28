@@ -197,7 +197,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
@@ -210,8 +210,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
+window.SHOW_COMBINATIONS = true; // default until fetched
+
+async function loadDisplaySettings(){
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'display'));
+    if(snap.exists()){
+      window.SHOW_COMBINATIONS = snap.data().showCombinations !== false;
+    }
+  } catch(e){ console.error('Display settings error:', e); }
+}
+
 async function loadCourses(){
   try {
+    await loadDisplaySettings();
     const snap = await getDocs(collection(db, 'courses'));
     const grouped = {};
     snap.forEach(d => {
@@ -321,7 +333,9 @@ async function loadFaqsFromFirebase(){
       var g=groups[gi];
       var fac=el('div',{class:'faculty'});
       var ft=el('div',{class:'faculty-title'}); ft.appendChild(text('Faculty of '+g.faculty)); fac.appendChild(ft);
-      var facTip=el('div',{class:'tip',style:'margin:0 0 10px;font-size:12px'}); facTip.appendChild(text('Tap a course below to see its subject combination.')); fac.appendChild(facTip);
+      var facTip=el('div',{class:'tip',style:'margin:0 0 10px;font-size:12px'});
+      facTip.appendChild(text(window.SHOW_COMBINATIONS !== false ? 'Tap a course below to see its subject combination.' : 'Subject combination temporarily unavailable, check back later.'));
+      fac.appendChild(facTip);
       for(var ci=0; ci<(g.courses||[]).length; ci++){
         var c=g.courses[ci];
         var card=el('div',{class:'course'});
@@ -331,13 +345,20 @@ async function loadFaqsFromFirebase(){
         var cut=el('div',{class:'cut'}); cut.appendChild(text('Cut-off mark: '+c.cutoff)); tw.appendChild(cut);
         btn.appendChild(tw);
         var chev=el('div'); chev.appendChild(text('›')); btn.appendChild(chev);
-        var panel=el('div',{class:'panel'});
-        var div=el('div',{class:'divider'}); panel.appendChild(div);
-        var grid=el('div',{class:'two'});
-        grid.appendChild(column('JAMB Subjects', c.jamb));
-        grid.appendChild(column("O'Level Requirements", c.olevel));
-        panel.appendChild(grid);
-        card.appendChild(btn); card.appendChild(panel); fac.appendChild(card);
+        card.appendChild(btn);
+        if(window.SHOW_COMBINATIONS !== false){
+          var panel=el('div',{class:'panel'});
+          var div=el('div',{class:'divider'}); panel.appendChild(div);
+          var grid=el('div',{class:'two'});
+          grid.appendChild(column('JAMB Subjects', c.jamb));
+          grid.appendChild(column("O'Level Requirements", c.olevel));
+          panel.appendChild(grid);
+          card.appendChild(panel);
+        } else {
+          chev.style.display='none';
+          btn.style.cursor='default';
+        }
+        fac.appendChild(card);
       }
       root.appendChild(fac);
     }

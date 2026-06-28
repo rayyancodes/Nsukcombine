@@ -38,6 +38,18 @@
   .stat .lbl{font-size:12px;color:#666;margin-top:2px}
 
   /* TOOLBAR */
+  /* COMBINATION TOGGLE */
+  .combo-toggle-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow)}
+  .combo-toggle-info{flex:1;min-width:0}
+  .combo-toggle-info .title{font-size:14px;font-weight:800;color:#2a392c;margin-bottom:2px}
+  .combo-toggle-info .sub{font-size:12px;color:#888;line-height:1.5}
+  .toggle-switch{position:relative;width:50px;height:28px;flex-shrink:0;cursor:pointer}
+  .toggle-switch input{opacity:0;width:0;height:0}
+  .toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:999px;transition:.3s}
+  .toggle-slider::before{content:'';position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .toggle-switch input:checked + .toggle-slider{background:var(--brand)}
+  .toggle-switch input:checked + .toggle-slider::before{transform:translateX(22px)}
+
   .toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
   .toolbar input{flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px}
   .toolbar input:focus{outline:2px solid var(--brand-light);border-color:var(--brand)}
@@ -207,6 +219,18 @@
 
   <!-- COURSES SECTION -->
   <div id="section-courses">
+
+  <div class="combo-toggle-card">
+    <div class="combo-toggle-info">
+      <div class="title">📚 Show Subject Combinations</div>
+      <div class="sub">Turn off to hide JAMB & O'Level requirements site-wide. Only cut-off marks will show. Use this while updating course data.</div>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="comboToggle" checked onchange="toggleCombinations()">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
   <div class="toolbar">
     <input type="text" id="searchInput" placeholder="🔍 Search course..." oninput="renderList()">
     <select id="facultyFilter" onchange="renderList()">
@@ -435,7 +459,7 @@ let selectedImageFile = null, selectedIconFile = null, selectedAdminIconFile = n
 auth.onAuthStateChanged(user => {
   document.getElementById('loginWrap').style.display  = user ? 'none' : 'flex';
   document.getElementById('adminWrap').style.display  = user ? 'block' : 'none';
-  if(user) loadCourses();
+  if(user){ loadCourses(); loadComboToggleState(); }
 });
 
 function doLogin(){
@@ -484,6 +508,21 @@ function showToast(msg){
 }
 
 // ── COURSES ───────────────────────────────────────────────────
+// ── COMBINATION VISIBILITY TOGGLE ──────────────────────────────
+function loadComboToggleState(){
+  db.collection('settings').doc('display').get().then(snap=>{
+    const show = snap.exists ? (snap.data().showCombinations !== false) : true;
+    document.getElementById('comboToggle').checked = show;
+  }).catch(e=>console.error(e));
+}
+
+function toggleCombinations(){
+  const show = document.getElementById('comboToggle').checked;
+  db.collection('settings').doc('display').set({ showCombinations: show }, { merge: true })
+    .then(()=> showToast(show ? '✅ Combinations are now visible on the site.' : '⚠️ Combinations are now hidden — only cut-off marks show.'))
+    .catch(e=> showToast('❌ ' + e.message));
+}
+
 function loadCourses(){
   db.collection('courses').get().then(snap=>{
     allCourses = [];
