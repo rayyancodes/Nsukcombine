@@ -100,9 +100,23 @@
 
 <script>
 const WA_LINK = 'https://chat.whatsapp.com/JhnmXkquaKH1cgoKev2Up2';
+const WA_INVITE_CODE = 'JhnmXkquaKH1cgoKev2Up2';
 
 function goToWhatsApp(){
-  window.location.href = WA_LINK;
+  // Try opening directly in the WhatsApp app first
+  const appLink = 'whatsapp://chat?code=' + WA_INVITE_CODE;
+  const fallbackTimer = setTimeout(() => {
+    // If the app didn't open within 1.2s, fall back to the normal web link
+    window.location.href = WA_LINK;
+  }, 1200);
+
+  // If the page loses focus (app opened successfully), cancel the fallback
+  window.addEventListener('blur', () => clearTimeout(fallbackTimer), { once: true });
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) clearTimeout(fallbackTimer);
+  }, { once: true });
+
+  window.location.href = appLink;
 }
 
 // Auto-redirect after 4 seconds
