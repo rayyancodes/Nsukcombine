@@ -215,6 +215,7 @@
     <button class="tab active" id="tab-courses" onclick="switchTab('courses')">🎓 Courses</button>
     <button class="tab" id="tab-announcements" onclick="switchTab('announcements')">📢 Announcements</button>
     <button class="tab" id="tab-faqs" onclick="switchTab('faqs')">❓ FAQs</button>
+    <button class="tab" id="tab-links" onclick="switchTab('links')">🔗 Links</button>
   </div>
 
   <!-- COURSES SECTION -->
@@ -307,6 +308,18 @@
       </div>
     </div>
     <div id="faqList"><div class="ann-empty">Click Refresh to load FAQs.</div></div>
+  </div>
+
+  <!-- LINKS SECTION -->
+  <div id="section-links" style="display:none">
+    <div class="group-settings">
+      <h3>🔗 WhatsApp Group Link</h3>
+      <p style="font-size:12px;color:#888;margin-bottom:12px;line-height:1.5">This is the link used by the "Join Chat" button on the WhatsApp group invite page. Update it whenever you create a new group.</p>
+      <div class="gs-fields">
+        <input type="text" id="waGroupLink" placeholder="https://chat.whatsapp.com/...">
+        <button class="gs-save" id="waLinkSaveBtn" onclick="saveWaLink()">💾 Save Link</button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -492,12 +505,13 @@ function forgotPassword(){
 
 // ── TABS ──────────────────────────────────────────────────────
 function switchTab(tab){
-  ['courses','announcements','faqs'].forEach(t=>{
+  ['courses','announcements','faqs','links'].forEach(t=>{
     document.getElementById('section-'+t).style.display = t===tab ? 'block' : 'none';
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
   });
   if(tab==='announcements'){ loadAnnouncements(); loadGroupSettings(); loadAdminSettings(); }
   if(tab==='faqs') loadFaqs();
+  if(tab==='links') loadWaLink();
 }
 
 // ── TOAST ─────────────────────────────────────────────────────
@@ -855,6 +869,29 @@ function deleteFaq(id,preview){
       .catch(e=>showToast('❌ '+e.message));
   };
   document.getElementById('confirmOverlay').classList.add('open');
+}
+
+// ── WHATSAPP GROUP LINK ─────────────────────────────────────────
+function loadWaLink(){
+  db.collection('settings').doc('links').get().then(snap=>{
+    if(snap.exists && snap.data().whatsappGroup){
+      document.getElementById('waGroupLink').value = snap.data().whatsappGroup;
+    }
+  }).catch(e=>console.error(e));
+}
+
+function saveWaLink(){
+  const link = document.getElementById('waGroupLink').value.trim();
+  if(!link){ showToast('❌ Please enter a valid link.'); return; }
+  if(!link.startsWith('https://chat.whatsapp.com/')){
+    showToast('⚠️ Link should start with https://chat.whatsapp.com/');
+  }
+  const btn = document.getElementById('waLinkSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  db.collection('settings').doc('links').set({ whatsappGroup: link }, { merge: true })
+    .then(()=> showToast('✅ WhatsApp group link updated!'))
+    .catch(e=> showToast('❌ ' + e.message))
+    .finally(()=>{ btn.disabled = false; btn.textContent = '💾 Save Link'; });
 }
 
 // ── MODAL CLOSE ON OVERLAY CLICK ──────────────────────────────

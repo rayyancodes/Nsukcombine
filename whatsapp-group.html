@@ -78,7 +78,7 @@
   <div class="group-name">NSUK Aspirants³ (Main Group)</div>
   <div class="group-sub">WhatsApp Group Invite</div>
 
-  <a href="https://chat.whatsapp.com/CPco7EBhbqZEOiew0lGAQA" class="join-btn" style="text-decoration:none;display:inline-block">Join Chat</a>
+  <a href="https://wa.me/2349057205252?text=Hi,+i+am+an+NSUK+Aspirant.+I+want+to+join+the+Aspirants+group.+" class="join-btn" id="joinBtn" style="text-decoration:none;display:inline-block">Join Chat</a>
 
   <div class="divider-line"></div>
   <div class="no-wa-text">Having issues joining group? message <strong>09057205252</strong> on WhatsApp to be added manually</div>
@@ -91,5 +91,25 @@
   </a>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDlSUVjCQVnOuzDj0kuDu0ISPD50-G10YM",
+  authDomain: "nsuk-combination.firebaseapp.com",
+  projectId: "nsuk-combination",
+  storageBucket: "nsuk-combination.firebasestorage.app",
+  messagingSenderId: "1009558767395",
+  appId: "1:1009558767395:web:1a208eb6e7befa4632ae96"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+db.collection('settings').doc('links').get().then(snap=>{
+  if(snap.exists && snap.data().whatsappGroup){
+    document.getElementById('joinBtn').href = snap.data().whatsappGroup;
+  }
+}).catch(e=> console.error('Could not load WhatsApp link:', e));
+</script>
 </body>
 </html>
