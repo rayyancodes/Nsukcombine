@@ -358,8 +358,11 @@
       </div>
       <div class="form-group">
         <label>Faculty</label>
-        <input type="text" id="fFaculty" placeholder="e.g. Administration" list="facultyList">
-        <datalist id="facultyList"></datalist>
+        <select id="fFaculty" onchange="onFacultySelect(this)">
+          <option value="">— Select Faculty —</option>
+          <option value="__new__">➕ Add New Faculty...</option>
+        </select>
+        <input type="text" id="fFacultyNew" placeholder="Type new faculty name" style="display:none;margin-top:8px">
       </div>
     </div>
 
@@ -550,9 +553,19 @@ function loadCourses(){
     const sel=document.getElementById('facultyFilter');
     sel.innerHTML='<option value="">All Faculties</option>';
     faculties.forEach(f=>{ const o=document.createElement('option'); o.value=f; o.textContent=f; sel.appendChild(o); });
-    // Datalist
-    const dl=document.getElementById('facultyList'); dl.innerHTML='';
-    faculties.forEach(f=>{ const o=document.createElement('option'); o.value=f; dl.appendChild(o); });
+    // Faculty dropdown in modal
+    const facSel=document.getElementById('fFaculty');
+    // Save current value to restore after repopulating
+    const curVal = facSel.value;
+    // Remove all options except the first two (Select + Add New)
+    while(facSel.options.length > 2) facSel.remove(2);
+    // Add faculty options before the "Add New" option
+    faculties.forEach(f=>{
+      const o=document.createElement('option'); o.value=f; o.textContent=f;
+      facSel.insertBefore(o, facSel.options[1]);
+    });
+    // Restore selected value if still valid
+    if(curVal) facSel.value = curVal;
     renderList();
   }).catch(e=>{ document.getElementById('courseList').innerHTML=`<div class="loading" style="color:red">Error: ${e.message}</div>`; });
 }
@@ -587,7 +600,7 @@ function renderList(){
 function openAddModal(){
   editingId=null;
   document.getElementById('modalTitle').textContent='➕ Add New Course';
-  document.getElementById('fName').value=''; document.getElementById('fFaculty').value='';
+  document.getElementById('fName').value=''; document.getElementById('fFaculty').value=''; document.getElementById('fFacultyNew').style.display='none'; document.getElementById('fFacultyNew').value='';
   document.getElementById('fCutoff').value='170'; document.getElementById('fJambPick').value='1'; document.getElementById('fOlPick').value='2';
   setTags('jambComp',[]); setTags('jambOpt',[]); setTags('olComp',['English Language','Mathematics']); setTags('olOpt',[]);
   document.getElementById('modalOverlay').classList.add('open');
@@ -597,7 +610,14 @@ function openEditModal(id){
   const c=allCourses.find(x=>x.id===id); if(!c) return;
   editingId=id;
   document.getElementById('modalTitle').textContent='✏️ Edit: '+c.name;
-  document.getElementById('fName').value=c.name; document.getElementById('fFaculty').value=c.faculty;
+  document.getElementById('fName').value=c.name;
+  const fsel=document.getElementById('fFaculty');
+  // Check if faculty exists in dropdown, if not add it temporarily
+  let found=false;
+  for(let o of fsel.options){ if(o.value===c.faculty){found=true;break;} }
+  if(!found){ const o=document.createElement('option'); o.value=c.faculty; o.textContent=c.faculty; fsel.insertBefore(o,fsel.options[1]); }
+  fsel.value=c.faculty;
+  document.getElementById('fFacultyNew').style.display='none';
   document.getElementById('fCutoff').value=c.cutoff;
   document.getElementById('fJambPick').value=c.jamb_optional_pick||0; document.getElementById('fOlPick').value=c.olevel_optional_pick||0;
   setTags('jambComp',c.jamb_compulsory||[]); setTags('jambOpt',c.jamb_optional||[]);
@@ -605,11 +625,23 @@ function openEditModal(id){
   document.getElementById('modalOverlay').classList.add('open');
 }
 
+function onFacultySelect(sel){
+  const newInput = document.getElementById('fFacultyNew');
+  if(sel.value === '__new__'){
+    newInput.style.display = 'block';
+    newInput.focus();
+  } else {
+    newInput.style.display = 'none';
+    newInput.value = '';
+  }
+}
+
 function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
 
 function saveCourse(){
   const name=document.getElementById('fName').value.trim();
-  const faculty=document.getElementById('fFaculty').value.trim();
+  const fsel=document.getElementById('fFaculty');
+  const faculty=(fsel.value==='__new__' ? document.getElementById('fFacultyNew').value.trim() : fsel.value.trim());
   const cutoff=parseInt(document.getElementById('fCutoff').value);
   if(!name||!faculty){ showToast('❌ Name and faculty required.'); return; }
   const btn=document.getElementById('saveBtn'); btn.disabled=true; btn.textContent='Saving...';
